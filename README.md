@@ -6,3 +6,7 @@
 4. Accepted by QA
 5. Merged
 6. Update documentation if needed (readme)
+
+# Branch ruleset:
+0. Name branch ex. feature/IW-ticket_number
+1. Ask and asign proper person to review the task
