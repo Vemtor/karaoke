@@ -12,6 +12,9 @@ import java.net.URL;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+//! server blackout when there is more than a one request at the time
+//todo run more threads with server instances or put new requests in a queue to wait until server is available
+
 @Slf4j
 @Component
 public class FlaskStarter implements CommandLineRunner {

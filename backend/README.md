@@ -1,6 +1,6 @@
 # python
 
-set up .venv with python 3.10 in backend dir then install dependencies
+set up .venv with python 3.10 in backend dir, activate it then install dependencies
 ```
 pip install flask torch
 pip install -U openai-whisper
