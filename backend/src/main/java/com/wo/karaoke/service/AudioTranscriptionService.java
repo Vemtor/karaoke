@@ -1,5 +1,6 @@
 package com.wo.karaoke.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,6 +31,8 @@ public class AudioTranscriptionService {
 
     private final HttpClient httpClient = HttpClient.newBuilder().build();
     private final ObjectMapper objectMapper = new ObjectMapper();
+
+
 
 
     public Map<String, Object> processAudio(MultipartFile file, boolean saveJson) throws IOException, InterruptedException {

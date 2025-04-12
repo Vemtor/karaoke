@@ -125,6 +125,11 @@ public class AudioTranscriptionServiceTest {
         return new byte[]{0x01, 0x02, 0x03, 0x04, 0x05};
     }
 
+    //todo add list of existing songs and check the results
+    private byte[] getTestAudioBytes(String song) throws IOException {
+        return getClass().getResourceAsStream("/song.mp3").readAllBytes();
+    }
+
     private String createMockJsonResponse() throws IOException {
         Map<String, Object> response = new HashMap<>();
         response.put("full_text", "This is a test transcription.");

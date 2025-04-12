@@ -12,6 +12,8 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
+
+#todo write test for the service and compare small and tiny model results for english songs
 class WhisperService:
     def __init__(self):
         self.models = {}
@@ -29,8 +31,8 @@ class WhisperService:
             raise
 
     def choose_model(self, language: str) -> str:
-        if language == "en":
-            return "tiny"
+        # if language == "en":
+        #     return "tiny"
         return "small"
 
     def detect_language(self, audio_tensor: torch.Tensor) -> str:
