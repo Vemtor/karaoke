@@ -43,7 +43,7 @@ public class AudioTranscriptionServiceTest {
     private HttpResponse<String> httpResponse;
 
     private static final String TEST_FLASK_URL = "http://localhost:8888/predict";
-    private static final String TEST_TRANSCRIPTION_FOLDER = "src/test/resources/test-transcriptions";
+    private static final String TEST_TRANSCRIPTION_FOLDER = "src/test/resources/transcriptions";
 
     @BeforeEach
     public void setup() throws IOException {
@@ -120,12 +120,11 @@ public class AudioTranscriptionServiceTest {
     }
 
 
-
     private byte[] getTestAudioBytes() {
         return new byte[]{0x01, 0x02, 0x03, 0x04, 0x05};
     }
 
-    //todo add list of existing songs and check the results
+
     private byte[] getTestAudioBytes(String song) throws IOException {
         return getClass().getResourceAsStream("/song.mp3").readAllBytes();
     }

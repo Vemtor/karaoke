@@ -3,6 +3,8 @@ package com.wo.karaoke;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
@@ -17,6 +19,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
 @Component
+@Profile({"default", "integration-test"})
 public class FlaskStarter implements CommandLineRunner {
 
     @Value("${flask.server.script}")
@@ -32,6 +35,7 @@ public class FlaskStarter implements CommandLineRunner {
     private int startupTimeout;
 
     private final AtomicBoolean serverStarted = new AtomicBoolean(false);
+    private volatile Process process;
 
     @Override
     public void run(String... args) throws Exception {
@@ -53,9 +57,9 @@ public class FlaskStarter implements CommandLineRunner {
                 );
 
                 pb.redirectErrorStream(true);
-                Process process = pb.start();
+                process = pb.start();
 
-                startOutputReader(process);
+                startOutputReader();
 
 
                 if (waitForServerToStart()) {
@@ -108,7 +112,7 @@ public class FlaskStarter implements CommandLineRunner {
         return false;
     }
 
-    private void startOutputReader(Process process) {
+    private void startOutputReader() {
         new Thread(() -> {
             try (BufferedReader reader = new BufferedReader(
                     new InputStreamReader(process.getInputStream()))) {
@@ -121,6 +125,28 @@ public class FlaskStarter implements CommandLineRunner {
             }
         }).start();
     }
+
+
+    public void stopServer() {
+        if (process.isAlive()) {
+            log.info("Stopping Flask server...");
+            process.destroy();
+        }
+
+        try {
+            boolean terminated = process.waitFor(5, TimeUnit.SECONDS);
+            if (!terminated) {
+                log.warn("Forcing shutdown of the flask server...");
+                process.destroyForcibly();
+            }
+            serverStarted.set(false);
+            log.info("Flask server has been stopped.");
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            log.error("Interrupted while waiting for Flask server to stop", e);
+        }
+    }
+
 
     public boolean isServerRunning() {
         return serverStarted.get();
