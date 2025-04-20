@@ -6,14 +6,12 @@ import tempfile
 import logging
 from typing import Dict
 
-
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
 
-#todo write test for the service and compare small and tiny model results for english songs
 class WhisperService:
     def __init__(self):
         self.models = {}
@@ -64,7 +62,6 @@ class WhisperService:
             'segments': []
         }
 
-
         for segment in result['segments']:
             response['segments'].append({
                 'end': segment['end'],
@@ -76,6 +73,7 @@ class WhisperService:
 
 
 whisper_service = WhisperService()
+
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -111,4 +109,4 @@ def clean_up(temp_dir, temp_file):
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 8888))
-    app.run(host='0.0.0.0', port=port, debug=False)
+    app.run(host='0.0.0.0', port=port, debug=False, threaded=True)

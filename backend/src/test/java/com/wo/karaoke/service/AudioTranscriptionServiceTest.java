@@ -1,5 +1,6 @@
 package com.wo.karaoke.service;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,13 +62,7 @@ public class AudioTranscriptionServiceTest {
     @Test
     public void testProcessAudio_WithSaveJson() throws IOException, InterruptedException {
 
-        byte[] audioContent = getTestAudioBytes();
-        MockMultipartFile mockFile = new MockMultipartFile(
-                "file",
-                "test-audio.mp3",
-                "audio/mpeg",
-                audioContent
-        );
+        MockMultipartFile mockFile = getMockFile();
 
         // Prepare mock response
         String mockJsonResponse = createMockJsonResponse();
@@ -93,13 +88,7 @@ public class AudioTranscriptionServiceTest {
     @Test
     public void testProcessAudio_WithoutSaveJson() throws IOException, InterruptedException {
         // Create test audio file
-        byte[] audioContent = getTestAudioBytes();
-        MockMultipartFile mockFile = new MockMultipartFile(
-                "file",
-                "test-audio.mp3",
-                "audio/mpeg",
-                audioContent
-        );
+        MockMultipartFile mockFile = getMockFile();
 
         // Prepare mock response
         String mockJsonResponse = createMockJsonResponse();
@@ -120,14 +109,30 @@ public class AudioTranscriptionServiceTest {
     }
 
 
+    @Test
+    public void processAudio_WhenServerReturnError_ShouldThrowException() throws IOException, InterruptedException {
+        //Given
+        MockMultipartFile mockFile = getMockFile();
+
+        //when & then
+        when(httpResponse.statusCode()).thenReturn(500);
+        when(httpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class))).thenReturn(httpResponse);
+
+        IOException exception = assertThrows(
+                IOException.class,
+                () -> audioTranscriptionService.processAudio(mockFile, false)
+        );
+
+        assertTrue(exception.getMessage().contains("500"));
+        assertTrue(exception.getMessage().contains("Flask server returned error code: 500"));
+
+    }
+    
+
     private byte[] getTestAudioBytes() {
         return new byte[]{0x01, 0x02, 0x03, 0x04, 0x05};
     }
 
-
-    private byte[] getTestAudioBytes(String song) throws IOException {
-        return getClass().getResourceAsStream("/song.mp3").readAllBytes();
-    }
 
     private String createMockJsonResponse() throws IOException {
         Map<String, Object> response = new HashMap<>();
@@ -147,4 +152,18 @@ public class AudioTranscriptionServiceTest {
 
         return objectMapper.writeValueAsString(response);
     }
+
+
+    private MockMultipartFile getMockFile() {
+        byte[] audioContent = getTestAudioBytes();
+        MockMultipartFile mockFile = new MockMultipartFile(
+                "file",
+                "test-audio.mp3",
+                "audio/mpeg",
+                audioContent
+        );
+        return mockFile;
+    }
+
+
 }
