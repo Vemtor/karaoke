@@ -61,13 +61,14 @@ public class AudioTranscriptionIntegrationTest {
         flaskStarter.stopServer();
     }
 
-
+    //! it takes some time around 3min per song to complete (depends on number of songs in songs dir)
     @Test
     void processAudioWithRealFiles() throws IOException {
         File songsDir = new ClassPathResource("songs").getFile();
         File[] songFiles = songsDir.listFiles((dir, name) ->
                 name.toLowerCase().endsWith(".mp3")
         );
+
 
         assertNotNull(songFiles);
         for (File songFile : songFiles) {
@@ -76,7 +77,7 @@ public class AudioTranscriptionIntegrationTest {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
-            MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+            MultiValueMap body = new LinkedMultiValueMap<>();
             body.add("file", fileResource);
 
             HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);

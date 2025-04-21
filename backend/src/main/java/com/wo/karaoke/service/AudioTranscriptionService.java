@@ -1,12 +1,12 @@
 package com.wo.karaoke.service;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.PostConstruct;
+import com.wo.karaoke.helpers.FileHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -33,19 +33,17 @@ public class AudioTranscriptionService {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
 
-
-
     public Map<String, Object> processAudio(MultipartFile file, boolean saveJson) throws IOException, InterruptedException {
-        File tempFile = convertMultiPartToFile(file);
-        try{
+        File tempFile = FileHandler.convertMultiPartToFile(file);
+        try {
             String jsonResponse = sendToFlaskServer(tempFile);
             Map<String, Object> transcription = objectMapper.readValue(jsonResponse, Map.class);
-            if(saveJson){
+            if (saveJson) {
                 saveTranscriptionToJson(file.getOriginalFilename(), transcription);
             }
             return transcription;
-        }finally {
-            if(tempFile != null && tempFile.exists()){
+        } finally {
+            if (tempFile != null && tempFile.exists()) {
                 tempFile.delete();
             }
         }
@@ -53,7 +51,7 @@ public class AudioTranscriptionService {
 
     private void saveTranscriptionToJson(String originalFilename, Map<String, Object> transcription) throws IOException {
         Path transcriptionsDir = Paths.get(transcriptionFolder);
-        if (!Files.exists(transcriptionsDir)){
+        if (!Files.exists(transcriptionsDir)) {
             Files.createDirectory(transcriptionsDir);
         }
 
@@ -69,16 +67,6 @@ public class AudioTranscriptionService {
         File outputFile = new File(transcriptionsDir.toFile(), baseName + ".json");
 
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(outputFile, transcription);
-    }
-
-
-
-    private File convertMultiPartToFile(MultipartFile file) throws IOException{
-        File tempFile = new File(System.getProperty("java.io.tmpdir"), UUID.randomUUID().toString() + ".mp3");
-        try(FileOutputStream fos = new FileOutputStream(tempFile)){
-            fos.write(file.getBytes());
-        }
-        return tempFile;
     }
 
 

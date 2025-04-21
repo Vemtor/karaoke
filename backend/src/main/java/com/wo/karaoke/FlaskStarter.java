@@ -3,7 +3,6 @@ package com.wo.karaoke;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -13,9 +12,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-//! server blackout when there is more than a one request at the time
-//todo run more threads with server instances or put new requests in a queue to wait until server is available
 
 @Slf4j
 @Component

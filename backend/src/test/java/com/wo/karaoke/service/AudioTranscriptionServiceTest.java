@@ -1,6 +1,5 @@
 package com.wo.karaoke.service;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -127,7 +126,7 @@ public class AudioTranscriptionServiceTest {
         assertTrue(exception.getMessage().contains("Flask server returned error code: 500"));
 
     }
-    
+
 
     private byte[] getTestAudioBytes() {
         return new byte[]{0x01, 0x02, 0x03, 0x04, 0x05};

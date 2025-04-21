@@ -1,6 +1,7 @@
 # python
 
 set up .venv with python 3.10 in backend dir, activate it then install dependencies
+
 ```
 pip install flask torch
 pip install -U openai-whisper
@@ -9,19 +10,20 @@ pip install -U openai-whisper
 # sending files to api
 
 without saving json file
+
 ```
 curl -X POST \
   -H "Content-Type: multipart/form-data" \
-  -F "file=@src/main/resources/songs/one_time.mp3;type=audio/mpeg" \
-  http://localhost:8080/api/audio/transcribe
+  -F "file=@src/test/resources/songs/one_time.mp3;type=audio/mpeg" \
+   http://localhost:8080/api/audio/transcribe\?saveJson\=true
 ```
-
 
 with saving to json managed by spring
+
 ```
 curl -X POST \
   -H "Content-Type: multipart/form-data" \
-  -F "file=@src/main/resources/songs/7dam.mp3;type=audio/mpeg" \
+  -F "file=@src/test/resources/songs/7dam.mp3;type=audio/mpeg" \
   http://localhost:8080/api/audio/transcribe\?saveJson\=true
 
 
