@@ -11,7 +11,7 @@ import java.util.UUID;
 public class FileHandler {
 
     public static File convertMultiPartToFile(MultipartFile file) throws IOException {
-        File tempFile = new File(System.getProperty("java.io.tmpdir"), UUID.randomUUID().toString() + ".mp3");
+        File tempFile = new File(System.getProperty("java.io.tmpdir"), UUID.randomUUID() + ".mp3");
         try (FileOutputStream fos = new FileOutputStream(tempFile)) {
             fos.write(file.getBytes());
         }

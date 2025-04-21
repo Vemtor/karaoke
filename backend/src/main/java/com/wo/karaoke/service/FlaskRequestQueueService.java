@@ -19,7 +19,7 @@ public class FlaskRequestQueueService {
     private static final int PROCESSING_TIMEOUT = 7;
 
     private final AudioTranscriptionService audioTranscriptionService;
-    private BlockingQueue<TranscriptionTask> taskQueue;
+    private final BlockingQueue<TranscriptionTask> taskQueue;
     private final ExecutorService executorService;
     private final AtomicBoolean isProcessing;
 
@@ -112,19 +112,9 @@ public class FlaskRequestQueueService {
     }
 
 
-    private static class TranscriptionTask {
-        final MultipartFile file;
-        final boolean saveJson;
-        final CompletableFuture<Map<String, Object>> future;
-        final CompletableFuture<Void> processingStarted;
-
-        public TranscriptionTask(MultipartFile file, boolean saveJson, CompletableFuture<Map<String, Object>> future,
-                                 CompletableFuture<Void> processingStarted) {
-            this.file = file;
-            this.saveJson = saveJson;
-            this.future = future;
-            this.processingStarted = processingStarted;
-        }
+    private record TranscriptionTask(MultipartFile file, boolean saveJson,
+                                     CompletableFuture<Map<String, Object>> future,
+                                     CompletableFuture<Void> processingStarted) {
     }
 
 

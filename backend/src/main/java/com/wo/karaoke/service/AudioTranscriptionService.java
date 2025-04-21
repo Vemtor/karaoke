@@ -43,7 +43,7 @@ public class AudioTranscriptionService {
             }
             return transcription;
         } finally {
-            if (tempFile != null && tempFile.exists()) {
+            if (tempFile.exists()) {
                 tempFile.delete();
             }
         }
@@ -77,17 +77,16 @@ public class AudioTranscriptionService {
         String boundaryPrefix = "--" + boundary;
         String lineFeed = "\r\n";
 
-        StringBuilder requestBody = new StringBuilder();
-        requestBody.append(boundaryPrefix).append(lineFeed);
-        requestBody.append("Content-Disposition: form-data; name=\"file\"; filename=\"").append(file.getName()).append("\"").append(lineFeed);
-        requestBody.append("Content-Type: audio/mpeg").append(lineFeed);
-        requestBody.append(lineFeed);
+        String requestBody = boundaryPrefix + lineFeed +
+                "Content-Disposition: form-data; name=\"file\"; filename=\"" + file.getName() + "\"" + lineFeed +
+                "Content-Type: audio/mpeg" + lineFeed +
+                lineFeed;
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(flaskServerUrl))
                 .header("Content-Type", "multipart/form-data; boundary=" + boundary)
                 .POST(HttpRequest.BodyPublishers.ofByteArrays(List.of(
-                        requestBody.toString().getBytes(),
+                        requestBody.getBytes(),
                         fileBytes,
                         (lineFeed + boundaryPrefix + "--" + lineFeed).getBytes()
                 )))

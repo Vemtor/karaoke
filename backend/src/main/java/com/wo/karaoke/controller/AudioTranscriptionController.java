@@ -33,7 +33,6 @@ public class AudioTranscriptionController {
             if (audioFile.isEmpty() || !audioFile.getContentType().equals("audio/mpeg")) {
                 return ResponseEntity.badRequest().body("Please upload a valid MP3 file");
             }
-//            Map<String, Object> transcription = audioService.processAudio(audioFile, saveJson);
             Map<String, Object> transcription = queueService.processAudioQueued(audioFile, saveJson);
             return ResponseEntity.ok().body(transcription);
 

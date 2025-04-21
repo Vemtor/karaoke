@@ -34,7 +34,7 @@ public class FlaskStarter implements CommandLineRunner {
     private volatile Process process;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         log.info("Starting Flask server");
 
         String pythonExecutable;

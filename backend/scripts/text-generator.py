@@ -1,9 +1,9 @@
-from flask import Flask, request, jsonify
-import torch
-import whisper
+import logging
 import os
 import tempfile
-import logging
+import torch
+import whisper
+from flask import Flask, request, jsonify
 from typing import Dict
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -28,6 +28,7 @@ class WhisperService:
             logger.error(f"Failed to load models: {e}")
             raise
 
+    # transcription is worse while using tiny model, but results is retrieved faster
     def choose_model(self, language: str) -> str:
         # if language == "en":
         #     return "tiny"
@@ -64,8 +65,8 @@ class WhisperService:
 
         for segment in result['segments']:
             response['segments'].append({
-                'end': segment['end'],
-                'start': segment['start'],
+                'end': round(segment['end'], 2),
+                'start': round(segment['start'], 2),
                 'text': segment['text']
             })
 
@@ -107,6 +108,7 @@ def clean_up(temp_dir, temp_file):
         os.rmdir(temp_dir)
 
 
+# add minor change for rounding to 2 digit points for every file.
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 8888))
     app.run(host='0.0.0.0', port=port, debug=False, threaded=True)
