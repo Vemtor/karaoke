@@ -41,4 +41,4 @@ curl -X POST \
 
 ```
 
-without saving json file just remove \?saveJason\=true
+without saving json file just remove \?saveJson\=true
