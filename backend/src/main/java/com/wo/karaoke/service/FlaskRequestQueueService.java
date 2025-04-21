@@ -15,7 +15,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Slf4j
 @Service
 public class FlaskRequestQueueService {
-    private static final int PROCESSING_TIMEOUT = 6;
+    //it takes around 2 to 4 minutes, but I set up buffer for 7
+    private static final int PROCESSING_TIMEOUT = 7;
 
     private final AudioTranscriptionService audioTranscriptionService;
     private BlockingQueue<TranscriptionTask> taskQueue;
@@ -34,15 +35,19 @@ public class FlaskRequestQueueService {
 
 
     public Map<String, Object> processAudioQueued(MultipartFile file, boolean saveJson) throws Exception {
-        CompletableFuture<Map<String, Object>> future = new CompletableFuture<>();
+        CompletableFuture<Void> processingStarted = new CompletableFuture<>();
+        CompletableFuture<Map<String, Object>> resultFuture = new CompletableFuture<>();
 
         MultipartFile fileCopy = copyMultipartFile(file);
-        taskQueue.add(new TranscriptionTask(fileCopy, saveJson, future));
+        taskQueue.add(new TranscriptionTask(fileCopy, saveJson, resultFuture, processingStarted));
         log.info("Added transcription task to queue for file: {}. Queue size: {}",
                 file.getOriginalFilename(), taskQueue.size());
-
         try {
-            return future.get(PROCESSING_TIMEOUT, TimeUnit.MINUTES);
+            processingStarted.get();
+            log.info("Processing started for file: {}, applying timeout of {} minutes",
+                    file.getOriginalFilename(), PROCESSING_TIMEOUT);
+
+            return resultFuture.get(PROCESSING_TIMEOUT, TimeUnit.MINUTES);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             log.error("Error waiting for transcription results ", e);
             throw new Exception("Transcription process failed: " + e.getMessage());
@@ -71,6 +76,7 @@ public class FlaskRequestQueueService {
 
                     isProcessing.set(true);
                     try {
+                        task.processingStarted.complete(null);
                         Map<String, Object> result = audioTranscriptionService.processAudio(task.file, task.saveJson);
                         task.future.complete(result);
                         log.info("Completed transcription for file: {}", task.file.getOriginalFilename());
@@ -110,11 +116,14 @@ public class FlaskRequestQueueService {
         final MultipartFile file;
         final boolean saveJson;
         final CompletableFuture<Map<String, Object>> future;
+        final CompletableFuture<Void> processingStarted;
 
-        public TranscriptionTask(MultipartFile file, boolean saveJson, CompletableFuture<Map<String, Object>> future) {
+        public TranscriptionTask(MultipartFile file, boolean saveJson, CompletableFuture<Map<String, Object>> future,
+                                 CompletableFuture<Void> processingStarted) {
             this.file = file;
             this.saveJson = saveJson;
             this.future = future;
+            this.processingStarted = processingStarted;
         }
     }
 
