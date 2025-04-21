@@ -11,6 +11,11 @@ pip install flask torch
 pip install -U openai-whisper
 ```
 
+# songs
+
+create folder songs for testing purpose in test/resources/songs with song files with .mp3 extension, then you
+can run below commands after starting spring app or just run integration test
+
 # sending files to api
 
 with saving to json managed by spring

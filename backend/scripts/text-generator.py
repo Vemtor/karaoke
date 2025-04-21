@@ -108,7 +108,6 @@ def clean_up(temp_dir, temp_file):
         os.rmdir(temp_dir)
 
 
-# add minor change for rounding to 2 digit points for every file.
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 8888))
     app.run(host='0.0.0.0', port=port, debug=False, threaded=True)
