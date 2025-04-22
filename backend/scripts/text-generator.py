@@ -28,7 +28,7 @@ class WhisperService:
             logger.error(f"Failed to load models: {e}")
             raise
 
-    # transcription is worse while using tiny model, but results is retrieved faster
+    # transcription is worse while using tiny model, but results are retrieved faster
     def choose_model(self, language: str) -> str:
         # if language == "en":
         #     return "tiny"
@@ -108,6 +108,10 @@ def clean_up(temp_dir, temp_file):
         os.rmdir(temp_dir)
 
 
+# ! when server is busy spring is taking a lat of resources, polish song translation might be bad,
+# ! rethink using medium model but it's very resource demanding... and transcription can take a much longer ...
+
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 8888))
+    # default optional, second arg
+    port = int(os.environ.get("FLASK_SERVER_PORT", 8889))
     app.run(host='0.0.0.0', port=port, debug=False, threaded=True)

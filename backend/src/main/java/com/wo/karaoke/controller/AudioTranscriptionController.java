@@ -1,7 +1,6 @@
 package com.wo.karaoke.controller;
 
 
-import com.wo.karaoke.service.AudioTranscriptionService;
 import com.wo.karaoke.service.FlaskRequestQueueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -13,27 +12,25 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/audio")
 public class AudioTranscriptionController {
     //receive MP3 files and forward them to model
-    @Autowired
-    private AudioTranscriptionService audioService;
 
     @Autowired
     private FlaskRequestQueueService queueService;
 
     @PostMapping(value = "/transcribe", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> transcribeAudio(
-            @RequestParam("file") MultipartFile audioFile,
-            @RequestParam(value = "saveJson", required = false, defaultValue = "false") boolean saveJson
+            @RequestParam MultipartFile file
     ) {
         try {
-            if (audioFile.isEmpty() || !audioFile.getContentType().equals("audio/mpeg")) {
+            if (file.isEmpty() || !Objects.equals(file.getContentType(), "audio/mpeg")) {
                 return ResponseEntity.badRequest().body("Please upload a valid MP3 file");
             }
-            Map<String, Object> transcription = queueService.processAudioQueued(audioFile, saveJson);
+            Map<String, Object> transcription = queueService.processAudioQueued(file);
             return ResponseEntity.ok().body(transcription);
 
 

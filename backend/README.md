@@ -23,22 +23,21 @@ with saving to json managed by spring
 ```
 curl -X POST \
   -H "Content-Type: multipart/form-data" \
-  -F "file=@src/test/resources/songs/one_time.mp3;type=audio/mpeg" \
-   http://localhost:8080/api/audio/transcribe\?saveJson\=true
+  -F "file=@src/test/resources/songs/song1.mp3;type=audio/mpeg" \
+   http://localhost:8080/api/audio/transcribe
 ```
 
 ```
 curl -X POST \
   -H "Content-Type: multipart/form-data" \
   -F "file=@src/test/resources/songs/7dam.mp3;type=audio/mpeg" \
-  http://localhost:8080/api/audio/transcribe\?saveJson\=true
+  http://localhost:8080/api/audio/transcribe
 
 
 curl -X POST \
   -H "Content-Type: multipart/form-data" \
   -F "file=@src/test/resources/songs/firework.mp3;type=audio/mpeg" \
-  http://localhost:8080/api/audio/transcribe\?saveJson\=true
+  http://localhost:8080/api/audio/transcribe
 
 ```
 
-without saving json file just remove \?saveJson\=true

@@ -34,12 +34,12 @@ public class FlaskRequestQueueService {
     }
 
 
-    public Map<String, Object> processAudioQueued(MultipartFile file, boolean saveJson) throws Exception {
+    public Map<String, Object> processAudioQueued(MultipartFile file) throws Exception {
         CompletableFuture<Void> processingStarted = new CompletableFuture<>();
         CompletableFuture<Map<String, Object>> resultFuture = new CompletableFuture<>();
 
         MultipartFile fileCopy = copyMultipartFile(file);
-        taskQueue.add(new TranscriptionTask(fileCopy, saveJson, resultFuture, processingStarted));
+        taskQueue.add(new TranscriptionTask(fileCopy, resultFuture, processingStarted));
         log.info("Added transcription task to queue for file: {}. Queue size: {}",
                 file.getOriginalFilename(), taskQueue.size());
         try {
@@ -77,7 +77,7 @@ public class FlaskRequestQueueService {
                     isProcessing.set(true);
                     try {
                         task.processingStarted.complete(null);
-                        Map<String, Object> result = audioTranscriptionService.processAudio(task.file, task.saveJson);
+                        Map<String, Object> result = audioTranscriptionService.processAudio(task.file);
                         task.future.complete(result);
                         log.info("Completed transcription for file: {}", task.file.getOriginalFilename());
                     } catch (Exception e) {
@@ -112,7 +112,7 @@ public class FlaskRequestQueueService {
     }
 
 
-    private record TranscriptionTask(MultipartFile file, boolean saveJson,
+    private record TranscriptionTask(MultipartFile file,
                                      CompletableFuture<Map<String, Object>> future,
                                      CompletableFuture<Void> processingStarted) {
     }

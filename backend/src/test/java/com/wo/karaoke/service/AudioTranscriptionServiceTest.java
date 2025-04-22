@@ -70,7 +70,7 @@ public class AudioTranscriptionServiceTest {
         when(httpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class))).thenReturn(httpResponse);
 
         // Execute service method
-        Map<String, Object> result = audioTranscriptionService.processAudio(mockFile, true);
+        Map<String, Object> result = audioTranscriptionService.processAudio(mockFile);
 
         // Verify results
         assertNotNull(result);
@@ -82,29 +82,6 @@ public class AudioTranscriptionServiceTest {
 
         // Cleanup
         savedJson.delete();
-    }
-
-    @Test
-    public void testProcessAudio_WithoutSaveJson() throws IOException, InterruptedException {
-        // Create test audio file
-        MockMultipartFile mockFile = getMockFile();
-
-        // Prepare mock response
-        String mockJsonResponse = createMockJsonResponse();
-        when(httpResponse.statusCode()).thenReturn(200);
-        when(httpResponse.body()).thenReturn(mockJsonResponse);
-        when(httpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class))).thenReturn(httpResponse);
-
-        // Execute service method
-        Map<String, Object> result = audioTranscriptionService.processAudio(mockFile, false);
-
-        // Verify results
-        assertNotNull(result);
-        assertEquals("This is a test transcription.", result.get("full_text"));
-
-        // Verify JSON file was NOT saved
-        File savedJson = new File(TEST_TRANSCRIPTION_FOLDER, "test-audio.json");
-        assertFalse(savedJson.exists());
     }
 
 
@@ -119,7 +96,7 @@ public class AudioTranscriptionServiceTest {
 
         IOException exception = assertThrows(
                 IOException.class,
-                () -> audioTranscriptionService.processAudio(mockFile, false)
+                () -> audioTranscriptionService.processAudio(mockFile)
         );
 
         assertTrue(exception.getMessage().contains("500"));
@@ -137,15 +114,18 @@ public class AudioTranscriptionServiceTest {
         Map<String, Object> response = new HashMap<>();
         response.put("full_text", "This is a test transcription.");
 
-        Map<String, Object> segment1 = new HashMap<>();
-        segment1.put("start", 0.0);
-        segment1.put("end", 2.5);
-        segment1.put("text", "This is a");
+        Map<String, Object> segment1 = Map.of(
+                "start", 0.0,
+                "end", 2.5,
+                "text", "This is a"
+        );
 
-        Map<String, Object> segment2 = new HashMap<>();
-        segment2.put("start", 2.5);
-        segment2.put("end", 4.0);
-        segment2.put("text", "test transcription.");
+
+        Map<String, Object> segment2 = Map.of(
+                "start", 2.5,
+                "end", 4.0,
+                "text", "test transcription"
+        );
 
         response.put("segments", List.of(segment1, segment2));
 

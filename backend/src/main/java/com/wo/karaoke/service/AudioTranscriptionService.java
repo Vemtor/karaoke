@@ -3,6 +3,8 @@ package com.wo.karaoke.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wo.karaoke.helpers.FileHandler;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +24,7 @@ import java.util.UUID;
 @Service
 public class AudioTranscriptionService {
 
+    public static final String LINE_FEED = "\r\n";
 
     @Value("${flask.server.url}")
     private String flaskServerUrl;
@@ -33,14 +36,12 @@ public class AudioTranscriptionService {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
 
-    public Map<String, Object> processAudio(MultipartFile file, boolean saveJson) throws IOException, InterruptedException {
+    public Map<String, Object> processAudio(MultipartFile file) throws IOException, InterruptedException {
         File tempFile = FileHandler.convertMultiPartToFile(file);
         try {
             String jsonResponse = sendToFlaskServer(tempFile);
             Map<String, Object> transcription = objectMapper.readValue(jsonResponse, Map.class);
-            if (saveJson) {
-                saveTranscriptionToJson(file.getOriginalFilename(), transcription);
-            }
+            saveTranscriptionToJson(file.getOriginalFilename(), transcription);
             return transcription;
         } finally {
             if (tempFile.exists()) {
@@ -75,20 +76,19 @@ public class AudioTranscriptionService {
         byte[] fileBytes = Files.readAllBytes(file.toPath());
 
         String boundaryPrefix = "--" + boundary;
-        String lineFeed = "\r\n";
 
-        String requestBody = boundaryPrefix + lineFeed +
-                "Content-Disposition: form-data; name=\"file\"; filename=\"" + file.getName() + "\"" + lineFeed +
-                "Content-Type: audio/mpeg" + lineFeed +
-                lineFeed;
+        String requestBody = boundaryPrefix + LINE_FEED +
+                "Content-Disposition: form-data; name=\"file\"; filename=\"" + file.getName() + "\"" + LINE_FEED +
+                "Content-Type: audio/mpeg" + LINE_FEED +
+                LINE_FEED;
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(flaskServerUrl))
-                .header("Content-Type", "multipart/form-data; boundary=" + boundary)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA_VALUE + "; boundary=" + boundary)
                 .POST(HttpRequest.BodyPublishers.ofByteArrays(List.of(
                         requestBody.getBytes(),
                         fileBytes,
-                        (lineFeed + boundaryPrefix + "--" + lineFeed).getBytes()
+                        (LINE_FEED + boundaryPrefix + "--" + LINE_FEED).getBytes()
                 )))
                 .build();
 

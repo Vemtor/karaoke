@@ -32,4 +32,11 @@ build/
 ### VS Code ###
 .vscode/
 .venv
+
+## project
+src/**/resources/transcriptions/
+src/**/resources/songs/
+
+## temp
 /scripts/vocal-remover
+

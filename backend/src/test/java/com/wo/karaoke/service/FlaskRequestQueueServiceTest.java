@@ -11,7 +11,6 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.when;
 
 public class FlaskRequestQueueServiceTest {
@@ -22,15 +21,15 @@ public class FlaskRequestQueueServiceTest {
         Map<String, Object> response = new HashMap<>();
         response.put("full_text", "Test transcription");
 
-        when(transcriptionService.processAudio(any(MultipartFile.class), anyBoolean()))
+        when(transcriptionService.processAudio(any(MultipartFile.class)))
                 .thenReturn(response);
 
         FlaskRequestQueueService queueService = new FlaskRequestQueueService(transcriptionService);
         MockMultipartFile testFile = new MockMultipartFile(
-                "file", "test.mp3", "audio/mpeg", "test audio content".getBytes()
+                "file", "test.mp3", "audio/mpeg", "test audio content" .getBytes()
         );
 
-        Map<String, Object> result = queueService.processAudioQueued(testFile, true);
+        Map<String, Object> result = queueService.processAudioQueued(testFile);
         assertNotNull(result);
         assertEquals("Test transcription", result.get("full_text"));
     }

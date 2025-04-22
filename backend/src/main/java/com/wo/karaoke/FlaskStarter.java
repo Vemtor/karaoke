@@ -9,7 +9,10 @@ import org.springframework.stereotype.Component;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -51,6 +54,10 @@ public class FlaskStarter implements CommandLineRunner {
                         pythonExecutable,
                         script
                 );
+
+                int port = getFlaskServerPort();
+                Map<String, String> env = pb.environment();
+                env.put("FLASK_SERVER_PORT", String.valueOf(port));
 
                 pb.redirectErrorStream(true);
                 process = pb.start();
@@ -146,5 +153,14 @@ public class FlaskStarter implements CommandLineRunner {
 
     public boolean isServerRunning() {
         return serverStarted.get();
+    }
+
+    private int getFlaskServerPort() {
+        try {
+            return new URI(flaskServerUrl).getPort();
+        } catch (URISyntaxException e) {
+            log.warn("Failed to parse URL for port extraction, using default", e);
+            return 8889;
+        }
     }
 }
