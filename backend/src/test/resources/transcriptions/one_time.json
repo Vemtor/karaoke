@@ -1,0 +1,312 @@
+{
+  "full_text" : " A, A, A, A, A, A, A, A, A, A, A. Me plus you. I'm gonna tell you one time. Me plus you. One time. I'm gonna tell you one time. Me plus you. One time. I'm gonna tell you one time. One time. One time. One time. One time. When I met you girl, my heart went knock, knock. Knock, knock. Now them butterflies in my stomach won't stop, stop. And even though it's a struggle, love is all we got So we gon' keep, keep climbing to the mountaintop Your world is my world And my fight is your fight My breath is your breath When you're hurt Hang on, you're my one love My one heart, my one life For sure, let me tell you one time I'm gonna tell you one time And I'm gonna be your one guy You'll be my number one girl Always making time for you I'm gonna tell you one time I'm gonna tell you one time You look so deep You know that it humbles me You by my side Them troubles, them not trouble me Many have called, but the chosen is you Whatever you want, shawty, I'll give it to you Your world is my world And my fight is your fight My breath is your breath When you're hurt Hang on, you're my one love My one heart, my one life For sure, let me tell you one time I'm gonna tell you one time And I'm gonna be your one guy You'll be my number one girl Always making time for you I'm gonna tell you one time Girl I love you Girl I love you Shawty right there She's got everything I need And I'm gonna tell her one time Give you everything you need Down to my last dime She makes me happy I know where I'll be Right by your side Cause she is the one And girl you're my one love My one heart, my one life For sure, let me tell you one time Girl I love you Girl I love you Girl I love you Girl I love you Girl I love you Girl I love you Girl I love you I'm gonna tell you one time Hey, I love you Tell you one time Hey, I love you Tell you one time Hey, I love you One time",
+  "segments" : [ {
+    "end" : 6.5600000000000005,
+    "start" : 0.0,
+    "text" : " A, A, A, A, A, A, A, A, A, A, A."
+  }, {
+    "end" : 8.620000000000001,
+    "start" : 6.5600000000000005,
+    "text" : " Me plus you."
+  }, {
+    "end" : 9.8,
+    "start" : 8.620000000000001,
+    "text" : " I'm gonna tell you one time."
+  }, {
+    "end" : 11.16,
+    "start" : 9.8,
+    "text" : " Me plus you."
+  }, {
+    "end" : 11.84,
+    "start" : 11.16,
+    "text" : " One time."
+  }, {
+    "end" : 13.08,
+    "start" : 11.84,
+    "text" : " I'm gonna tell you one time."
+  }, {
+    "end" : 14.120000000000001,
+    "start" : 13.08,
+    "text" : " Me plus you."
+  }, {
+    "end" : 14.92,
+    "start" : 14.120000000000001,
+    "text" : " One time."
+  }, {
+    "end" : 16.76,
+    "start" : 14.92,
+    "text" : " I'm gonna tell you one time."
+  }, {
+    "end" : 17.46,
+    "start" : 16.76,
+    "text" : " One time."
+  }, {
+    "end" : 18.2,
+    "start" : 17.46,
+    "text" : " One time."
+  }, {
+    "end" : 18.84,
+    "start" : 18.2,
+    "text" : " One time."
+  }, {
+    "end" : 20.06,
+    "start" : 18.84,
+    "text" : " One time."
+  }, {
+    "end" : 22.78,
+    "start" : 20.06,
+    "text" : " When I met you girl, my heart went knock, knock."
+  }, {
+    "end" : 23.400000000000002,
+    "start" : 22.78,
+    "text" : " Knock, knock."
+  }, {
+    "end" : 26.48,
+    "start" : 23.400000000000002,
+    "text" : " Now them butterflies in my stomach won't stop, stop."
+  }, {
+    "end" : 29.44,
+    "start" : 26.48,
+    "text" : " And even though it's a struggle, love is all we got"
+  }, {
+    "end" : 32.88,
+    "start" : 29.44,
+    "text" : " So we gon' keep, keep climbing to the mountaintop"
+  }, {
+    "end" : 36.52,
+    "start" : 32.88,
+    "text" : " Your world is my world"
+  }, {
+    "end" : 40.120000000000005,
+    "start" : 36.52,
+    "text" : " And my fight is your fight"
+  }, {
+    "end" : 43.2,
+    "start" : 40.120000000000005,
+    "text" : " My breath is your breath"
+  }, {
+    "end" : 44.84,
+    "start" : 43.2,
+    "text" : " When you're hurt"
+  }, {
+    "end" : 47.2,
+    "start" : 44.84,
+    "text" : " Hang on, you're my one love"
+  }, {
+    "end" : 50.400000000000006,
+    "start" : 47.2,
+    "text" : " My one heart, my one life"
+  }, {
+    "end" : 53.120000000000005,
+    "start" : 50.400000000000006,
+    "text" : " For sure, let me tell you one time"
+  }, {
+    "end" : 56.36,
+    "start" : 53.120000000000005,
+    "text" : " I'm gonna tell you one time"
+  }, {
+    "end" : 59.92,
+    "start" : 57.36,
+    "text" : " And I'm gonna be your one guy"
+  }, {
+    "end" : 61.92,
+    "start" : 59.92,
+    "text" : " You'll be my number one girl"
+  }, {
+    "end" : 64.32,
+    "start" : 61.92,
+    "text" : " Always making time for you"
+  }, {
+    "end" : 66.76,
+    "start" : 64.32,
+    "text" : " I'm gonna tell you one time"
+  }, {
+    "end" : 70.28,
+    "start" : 66.76,
+    "text" : " I'm gonna tell you one time"
+  }, {
+    "end" : 73.56,
+    "start" : 72.28,
+    "text" : " You look so deep"
+  }, {
+    "end" : 75.56,
+    "start" : 73.56,
+    "text" : " You know that it humbles me"
+  }, {
+    "end" : 76.88,
+    "start" : 75.56,
+    "text" : " You by my side"
+  }, {
+    "end" : 78.88,
+    "start" : 76.88,
+    "text" : " Them troubles, them not trouble me"
+  }, {
+    "end" : 81.92,
+    "start" : 78.88,
+    "text" : " Many have called, but the chosen is you"
+  }, {
+    "end" : 85.92,
+    "start" : 81.92,
+    "text" : " Whatever you want, shawty, I'll give it to you"
+  }, {
+    "end" : 88.92,
+    "start" : 85.92,
+    "text" : " Your world is my world"
+  }, {
+    "end" : 92.92,
+    "start" : 88.92,
+    "text" : " And my fight is your fight"
+  }, {
+    "end" : 95.92,
+    "start" : 92.92,
+    "text" : " My breath is your breath"
+  }, {
+    "end" : 97.44,
+    "start" : 95.92,
+    "text" : " When you're hurt"
+  }, {
+    "end" : 99.92,
+    "start" : 97.44,
+    "text" : " Hang on, you're my one love"
+  }, {
+    "end" : 102.92,
+    "start" : 99.92,
+    "text" : " My one heart, my one life"
+  }, {
+    "end" : 105.92,
+    "start" : 102.92,
+    "text" : " For sure, let me tell you one time"
+  }, {
+    "end" : 109.92,
+    "start" : 106.92,
+    "text" : " I'm gonna tell you one time"
+  }, {
+    "end" : 112.92,
+    "start" : 109.92,
+    "text" : " And I'm gonna be your one guy"
+  }, {
+    "end" : 114.92,
+    "start" : 112.92,
+    "text" : " You'll be my number one girl"
+  }, {
+    "end" : 116.92,
+    "start" : 114.92,
+    "text" : " Always making time for you"
+  }, {
+    "end" : 118.92,
+    "start" : 116.92,
+    "text" : " I'm gonna tell you one time"
+  }, {
+    "end" : 120.92,
+    "start" : 118.92,
+    "text" : " Girl I love you"
+  }, {
+    "end" : 123.92,
+    "start" : 120.92,
+    "text" : " Girl I love you"
+  }, {
+    "end" : 125.92,
+    "start" : 123.92,
+    "text" : " Shawty right there"
+  }, {
+    "end" : 128.92000000000002,
+    "start" : 125.92,
+    "text" : " She's got everything I need"
+  }, {
+    "end" : 131.92000000000002,
+    "start" : 128.92000000000002,
+    "text" : " And I'm gonna tell her one time"
+  }, {
+    "end" : 135.92000000000002,
+    "start" : 132.92000000000002,
+    "text" : " Give you everything you need"
+  }, {
+    "end" : 137.92000000000002,
+    "start" : 135.92000000000002,
+    "text" : " Down to my last dime"
+  }, {
+    "end" : 140.92000000000002,
+    "start" : 137.92000000000002,
+    "text" : " She makes me happy"
+  }, {
+    "end" : 143.92000000000002,
+    "start" : 140.92000000000002,
+    "text" : " I know where I'll be"
+  }, {
+    "end" : 146.92,
+    "start" : 143.92,
+    "text" : " Right by your side"
+  }, {
+    "end" : 149.92,
+    "start" : 146.92,
+    "text" : " Cause she is the one"
+  }, {
+    "end" : 151.92,
+    "start" : 149.92,
+    "text" : " And girl you're my one love"
+  }, {
+    "end" : 154.92,
+    "start" : 151.92,
+    "text" : " My one heart, my one life"
+  }, {
+    "end" : 157.92,
+    "start" : 154.92,
+    "text" : " For sure, let me tell you one time"
+  }, {
+    "end" : 159.92,
+    "start" : 157.92,
+    "text" : " Girl I love you"
+  }, {
+    "end" : 161.92,
+    "start" : 159.92,
+    "text" : " Girl I love you"
+  }, {
+    "end" : 163.92,
+    "start" : 161.92,
+    "text" : " Girl I love you"
+  }, {
+    "end" : 165.92,
+    "start" : 163.92,
+    "text" : " Girl I love you"
+  }, {
+    "end" : 167.92,
+    "start" : 165.92,
+    "text" : " Girl I love you"
+  }, {
+    "end" : 169.92,
+    "start" : 167.92,
+    "text" : " Girl I love you"
+  }, {
+    "end" : 171.92,
+    "start" : 169.92,
+    "text" : " Girl I love you"
+  }, {
+    "end" : 174.92,
+    "start" : 171.92,
+    "text" : " I'm gonna tell you one time"
+  }, {
+    "end" : 176.92,
+    "start" : 175.92,
+    "text" : " Hey, I love you"
+  }, {
+    "end" : 179.92,
+    "start" : 176.92,
+    "text" : " Tell you one time"
+  }, {
+    "end" : 183.92,
+    "start" : 179.92,
+    "text" : " Hey, I love you"
+  }, {
+    "end" : 186.92,
+    "start" : 183.92,
+    "text" : " Tell you one time"
+  }, {
+    "end" : 188.92,
+    "start" : 186.92,
+    "text" : " Hey, I love you"
+  }, {
+    "end" : 190.92,
+    "start" : 188.92,
+    "text" : " One time"
+  } ]
+}
