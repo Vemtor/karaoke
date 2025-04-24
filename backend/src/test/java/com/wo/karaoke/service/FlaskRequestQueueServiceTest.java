@@ -21,7 +21,7 @@ public class FlaskRequestQueueServiceTest {
         Map<String, Object> response = new HashMap<>();
         response.put("full_text", "Test transcription");
 
-        when(transcriptionService.processAudio(any(MultipartFile.class)))
+        when(transcriptionService.transcribe(any(MultipartFile.class)))
                 .thenReturn(response);
 
         FlaskRequestQueueService queueService = new FlaskRequestQueueService(transcriptionService);

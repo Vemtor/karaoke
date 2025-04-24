@@ -59,7 +59,7 @@ public class AudioTranscriptionServiceTest {
     }
 
     @Test
-    public void testProcessAudio_WithSaveJson() throws IOException, InterruptedException {
+    public void testTranscribe_WithSaveJson() throws IOException, InterruptedException {
 
         MockMultipartFile mockFile = getMockFile();
 
@@ -70,7 +70,7 @@ public class AudioTranscriptionServiceTest {
         when(httpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class))).thenReturn(httpResponse);
 
         // Execute service method
-        Map<String, Object> result = audioTranscriptionService.processAudio(mockFile);
+        Map<String, Object> result = audioTranscriptionService.transcribe(mockFile);
 
         // Verify results
         assertNotNull(result);
@@ -86,7 +86,7 @@ public class AudioTranscriptionServiceTest {
 
 
     @Test
-    public void processAudio_WhenServerReturnError_ShouldThrowException() throws IOException, InterruptedException {
+    public void transcribe_WhenServerReturnError_ShouldThrowException() throws IOException, InterruptedException {
         //Given
         MockMultipartFile mockFile = getMockFile();
 
@@ -96,7 +96,7 @@ public class AudioTranscriptionServiceTest {
 
         IOException exception = assertThrows(
                 IOException.class,
-                () -> audioTranscriptionService.processAudio(mockFile)
+                () -> audioTranscriptionService.transcribe(mockFile)
         );
 
         assertTrue(exception.getMessage().contains("500"));

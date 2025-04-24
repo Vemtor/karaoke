@@ -1,6 +1,7 @@
 package com.wo.karaoke.service;
 
 import com.wo.karaoke.model.AudioSplitResponse;
+import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.FileSystemResource;
 
@@ -9,9 +10,10 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@AllArgsConstructor
 public class AudioSplitterServiceTest {
 
-    private final AudioSplitterService audioService = new AudioSplitterService();
+    private final AudioSplitterService audioService;
 
     @Test
     public void splitAudio() throws IOException, InterruptedException {
