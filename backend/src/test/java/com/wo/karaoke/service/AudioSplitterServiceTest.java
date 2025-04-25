@@ -1,39 +1,78 @@
 package com.wo.karaoke.service;
 
-import com.wo.karaoke.model.AudioSplitResponse;
-import lombok.AllArgsConstructor;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.test.util.ReflectionTestUtils;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-@AllArgsConstructor
-public class AudioSplitterServiceTest {
+class AudioSplitterServiceTest {
 
-    private final AudioSplitterService audioService;
+    private FlaskRequestExecutor flaskRequestExecutor;
+    private AudioSplitterService audioSplitterService;
 
-    @Test
-    public void splitAudio() throws IOException, InterruptedException {
-        String youtubeUrl = "localhost:8080/audio/split?youtubePath=https://www.youtube.com/watch?v=uHZO0TOc5Tk";
+    private final String FLASK_SPLIT_URL = "http://localhost:5000/split";
+    private final String SONG_DIRECTORY = "src/test/resources/songs/";
 
-        AudioSplitResponse response = audioService.splitAudio(youtubeUrl);
+    @BeforeEach
+    void setUp() {
+        flaskRequestExecutor = mock(FlaskRequestExecutor.class);
+        audioSplitterService = new AudioSplitterService(flaskRequestExecutor);
 
-        assertNotNull(response);
-        assertEquals("/audio/split/uHZO0TOc5Tk/uHZO0TOc5Tk_Vocals.mp3", response.vocalsPath());
-        assertEquals("/audio/split/uHZO0TOc5Tk/uHZO0TOc5Tk_Instruments.mp3", response.instrumentsPath());
+        ReflectionTestUtils.setField(audioSplitterService, "flaskSplitUrl", FLASK_SPLIT_URL);
+        ReflectionTestUtils.setField(audioSplitterService, "songDirectory", SONG_DIRECTORY);
     }
 
     @Test
-    public void getAudio() throws IOException {
-        String directoryName = "../songs/uHZO0TOc5Tk";
-        String fileName = "uHZO0TOc5Tk_Instruments.mp3";
+    void testSplitAudio_returnsExpectedMap() throws Exception {
+        String youtubeUrl = "https://youtube.com/watch?v=test";
+        Map<String, Object> mockResponse = Map.of("vocalsPath", "/vocals.wav", "instrumentsPath", "/instruments.wav");
 
-        FileSystemResource result = audioService.getAudio(directoryName, fileName);
+        when(flaskRequestExecutor.processAudio(youtubeUrl, FLASK_SPLIT_URL)).thenReturn(mockResponse);
 
-        assertNotNull(result);
+        Map<String, Object> result = audioSplitterService.splitAudio(youtubeUrl);
+
+        assertEquals("/vocals.wav", result.get("vocalsPath"));
+        assertEquals("/instruments.wav", result.get("instrumentsPath"));
+        verify(flaskRequestExecutor).processAudio(youtubeUrl, FLASK_SPLIT_URL);
     }
 
+    @Test
+    void testGetAudio_returnsFileSystemResource_whenFileExists() throws IOException {
+        String testDir = "test-folder/";
+        String testFile = "test.wav";
+
+        File dir = new File(SONG_DIRECTORY + testDir);
+        dir.mkdirs();
+        File file = new File(dir, testFile);
+        file.createNewFile();
+
+        FileSystemResource resource = audioSplitterService.getAudio(testDir, testFile);
+
+        assertNotNull(resource);
+        assertTrue(resource.exists());
+        assertEquals(file.getAbsolutePath(), resource.getFile().getAbsolutePath());
+
+        file.delete();
+        dir.delete();
+    }
+
+    @Test
+    void testGetAudio_throwsFileNotFound_whenFileDoesNotExist() {
+        String testDir = "missing-folder/";
+        String testFile = "nonexistent.wav";
+
+        FileNotFoundException exception = assertThrows(FileNotFoundException.class, () ->
+                audioSplitterService.getAudio(testDir, testFile)
+        );
+
+        assertEquals("nonexistent.wav not found", exception.getMessage());
+    }
 }

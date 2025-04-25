@@ -1,7 +1,6 @@
 package com.wo.karaoke.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -16,10 +15,19 @@ import java.util.Map;
 
 @Slf4j
 @Service
-@AllArgsConstructor
 public class FlaskRequestExecutor {
-    private final HttpClient httpClient = HttpClient.newBuilder().build();
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final HttpClient httpClient;
+    private final ObjectMapper objectMapper;
+
+    public FlaskRequestExecutor(HttpClient httpClient, ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+        this.httpClient = httpClient;
+    }
+
+    public FlaskRequestExecutor() {
+        httpClient = HttpClient.newBuilder().build();
+        objectMapper = new ObjectMapper();
+    }
 
     public Map<String, Object> processAudio(String youtubeUrl, String serverUrl) throws IOException, InterruptedException {
         try {
@@ -33,7 +41,6 @@ public class FlaskRequestExecutor {
 
     private String sendToFlaskServer(String youtubeUrl, String serverUrl) throws IOException, InterruptedException {
         String fullUrl = serverUrl + "?youtube_url=" + URLEncoder.encode(youtubeUrl, StandardCharsets.UTF_8);
-
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(fullUrl))
@@ -49,4 +56,5 @@ public class FlaskRequestExecutor {
 
         return response.body();
     }
+
 }

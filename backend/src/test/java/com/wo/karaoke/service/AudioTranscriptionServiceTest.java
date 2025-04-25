@@ -1,148 +1,64 @@
 package com.wo.karaoke.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
-public class AudioTranscriptionServiceTest {
+class AudioTranscriptionServiceTest {
 
-    @InjectMocks
+    private final String FLASK_URL = "http://localhost:5000/transcribe";
+    private FlaskRequestExecutor flaskRequestExecutor;
     private AudioTranscriptionService audioTranscriptionService;
 
-    @Spy
-    private ObjectMapper objectMapper = new ObjectMapper();
-
-    @Mock
-    private HttpClient httpClient;
-
-    @Mock
-    private HttpResponse<String> httpResponse;
-
-    private static final String TEST_FLASK_URL = "http://localhost:8888/predict";
-    private static final String TEST_TRANSCRIPTION_FOLDER = "src/test/resources/transcriptions";
-
     @BeforeEach
-    public void setup() throws IOException {
-        ReflectionTestUtils.setField(audioTranscriptionService, "flaskServerUrl", TEST_FLASK_URL);
-        ReflectionTestUtils.setField(audioTranscriptionService, "transcriptionFolder", TEST_TRANSCRIPTION_FOLDER);
-        ReflectionTestUtils.setField(audioTranscriptionService, "httpClient", httpClient);
+    void setUp() {
+        flaskRequestExecutor = mock(FlaskRequestExecutor.class);
+        audioTranscriptionService = new AudioTranscriptionService(flaskRequestExecutor);
 
-
-        Path transcriptionDir = Paths.get(TEST_TRANSCRIPTION_FOLDER);
-        if (!Files.exists(transcriptionDir)) {
-            Files.createDirectory(transcriptionDir);
-        }
+        ReflectionTestUtils.setField(audioTranscriptionService, "flaskServerTranscriptionUrl", FLASK_URL);
     }
 
     @Test
-    public void testTranscribe_WithSaveJson() throws IOException, InterruptedException {
+    void testTranscribe_returnsExpectedMap() throws Exception {
+        String youtubeUrl = "https://youtube.com/watch?v=test";
+        Map<String, Object> mockResponse = Map.of("text", "Transcribed content");
 
-        MockMultipartFile mockFile = getMockFile();
+        when(flaskRequestExecutor.processAudio(youtubeUrl, FLASK_URL)).thenReturn(mockResponse);
 
-        // Prepare mock response
-        String mockJsonResponse = createMockJsonResponse();
-        when(httpResponse.statusCode()).thenReturn(200);
-        when(httpResponse.body()).thenReturn(mockJsonResponse);
-        when(httpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class))).thenReturn(httpResponse);
+        Map<String, Object> result = audioTranscriptionService.transcribe(youtubeUrl);
 
-        // Execute service method
-        Map<String, Object> result = audioTranscriptionService.transcribe(mockFile);
-
-        // Verify results
-        assertNotNull(result);
-        assertEquals("This is a test transcription.", result.get("full_text"));
-
-        // Verify JSON file was saved
-        File savedJson = new File(TEST_TRANSCRIPTION_FOLDER, "test-audio.json");
-        assertTrue(savedJson.exists());
-
-        // Cleanup
-        savedJson.delete();
+        assertEquals("Transcribed content", result.get("text"));
+        verify(flaskRequestExecutor, times(1)).processAudio(youtubeUrl, FLASK_URL);
     }
-
 
     @Test
-    public void transcribe_WhenServerReturnError_ShouldThrowException() throws IOException, InterruptedException {
-        //Given
-        MockMultipartFile mockFile = getMockFile();
+    void testTranscribe_throwsIOException() throws Exception {
+        String youtubeUrl = "https://youtube.com/watch?v=test";
 
-        //when & then
-        when(httpResponse.statusCode()).thenReturn(500);
-        when(httpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class))).thenReturn(httpResponse);
+        when(flaskRequestExecutor.processAudio(any(), any())).thenThrow(new IOException("Test IO exception"));
 
-        IOException exception = assertThrows(
-                IOException.class,
-                () -> audioTranscriptionService.transcribe(mockFile)
-        );
+        IOException exception = assertThrows(IOException.class, () ->
+                audioTranscriptionService.transcribe(youtubeUrl));
 
-        assertTrue(exception.getMessage().contains("500"));
-        assertTrue(exception.getMessage().contains("Flask server returned error code: 500"));
-
+        assertEquals("Test IO exception", exception.getMessage());
     }
 
+    @Test
+    void testTranscribe_throwsInterruptedException() throws Exception {
+        String youtubeUrl = "https://youtube.com/watch?v=test";
 
-    private byte[] getTestAudioBytes() {
-        return new byte[]{0x01, 0x02, 0x03, 0x04, 0x05};
+        when(flaskRequestExecutor.processAudio(any(), any())).thenThrow(new InterruptedException("Interrupted"));
+
+        InterruptedException exception = assertThrows(InterruptedException.class, () ->
+                audioTranscriptionService.transcribe(youtubeUrl));
+
+        assertEquals("Interrupted", exception.getMessage());
     }
-
-
-    private String createMockJsonResponse() throws IOException {
-        Map<String, Object> response = new HashMap<>();
-        response.put("full_text", "This is a test transcription.");
-
-        Map<String, Object> segment1 = Map.of(
-                "start", 0.0,
-                "end", 2.5,
-                "text", "This is a"
-        );
-
-
-        Map<String, Object> segment2 = Map.of(
-                "start", 2.5,
-                "end", 4.0,
-                "text", "test transcription"
-        );
-
-        response.put("segments", List.of(segment1, segment2));
-
-        return objectMapper.writeValueAsString(response);
-    }
-
-
-    private MockMultipartFile getMockFile() {
-        byte[] audioContent = getTestAudioBytes();
-        MockMultipartFile mockFile = new MockMultipartFile(
-                "file",
-                "test-audio.mp3",
-                "audio/mpeg",
-                audioContent
-        );
-        return mockFile;
-    }
-
-
 }

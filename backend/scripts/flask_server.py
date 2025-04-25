@@ -6,17 +6,16 @@ import audio_splitter
 from text_generator import *
 
 app = Flask(__name__)
+resources_path = "src/main/resources"
 
 
 def getFile(youtube_url):
-    directory_name = audio_splitter.extract_video_id(youtube_url)
-    file_name = f"songs/{directory_name}/{directory_name}.mp3"
-
+    song_id = audio_splitter.extract_video_id(youtube_url)
+    file_name = f"{resources_path}/{song_id}/{song_id}.mp3"
     if os.path.exists(file_name):
         return file_name
 
-    file_name = audio_splitter.download_audio_from_youtube_url(youtube_url, directory_name)
-
+    file_name = audio_splitter.download_audio_from_youtube_url(youtube_url, song_id)
     name_without_extension, _ = os.path.splitext(file_name)
     return audio_splitter.wavToMp3(name_without_extension)
 
@@ -50,18 +49,11 @@ def transcribe():
 @app.route('/split', methods=['POST'])
 def split():
     """API endpoint for audio transcription"""
-    yt_url = request.args.get("youtube_url")
     try:
+        yt_url = request.args.get("youtube_url")
         return audio_splitter.split(yt_url)
     except:
         return jsonify({'error': str(e)}), 500
-
-
-def clean_up(temp_dir, temp_file):
-    if os.path.exists(temp_file):
-        os.remove(temp_file)
-    if os.path.exists(temp_dir):
-        os.rmdir(temp_dir)
 
 
 # ! when server is busy spring is taking a lat of resources, polish song translation might be bad,
