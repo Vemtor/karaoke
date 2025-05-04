@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { TextInput, FlatList, Text, View, ActivityIndicator } from "react-native";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
-import { IconSymbol } from "@/components/ui/IconSymbol";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { SearchedVideo } from "@/KaraokeApp/searchedVideo";
+import { mapToSearchedVideo } from "@/KaraokeApp/mapToSearchedVideo";
 
 export default function SearchScreen() {
   const [searchValue, setSearchValue] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [results, setResults] = useState<string[]>([]);
+  const [videos, setVideos] = useState<SearchedVideo[]>([]);
   const [loading, setLoading] = useState(false);
 
 
@@ -17,7 +17,7 @@ export default function SearchScreen() {
       if (searchValue.length > 2) {
         setDebouncedSearch(searchValue);
       }
-    }, 300);
+    }, 500);
     return () => clearTimeout(timeout);
   }, [searchValue]);
 
@@ -26,11 +26,14 @@ export default function SearchScreen() {
     if (!debouncedSearch) return;
 
     const fetchData = async () => {
+      setVideos([]);
       setLoading(true);
       try {
-        const res = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=Tamagotchi&type=video&maxResults=10&key=AIzaSyAcyaA3htasw-LLJQwBJvZzCbM2o6stE4s`);
+        const res = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${debouncedSearch}&type=video&maxResults=10&key=AIzaSyAcyaA3htasw-LLJQwBJvZzCbM2o6stE4s`);
         const data = await res.json();
-        setResults(data.results || []);
+        const videos: SearchedVideo[] = mapToSearchedVideo(data);
+        setVideos(videos || []);
+        console.log("Wyniki wyszukiwania:", videos);
       } catch (err) {
         console.error("Błąd podczas wyszukiwania:", err);
       } finally {
@@ -42,16 +45,7 @@ export default function SearchScreen() {
   }, [debouncedSearch]);
 
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: "#D0D0D0", dark: "#353636" }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-        />
-      }
-    >
+    <View style={{ flex: 1, marginTop: 50 }}>
       <TextInput
         style={{
           height: 40,
@@ -69,17 +63,18 @@ export default function SearchScreen() {
         <ThemedText type="title">Search</ThemedText>
 
         {loading && <ActivityIndicator size="small" color="#555" style={{ marginVertical: 10 }} />}
-
         <FlatList
-          data={results}
-          keyExtractor={(item, index) => index.toString()}
+          data={videos}
+          keyExtractor={(video) => video.id}
           renderItem={({ item }) => (
-            <View style={{ padding: 10 }}>
-              <Text>{item}</Text>
+            <View style={{ padding: 10, margin: 1, borderWidth: 1, borderBottomColor: "#ccc" }}>
+              <Text>{item.title}</Text>
+              <Text>{item.description}</Text>
             </View>
           )}
+          ListEmptyComponent={<Text>No results found</Text>}
         />
       </ThemedView>
-    </ParallaxScrollView>
+    </View>
   );
 }
