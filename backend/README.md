@@ -14,6 +14,10 @@ directory (https://github.com/tsurumeso/vocal-remover/releases/download/v5.1.1/v
 
 ![images/vocal-remover-position.png](images/vocal-remover-position.png)
 
+# Launch the servers
+1) run `python3 scripts/flask_server.py`
+2) run Spring app from your IDE
+
 # Usage
 ## Song transcription
 ```

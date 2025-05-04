@@ -15,11 +15,10 @@ import static org.mockito.Mockito.*;
 
 class AudioSplitterServiceTest {
 
-    private FlaskRequestExecutor flaskRequestExecutor;
-    private AudioSplitterService audioSplitterService;
-
     private final String FLASK_SPLIT_URL = "http://localhost:5000/split";
     private final String SONG_DIRECTORY = "src/test/resources/songs/";
+    private FlaskRequestExecutor flaskRequestExecutor;
+    private AudioSplitterService audioSplitterService;
 
     @BeforeEach
     void setUp() {
