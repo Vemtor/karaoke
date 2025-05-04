@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { TextInput, FlatList, Text, View, ActivityIndicator } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { SearchedVideo } from "@/KaraokeApp/searchedVideo";
-import { mapToSearchedVideo } from "@/KaraokeApp/mapToSearchedVideo";
+import { SearchedVideo } from "@/KaraokeApp/searchEngine/searchedVideo";
+import { mapToSearchedVideo } from "@/KaraokeApp/searchEngine/mapToSearchedVideo";
 
 export default function SearchScreen() {
   const [searchValue, setSearchValue] = useState("");
