@@ -9,5 +9,4 @@ class KaraokeBackendApplicationTests {
     @Test
     void contextLoads() {
     }
-
 }
