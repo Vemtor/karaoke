@@ -79,15 +79,8 @@ To get the desired splitted audio files, use the GET endpoint:
 ```
 curl -X GET \
     http://localhost:8080/{pathFromPreviousPostRequest}
-```
+```   
 
-## Code Formatting and Linting
-
-### Java - Spotless
-
-This project uses Spotless to enforce consistent code formatting in Java files
-
-### Check formatting
 Example:
 ```
 curl -X GET \
@@ -96,6 +89,13 @@ curl -X GET \
 Response, example when running in Postman:   
 ![images/get_splitted.png](images/get_splitted.png)
 
+## Code Formatting and Linting
+
+### Java - Spotless
+
+This project uses Spotless to enforce consistent code formatting in Java files
+
+### Check formatting
 To verify if your java code is properly formatted:
 
 ```bash
@@ -123,7 +123,7 @@ This project uses Ruff as fast Python linter and formatter
 Make sure all dependencies are installed (including Ruff):
 
 ```bash
-pip install -r requirements.txt
+pip install -r linter_requirements.txt
 ```
 
 ### Check for linting issues

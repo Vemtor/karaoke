@@ -1,9 +1,11 @@
 import logging
+
 import torch
 import whisper
-from typing import Dict
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 
@@ -36,7 +38,7 @@ class WhisperService:
         logger.info(f"Detected language: {detected_lang}")
         return detected_lang
 
-    def transcribe(self, file_path: str) -> Dict:
+    def transcribe(self, file_path: str) -> dict:
         audio = whisper.load_audio(file_path)
         audio_tensor = torch.from_numpy(whisper.pad_or_trim(audio)).float()
 
@@ -48,22 +50,21 @@ class WhisperService:
         options = {
             "task": "transcribe",
             "language": language,
-            "fp16": torch.cuda.is_available()
+            "fp16": torch.cuda.is_available(),
         }
 
         result = selected_model.transcribe(file_path, **options)
 
-        response = {
-            'full_text': result['text'],
-            'segments': []
-        }
+        response = {"full_text": result["text"], "segments": []}
 
-        for segment in result['segments']:
-            response['segments'].append({
-                'end': round(segment['end'], 2),
-                'start': round(segment['start'], 2),
-                'text': segment['text']
-            })
+        for segment in result["segments"]:
+            response["segments"].append(
+                {
+                    "end": round(segment["end"], 2),
+                    "start": round(segment["start"], 2),
+                    "text": segment["text"],
+                }
+            )
 
         return response
 
