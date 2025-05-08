@@ -9,8 +9,8 @@ import {
   SafeAreaView,
   Image,
 } from 'react-native';
-import { SearchedVideo } from '@/KaraokeApp/searchEngine/searchedVideo';
-import { mapToSearchedVideo } from '@/KaraokeApp/searchEngine/mapToSearchedVideo';
+import { SearchedVideo } from '@/components/utils/searchEngine/searchedVideo';
+import { mapToSearchedVideo } from '@/components/utils/searchEngine/mapToSearchedVideo';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function SearchScreen() {
