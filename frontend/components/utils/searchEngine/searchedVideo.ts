@@ -4,6 +4,9 @@ export class SearchedVideo {
   description: string;
   thumbnailUrl: string;
   channelTitle: string;
+  videoUrl: string;
+  rawDuration?: string;
+  formattedDuration?: string;
 
   constructor(
     id: string,
@@ -17,5 +20,6 @@ export class SearchedVideo {
     this.description = description;
     this.thumbnailUrl = thumbnailUrl;
     this.channelTitle = channelTitle;
+    this.videoUrl = `https://www.youtube.com/watch?v=${id}`;
   }
 }

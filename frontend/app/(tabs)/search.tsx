@@ -8,10 +8,13 @@ import {
   StyleSheet,
   SafeAreaView,
   Image,
+  TouchableOpacity,
 } from 'react-native';
-import { SearchedVideo } from '@/components/utils/searchEngine/searchedVideo';
-import { mapToSearchedVideo } from '@/components/utils/searchEngine/mapToSearchedVideo';
+import {SearchedVideo} from "@/components/utils/searchEngine/searchedVideo";
+import {mapToSearchedVideo} from "@/components/utils/searchEngine/mapToSearchedVideo";
 import { Ionicons } from '@expo/vector-icons';
+import { parseISO8601Duration} from "@/components/utils/searchEngine/durationParser";
+
 
 export default function SearchScreen() {
   const apiKey = process.env.EXPO_PUBLIC_SEARCH_APP_API_KEY;
@@ -38,7 +41,31 @@ export default function SearchScreen() {
     placeholder: '#999999',
     listItemSeparator: '#161616',
     icon: '#FFFFFF',
+    durationText: 'rgba(235, 235, 245, 0.6)',
   };
+
+  const fetchVideoDetails = async (videoIds: string[]): Promise<Map<string, string>> => {
+    if (videoIds.length === 0) {
+      return new Map();
+    }
+    const idsString = videoIds.join(',');
+    const res = await fetch(
+        `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${idsString}&key=${apiKey}`
+    );
+    if (!res.ok) {
+      console.error(`HTTP error! status: ${res.status} while fetching video details for IDs: ${idsString}`);
+      return new Map();
+    }
+    const data = await res.json();
+    const durationsMap = new Map<string, string>();
+    data.items?.forEach((item: any) => {
+      if (item.id && item.contentDetails?.duration) {
+        durationsMap.set(item.id, item.contentDetails.duration);
+      }
+    });
+    return durationsMap;
+  };
+
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -60,22 +87,36 @@ export default function SearchScreen() {
       return;
     }
 
-    const fetchInitialData = async () => {
+    const fetchInitialDataAndDetails = async () => {
       setLoading(true);
       setVideos([]);
       setNextPageToken(null);
       try {
-        const res = await fetch(
+        const searchRes = await fetch(
             `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${debouncedSearch}&type=video&videoEmbeddable=true&maxResults=10&key=${apiKey}`
         );
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
+        if (!searchRes.ok) {
+          throw new Error(`Search API HTTP error! status: ${searchRes.status}`);
         }
-        const data = await res.json();
-        const mappedVideos: SearchedVideo[] = mapToSearchedVideo(data);
-        setVideos(mappedVideos || []);
-        setNextPageToken(data.nextPageToken || null);
+        const searchData = await searchRes.json();
+
+        let mappedInitialVideos: SearchedVideo[] = mapToSearchedVideo(searchData);
+
+        const videoIds = mappedInitialVideos.map(v => v.id).filter(id => id); // Upewnij się, że ID istnieją
+        if (videoIds.length > 0) {
+          const durationsMap = await fetchVideoDetails(videoIds);
+          mappedInitialVideos = mappedInitialVideos.map(video => {
+            const rawDur = durationsMap.get(video.id);
+            video.rawDuration = rawDur;
+            video.formattedDuration = parseISO8601Duration(rawDur);
+            return video;
+          });
+        }
+
+        setVideos(mappedInitialVideos);
+        setNextPageToken(searchData.nextPageToken || null);
       } catch (err) {
+        console.error('Error in fetchInitialDataAndDetails:', err);
         setVideos([]);
         setNextPageToken(null);
       } finally {
@@ -83,7 +124,7 @@ export default function SearchScreen() {
       }
     };
 
-    fetchInitialData();
+    fetchInitialDataAndDetails();
   }, [debouncedSearch]);
 
   const handleLoadMore = async () => {
@@ -92,18 +133,31 @@ export default function SearchScreen() {
     }
     setLoadingMore(true);
     try {
-      const res = await fetch(
+      const searchRes = await fetch(
           `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${debouncedSearch}&type=video&videoEmbeddable=true&maxResults=10&key=${apiKey}&pageToken=${nextPageToken}`
       );
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
+      if (!searchRes.ok) {
+        throw new Error(`Search API (load more) HTTP error! status: ${searchRes.status}`);
       }
-      const data = await res.json();
-      const newVideos: SearchedVideo[] = mapToSearchedVideo(data);
-      setVideos(prevVideos => [...prevVideos, ...newVideos]);
-      setNextPageToken(data.nextPageToken || null);
+      const searchData = await searchRes.json();
+
+      let newMappedVideos: SearchedVideo[] = mapToSearchedVideo(searchData);
+
+      const videoIds = newMappedVideos.map(v => v.id).filter(id => id);
+      if (videoIds.length > 0) {
+        const durationsMap = await fetchVideoDetails(videoIds);
+        newMappedVideos = newMappedVideos.map(video => {
+          const rawDur = durationsMap.get(video.id);
+          video.rawDuration = rawDur;
+          video.formattedDuration = parseISO8601Duration(rawDur);
+          return video;
+        });
+      }
+
+      setVideos(prevVideos => [...prevVideos, ...newMappedVideos]);
+      setNextPageToken(searchData.nextPageToken || null);
     } catch (err) {
-      console.error('Error while loading more videos', err);
+      console.error('Error in handleLoadMore:', err);
     } finally {
       setLoadingMore(false);
     }
@@ -136,10 +190,9 @@ export default function SearchScreen() {
       paddingLeft: 8,
     },
     searchIcon: {
-      color: colors.inputIconLight
+      color: colors.inputIconLight,
     },
-    listContainer: {
-      flex: 1,
+    listContainerFlatList: {
       paddingHorizontal: 15,
     },
     listItem: {
@@ -170,6 +223,11 @@ export default function SearchScreen() {
     descriptionText: {
       fontSize: 14,
       color: colors.text,
+      marginBottom: 4,
+    },
+    durationText: {
+      fontSize: 12,
+      color: colors.durationText,
     },
     listEmptyText: {
       textAlign: 'center',
@@ -177,7 +235,7 @@ export default function SearchScreen() {
       color: colors.text,
       fontSize: 16,
     },
-    activityIndicator: {
+    activityIndicatorContainer: {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
@@ -197,7 +255,15 @@ export default function SearchScreen() {
   };
 
   const renderVideoItem = ({ item }: { item: SearchedVideo }) => (
-      <View style={styles.listItem}>
+      <TouchableOpacity style={styles.listItem}
+                        onPress={() => {
+                          console.log('Item clicked:', item.title);
+                          console.log('Video URL:', item.videoUrl);
+                          console.log('Raw Duration:', item.rawDuration);
+                          console.log('Formatted Duration:', item.formattedDuration);
+                        }}
+                        activeOpacity={0.7}
+      >
         {item.thumbnailUrl && (
             <Image
                 source={{ uri: item.thumbnailUrl }}
@@ -207,8 +273,9 @@ export default function SearchScreen() {
         <View style={styles.textContainer}>
           <Text style={styles.titleText} numberOfLines={2} ellipsizeMode="tail">{item.title}</Text>
           <Text style={styles.descriptionText} numberOfLines={1} ellipsizeMode="tail">{item.description}</Text>
+          <Text style={styles.durationText} numberOfLines={1}>{item.formattedDuration}</Text>
         </View>
-      </View>
+      </TouchableOpacity>
   );
 
   return (
@@ -241,12 +308,12 @@ export default function SearchScreen() {
           </View>
 
           {loading && videos.length === 0 ? (
-              <View style={styles.activityIndicator}>
+              <View style={styles.activityIndicatorContainer}>
                 <ActivityIndicator size="large" color={colors.activityIndicator} />
               </View>
           ) : (
               <FlatList
-                  contentContainerStyle={styles.listContainer}
+                  contentContainerStyle={styles.listContainerFlatList}
                   data={videos}
                   keyExtractor={(video) => video.id}
                   renderItem={renderVideoItem}
