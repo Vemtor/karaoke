@@ -41,37 +41,37 @@ export default function TabLayout() {
             borderTopWidth: 0,
           },
         }),
-<<<<<<< HEAD
-      }}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: "Home",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="house.fill" color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: "Explore",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="paperplane.fill" color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name='search'
-        options={{
-          title: 'Search',
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="paperplane.fill" color={color} />
-          ),
-        }}
-      />
-=======
+// <<<<<<< HEAD
+//       }}
+//     >
+//       <Tabs.Screen
+//         name="index"
+//         options={{
+//           title: "Home",
+//           tabBarIcon: ({ color }) => (
+//             <IconSymbol size={28} name="house.fill" color={color} />
+//           ),
+//         }}
+//       />
+//       <Tabs.Screen
+//         name="explore"
+//         options={{
+//           title: "Explore",
+//           tabBarIcon: ({ color }) => (
+//             <IconSymbol size={28} name="paperplane.fill" color={color} />
+//           ),
+//         }}
+//       />
+//       <Tabs.Screen
+//         name='search'
+//         options={{
+//           title: 'Search',
+//           tabBarIcon: ({ color }) => (
+//             <IconSymbol size={28} name="paperplane.fill" color={color} />
+//           ),
+//         }}
+//       />
+// =======
       }}>
       {TABS.map(({ name, icon }) => (
         <Tabs.Screen
@@ -82,7 +82,6 @@ export default function TabLayout() {
           }}
         />
       ))}
->>>>>>> origin/develop
     </Tabs>
   );
 }

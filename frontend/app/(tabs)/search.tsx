@@ -1,34 +1,43 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import {
   TextInput,
   FlatList,
   Text,
   View,
   ActivityIndicator,
-  useColorScheme,
   StyleSheet,
+  SafeAreaView,
+  Image,
 } from 'react-native';
-import { ThemedText } from '@/components/ThemedText';
 import { SearchedVideo } from '@/KaraokeApp/searchEngine/searchedVideo';
 import { mapToSearchedVideo } from '@/KaraokeApp/searchEngine/mapToSearchedVideo';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function SearchScreen() {
+  const apiKey = process.env.EXPO_PUBLIC_SEARCH_APP_API_KEY;
+
   const [searchValue, setSearchValue] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [videos, setVideos] = useState<SearchedVideo[]>([]);
   const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [nextPageToken, setNextPageToken] = useState<string | null>(null);
 
-  const colorScheme = useColorScheme();
-  const isDarkMode = colorScheme === 'dark';
+  const isDarkMode = true;
 
   const colors = {
-    background: isDarkMode ? '#121212' : '#FFFFFF',
-    text: isDarkMode ? '#FFFFFF' : '#000000',
-    border: isDarkMode ? '#444444' : '#CCCCCC',
-    placeholder: isDarkMode ? '#AAAAAA' : '#888888',
-    inputBackground: isDarkMode ? '#333333' : '#FFFFFF',
-    listItemSeparator: isDarkMode ? '#333333' : '#EEEEEE',
-    activityIndicator: isDarkMode ? '#FFFFFF' : '#555555',
+    background: '#161616',
+    text: '#FFFFFF',
+    border: '#555555',
+    inputBackgroundLight: '#FFFFFF',
+    inputTextLight: '#000000',
+    inputPlaceholderLight: '#8A8A8F',
+    inputIconLight: '#3C3C43',
+    listItemBackground: '#2C2C2E',
+    activityIndicator: '#FFFFFF',
+    placeholder: '#999999',
+    listItemSeparator: '#161616',
+    icon: '#FFFFFF',
   };
 
   useEffect(() => {
@@ -38,6 +47,7 @@ export default function SearchScreen() {
       } else if (searchValue.length <= 2) {
         setDebouncedSearch('');
         setVideos([]);
+        setNextPageToken(null);
       }
     }, 500);
     return () => clearTimeout(timeout);
@@ -46,16 +56,17 @@ export default function SearchScreen() {
   useEffect(() => {
     if (!debouncedSearch) {
       setVideos([]);
+      setNextPageToken(null);
       return;
     }
 
-    const fetchData = async () => {
-      setVideos([]);
+    const fetchInitialData = async () => {
       setLoading(true);
+      setVideos([]);
+      setNextPageToken(null);
       try {
-        const apiKey = 'AIzaSyAcyaA3htasw-LLJQwBJvZzCbM2o6stE4s';
         const res = await fetch(
-          `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${debouncedSearch}&type=video&videoEmbeddable=true&maxResults=10&key=${apiKey}`
+            `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${debouncedSearch}&type=video&videoEmbeddable=true&maxResults=10&key=${apiKey}`
         );
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
@@ -63,132 +74,197 @@ export default function SearchScreen() {
         const data = await res.json();
         const mappedVideos: SearchedVideo[] = mapToSearchedVideo(data);
         setVideos(mappedVideos || []);
-        console.log('Search result:', mappedVideos);
+        setNextPageToken(data.nextPageToken || null);
       } catch (err) {
-        console.error('Error while searching', err);
+        setVideos([]);
+        setNextPageToken(null);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchData();
+    fetchInitialData();
   }, [debouncedSearch]);
 
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      paddingTop: 50,
-      backgroundColor: colors.background,
+  const handleLoadMore = async () => {
+    if (!nextPageToken || loadingMore || loading) {
+      return;
+    }
+    setLoadingMore(true);
+    try {
+      const res = await fetch(
+          `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${debouncedSearch}&type=video&videoEmbeddable=true&maxResults=10&key=${apiKey}&pageToken=${nextPageToken}`
+      );
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+      const data = await res.json();
+      const newVideos: SearchedVideo[] = mapToSearchedVideo(data);
+      setVideos(prevVideos => [...prevVideos, ...newVideos]);
+      setNextPageToken(data.nextPageToken || null);
+    } catch (err) {
+      console.error('Error while loading more videos', err);
+    } finally {
+      setLoadingMore(false);
+    }
+  };
+
+  const styles = useMemo(() => StyleSheet.create({
+    mainText: {
+      textAlign: 'center',
+      fontSize: 22,
+      fontWeight: '600',
+      color: colors.text,
+      marginVertical: 15,
+    },
+    inputContainer: {
+      marginTop: 20,
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: colors.inputBackgroundLight,
+      borderRadius: 10,
+      marginHorizontal: 15,
+      marginBottom: 20,
+      paddingHorizontal: 10,
+      height: 48,
     },
     textInput: {
-      height: 40,
-      borderColor: colors.border,
-      borderWidth: 1,
-      borderRadius: 5,
-      paddingHorizontal: 10,
-      marginHorizontal: 20,
-      marginBottom: 10,
-      color: colors.text,
-      backgroundColor: colors.inputBackground,
+      flex: 1,
+      height: '100%',
+      color: colors.inputTextLight,
+      fontSize: 17,
+      paddingLeft: 8,
+    },
+    searchIcon: {
+      color: colors.inputIconLight
     },
     listContainer: {
-        flex: 1,
-        paddingHorizontal: 10,
+      flex: 1,
+      paddingHorizontal: 15,
     },
     listItem: {
-      paddingVertical: 12,
-      paddingHorizontal: 10,
-      borderBottomWidth: 1,
-      borderBottomColor: colors.listItemSeparator,
+      flexDirection: 'row',
+      backgroundColor: colors.listItemBackground,
+      borderRadius: 10,
+      padding: 12,
+      marginBottom: 12,
+      alignItems: 'center',
+    },
+    thumbnail: {
+      width: 80,
+      height: 80,
+      marginRight: 12,
+      borderRadius: 6,
+      backgroundColor: '#555',
+    },
+    textContainer: {
+      flex: 1,
+      justifyContent: 'center',
+    },
+    titleText: {
+      fontSize: 16,
+      fontWeight: '600',
+      color: colors.text,
+      marginBottom: 3,
+    },
+    descriptionText: {
+      fontSize: 14,
+      color: colors.text,
     },
     listEmptyText: {
       textAlign: 'center',
-      marginTop: 20,
+      marginTop: 50,
       color: colors.text,
       fontSize: 16,
     },
     activityIndicator: {
-      marginVertical: 20,
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
-     titleText: {
-        fontSize: 18,
-        fontWeight: 'bold',
-     },
-     descriptionText: {
-        fontSize: 14,
-        marginTop: 4,
-     }
-  });
+    footerActivityIndicator: {
+      paddingVertical: 20,
+    },
+  }), [isDarkMode]);
+
+  const renderFooter = () => {
+    if (!loadingMore) return null;
+    return (
+        <View style={styles.footerActivityIndicator}>
+          <ActivityIndicator size="small" color={colors.activityIndicator} />
+        </View>
+    );
+  };
+
+  const renderVideoItem = ({ item }: { item: SearchedVideo }) => (
+      <View style={styles.listItem}>
+        {item.thumbnailUrl && (
+            <Image
+                source={{ uri: item.thumbnailUrl }}
+                style={styles.thumbnail}
+            />
+        )}
+        <View style={styles.textContainer}>
+          <Text style={styles.titleText} numberOfLines={2} ellipsizeMode="tail">{item.title}</Text>
+          <Text style={styles.descriptionText} numberOfLines={1} ellipsizeMode="tail">{item.description}</Text>
+        </View>
+      </View>
+  );
 
   return (
-    <View style={styles.container}>
-      <TextInput
-        style={styles.textInput}
-        placeholder="Enter song title here."
-        placeholderTextColor={colors.placeholder}
-        onChangeText={setSearchValue}
-        value={searchValue}
-        clearButtonMode="while-editing"
-        autoCapitalize="none"
-        autoCorrect={false}
-      />
+      <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+        <View style={{ flex: 1 }}>
 
-      <View style={styles.listContainer}>
-        {loading && (
-          <ActivityIndicator
-             size="large"
-             color={colors.activityIndicator}
-             style={styles.activityIndicator}
-           />
-        )}
-        <FlatList
-          data={videos}
-          keyExtractor={(video) => video.id}
-          renderItem={({ item }) => (
-            <View style={styles.listItem}>
-              <ThemedText style={styles.titleText} numberOfLines={1} ellipsizeMode="tail">{item.title}</ThemedText>
-              <ThemedText style={styles.descriptionText} numberOfLines={2} ellipsizeMode="tail">{item.description}</ThemedText>
-            </View>
+          <View style={styles.inputContainer}>
+            <Ionicons
+                name="search"
+                size={20}
+                color={colors.inputIconLight}
+                style={{ marginRight: 6 }}
+            />
+            <TextInput
+                style={styles.textInput}
+                placeholder="Search"
+                placeholderTextColor={colors.inputPlaceholderLight}
+                onChangeText={setSearchValue}
+                value={searchValue}
+                clearButtonMode="while-editing"
+                autoCapitalize="none"
+                autoCorrect={false}
+                returnKeyType="search"
+                onSubmitEditing={() => {
+                  if (searchValue.length > 2) {
+                    setDebouncedSearch(searchValue);
+                  }
+                }}
+            />
+          </View>
+
+          {loading && videos.length === 0 ? (
+              <View style={styles.activityIndicator}>
+                <ActivityIndicator size="large" color={colors.activityIndicator} />
+              </View>
+          ) : (
+              <FlatList
+                  contentContainerStyle={styles.listContainer}
+                  data={videos}
+                  keyExtractor={(video) => video.id}
+                  renderItem={renderVideoItem}
+                  ListEmptyComponent={
+                    !loading && !loadingMore && debouncedSearch && videos.length === 0 ? (
+                        <Text style={styles.listEmptyText}>No results for "{debouncedSearch}"</Text>
+                    ) : null
+                  }
+                  initialNumToRender={10}
+                  maxToRenderPerBatch={10}
+                  windowSize={10}
+                  onEndReached={handleLoadMore}
+                  onEndReachedThreshold={0.7}
+                  ListFooterComponent={renderFooter}
+                  keyboardShouldPersistTaps="handled"
+              />
           )}
-          ListEmptyComponent={
-            !loading && debouncedSearch ? (
-                 <Text style={styles.listEmptyText}>No results for "{debouncedSearch}"</Text>
-            ) : null
-          }
-          initialNumToRender={10}
-          maxToRenderPerBatch={10}
-          windowSize={10}
-        />
-      </View>
-    </View>
+        </View>
+      </SafeAreaView>
   );
 }
-// import React from 'react';
-// import global from '@/styles/global';
-// import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
-
-// const HomeScreen = () => {
-//   return (
-//     <SafeAreaView style={global['safe-area-container']}>
-//       <View style={styles.container}>
-//         <Text style={styles.text}>Search</Text>
-//       </View>
-//     </SafeAreaView>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   text: {
-//     color: '#FFFFFF',
-//     fontSize: 24,
-//     fontWeight: 'bold',
-//   },
-// });
-
-// export default HomeScreen;
-// >>>>>>> origin/develop

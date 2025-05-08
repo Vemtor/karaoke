@@ -9,8 +9,7 @@ export const mapToSearchedVideo = (data: YouTubeSearchItem): SearchedVideo[] => 
         item.snippet.title,
         item.snippet.description,
         item.snippet.thumbnails.medium.url,
-        item.snippet.channelTitle,
-        item.snippet.publishedAt
+        item.snippet.channelTitle
       )
   )
 }
