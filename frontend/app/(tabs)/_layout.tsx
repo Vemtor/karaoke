@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { Platform } from 'react-native';
 import { Tabs } from 'expo-router';
-import { House, Search, List, Bookmark, LucideIcon } from 'lucide-react-native';
+import { House, Search, List, Bookmark, LucideIcon, MicVocal } from 'lucide-react-native';
 import { BottomNavTabNameEnum, BottomNavTabName } from '@/types/bottom-nav-tab-enum';
 import BottomNavTab, { BottomNavTabProps } from '@/components/tabs/BottomNavTab';
 
@@ -10,6 +10,7 @@ const TABS: { name: BottomNavTabName; icon: LucideIcon }[] = [
   { name: BottomNavTabNameEnum.SEARCH, icon: Search },
   { name: BottomNavTabNameEnum.QUEUE, icon: List },
   { name: BottomNavTabNameEnum.DOWNLOADS, icon: Bookmark },
+  { name: BottomNavTabNameEnum.KARAOKE, icon: MicVocal },
 ];
 
 export default function TabLayout() {

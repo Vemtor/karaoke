@@ -4,6 +4,7 @@ export enum BottomNavTabNameEnum {
   SEARCH = 'search',
   QUEUE = 'queue',
   DOWNLOADS = 'downloads',
+  KARAOKE = 'karaoke',
 }
 
 export type BottomNavTabName = BottomNavTabNameEnum;
