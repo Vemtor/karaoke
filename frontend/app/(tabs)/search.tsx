@@ -14,6 +14,7 @@ import {SearchedVideo} from "@/components/utils/searchEngine/searchedVideo";
 import {mapToSearchedVideo} from "@/components/utils/searchEngine/mapToSearchedVideo";
 import { Ionicons } from '@expo/vector-icons';
 import { parseISO8601Duration} from "@/components/utils/searchEngine/durationParser";
+import colors from "@/constants/colors";
 
 
 export default function SearchScreen() {
@@ -26,23 +27,9 @@ export default function SearchScreen() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [nextPageToken, setNextPageToken] = useState<string | null>(null);
 
-  const isDarkMode = true;
 
-  const colors = {
-    background: '#161616',
-    text: '#FFFFFF',
-    border: '#555555',
-    inputBackgroundLight: '#FFFFFF',
-    inputTextLight: '#000000',
-    inputPlaceholderLight: '#8A8A8F',
-    inputIconLight: '#3C3C43',
-    listItemBackground: '#2C2C2E',
-    activityIndicator: '#FFFFFF',
-    placeholder: '#999999',
-    listItemSeparator: '#161616',
-    icon: '#FFFFFF',
-    durationText: 'rgba(235, 235, 245, 0.6)',
-  };
+
+
 
   const fetchVideoDetails = async (videoIds: string[]): Promise<Map<string, string>> => {
     if (videoIds.length === 0) {
@@ -102,7 +89,7 @@ export default function SearchScreen() {
 
         let mappedInitialVideos: SearchedVideo[] = mapToSearchedVideo(searchData);
 
-        const videoIds = mappedInitialVideos.map(v => v.id).filter(id => id); // Upewnij się, że ID istnieją
+        const videoIds = mappedInitialVideos.map(v => v.id).filter(id => id);
         if (videoIds.length > 0) {
           const durationsMap = await fetchVideoDetails(videoIds);
           mappedInitialVideos = mappedInitialVideos.map(video => {
@@ -162,88 +149,6 @@ export default function SearchScreen() {
       setLoadingMore(false);
     }
   };
-
-  const styles = useMemo(() => StyleSheet.create({
-    mainText: {
-      textAlign: 'center',
-      fontSize: 22,
-      fontWeight: '600',
-      color: colors.text,
-      marginVertical: 15,
-    },
-    inputContainer: {
-      marginTop: 20,
-      flexDirection: 'row',
-      alignItems: 'center',
-      backgroundColor: colors.inputBackgroundLight,
-      borderRadius: 10,
-      marginHorizontal: 15,
-      marginBottom: 20,
-      paddingHorizontal: 10,
-      height: 48,
-    },
-    textInput: {
-      flex: 1,
-      height: '100%',
-      color: colors.inputTextLight,
-      fontSize: 17,
-      paddingLeft: 8,
-    },
-    searchIcon: {
-      color: colors.inputIconLight,
-    },
-    listContainerFlatList: {
-      paddingHorizontal: 15,
-    },
-    listItem: {
-      flexDirection: 'row',
-      backgroundColor: colors.listItemBackground,
-      borderRadius: 10,
-      padding: 12,
-      marginBottom: 12,
-      alignItems: 'center',
-    },
-    thumbnail: {
-      width: 80,
-      height: 80,
-      marginRight: 12,
-      borderRadius: 6,
-      backgroundColor: '#555',
-    },
-    textContainer: {
-      flex: 1,
-      justifyContent: 'center',
-    },
-    titleText: {
-      fontSize: 16,
-      fontWeight: '600',
-      color: colors.text,
-      marginBottom: 3,
-    },
-    descriptionText: {
-      fontSize: 14,
-      color: colors.text,
-      marginBottom: 4,
-    },
-    durationText: {
-      fontSize: 12,
-      color: colors.durationText,
-    },
-    listEmptyText: {
-      textAlign: 'center',
-      marginTop: 50,
-      color: colors.text,
-      fontSize: 16,
-    },
-    activityIndicatorContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    footerActivityIndicator: {
-      paddingVertical: 20,
-    },
-  }), [isDarkMode]);
 
   const renderFooter = () => {
     if (!loadingMore) return null;
@@ -335,3 +240,87 @@ export default function SearchScreen() {
       </SafeAreaView>
   );
 }
+
+
+const isDarkMode = true;
+const styles = useMemo(() => StyleSheet.create({
+  mainText: {
+    textAlign: 'center',
+    fontSize: 22,
+    fontWeight: '600',
+    color: colors.text,
+    marginVertical: 15,
+  },
+  inputContainer: {
+    marginTop: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.inputBackgroundLight,
+    borderRadius: 10,
+    marginHorizontal: 15,
+    marginBottom: 20,
+    paddingHorizontal: 10,
+    height: 48,
+  },
+  textInput: {
+    flex: 1,
+    height: '100%',
+    color: colors.inputTextLight,
+    fontSize: 17,
+    paddingLeft: 8,
+  },
+  searchIcon: {
+    color: colors.inputIconLight,
+  },
+  listContainerFlatList: {
+    paddingHorizontal: 15,
+  },
+  listItem: {
+    flexDirection: 'row',
+    backgroundColor: colors.listItemBackground,
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 12,
+    alignItems: 'center',
+  },
+  thumbnail: {
+    width: 80,
+    height: 80,
+    marginRight: 12,
+    borderRadius: 6,
+    backgroundColor: '#555',
+  },
+  textContainer: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  titleText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.text,
+    marginBottom: 3,
+  },
+  descriptionText: {
+    fontSize: 14,
+    color: colors.text,
+    marginBottom: 4,
+  },
+  durationText: {
+    fontSize: 12,
+    color: colors.durationText,
+  },
+  listEmptyText: {
+    textAlign: 'center',
+    marginTop: 50,
+    color: colors.text,
+    fontSize: 16,
+  },
+  activityIndicatorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  footerActivityIndicator: {
+    paddingVertical: 20,
+  },
+}), [isDarkMode]);
