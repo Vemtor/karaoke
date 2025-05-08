@@ -10,12 +10,14 @@ module.exports = {
       jsx: true,
     },
   },
-  extends: [
-    'expo',
-    'prettier',
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-  ],
+  settings: {
+    'import/resolver': {
+      typescript: {
+        project: './tsconfig.json',
+      },
+    },
+  },
+  extends: ['expo', 'prettier', 'eslint:recommended', 'plugin:@typescript-eslint/recommended'],
   plugins: ['prettier', '@typescript-eslint'],
   rules: {
     'prettier/prettier': 'error',
