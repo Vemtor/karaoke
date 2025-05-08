@@ -1,4 +1,4 @@
-import { FlatList, View, StyleSheet } from 'react-native';
+import { FlatList, StyleSheet } from 'react-native';
 import { ImageTileProps } from '../tiles/types/image-tile';
 
 interface TileGridProps<T> {

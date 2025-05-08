@@ -1,12 +1,12 @@
 import React, { useRef, useEffect } from 'react';
-import { GestureResponderEvent, Platform, View, Animated } from 'react-native';
+import { GestureResponderEvent, Platform, Animated } from 'react-native';
 import { BottomTabBarButtonProps } from '@react-navigation/bottom-tabs';
 import { PlatformPressable } from '@react-navigation/elements';
 import * as Haptics from 'expo-haptics';
 import Colors from '@/constants/colors';
 import { LucideIcon } from 'lucide-react-native';
 
-interface BottomNavTabProps extends BottomTabBarButtonProps {
+export interface BottomNavTabProps extends BottomTabBarButtonProps {
   icon: LucideIcon;
   isSelected: boolean;
   onTabPress: () => void;

@@ -32,25 +32,25 @@ const Typography = StyleSheet.create({
     letterSpacing: 0.5,
   },
   'font-thin': {
-    fontFamily: 'RobotoMono_100Thin',
+    fontFamily: 'RobotoMono100',
   },
   'font-extra-light': {
-    fontFamily: 'RobotoMono_200ExtraLight',
+    fontFamily: 'RobotoMono200',
   },
   'font-light': {
-    fontFamily: 'RobotoMono_300Light',
+    fontFamily: 'RobotoMono300',
   },
   'font-regular': {
-    fontFamily: 'RobotoMono_400Regular',
+    fontFamily: 'RobotoMono400',
   },
   'font-medium': {
-    fontFamily: 'RobotoMono_500Medium',
+    fontFamily: 'RobotoMono500',
   },
   'font-semi-bold': {
-    fontFamily: 'RobotoMono_600SemiBold',
+    fontFamily: 'RobotoMono600',
   },
   'font-bold': {
-    fontFamily: 'RobotoMono_700Bold',
+    fontFamily: 'RobotoMono700',
   },
 });
 

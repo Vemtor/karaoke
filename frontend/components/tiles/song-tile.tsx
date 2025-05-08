@@ -2,8 +2,7 @@ import Colors from '@/constants/colors';
 import Typography from '@/constants/typography';
 import { FC } from 'react';
 import { View, StyleSheet, Image, Text, Pressable } from 'react-native';
-import { ImageTileProps } from './types/image-tile';
-
+import { ImageTileProps } from '@/components/tiles/types/image-tile';
 export interface SongTileProps extends ImageTileProps {
   onPress?: () => void; // click handler here
   // otherProps: any; // other props if needed

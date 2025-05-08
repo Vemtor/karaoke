@@ -1,9 +1,9 @@
 import { useCallback, useState } from 'react';
-import { Platform, View } from 'react-native';
+import { Platform } from 'react-native';
 import { Tabs } from 'expo-router';
 import { House, Search, List, Bookmark, LucideIcon } from 'lucide-react-native';
-import { BottomNavTabNameEnum, BottomNavTabName } from '../../types/bottom-nav-tab-enum';
-import BottomNavTab from '@/components/tabs/BottomNavTab';
+import { BottomNavTabNameEnum, BottomNavTabName } from '@/types/bottom-nav-tab-enum';
+import BottomNavTab, { BottomNavTabProps } from '@/components/tabs/BottomNavTab';
 
 const TABS: { name: BottomNavTabName; icon: LucideIcon }[] = [
   { name: BottomNavTabNameEnum.HOME, icon: House },
@@ -16,16 +16,16 @@ export default function TabLayout() {
   const [selectedTab, setSelectedTab] = useState<BottomNavTabName>(BottomNavTabNameEnum.HOME);
 
   const renderTabButton = useCallback(
-    (name: BottomNavTabName, Icon: LucideIcon) => (props: any) => (
-      <BottomNavTab
-        {...props}
-        icon={Icon}
-        isSelected={selectedTab === name}
-        onTabPress={() => {
-          setSelectedTab(name);
-        }}
-      />
-    ),
+    (name: BottomNavTabName, icon: LucideIcon) =>
+      // eslint-disable-next-line
+      (props: Omit<BottomNavTabProps, 'isSelected' | 'onTabPress' | 'icon'>) => (
+        <BottomNavTab
+          {...props}
+          icon={icon}
+          isSelected={selectedTab === name}
+          onTabPress={() => setSelectedTab(name)}
+        />
+      ),
     [selectedTab],
   );
 
