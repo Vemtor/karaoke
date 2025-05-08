@@ -1,3 +1,11 @@
+.idea
+.github
+.venv
+*.iml
+/**/**/resources/songs
+
+
+
 # Compiled class file
 *.class
 

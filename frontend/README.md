@@ -25,6 +25,30 @@ In the output, you'll find options to open the app in a
 
 You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
 
+## Linting
+
+This project uses ESLint and Prettier to enforce consistent code style and detect potential issues in your TypeScript code.
+
+### Check for linting issues
+
+To check the code for linting issues, run:
+
+```bash
+npm run lint
+```
+
+This will analyze all `.ts` and `.tsx` files and report any problems without making changes.
+
+### Automatically fix linting issues
+
+To automatically fix issues (e.g. formatting problems) where possible, run:
+
+```bash
+npm run lint:fix
+```
+
+This will apply ESLint's auto-fix capabilities to your files.
+
 ## Get a fresh project
 
 When you're ready, run:
