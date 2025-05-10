@@ -1,0 +1,34 @@
+services:
+  spring-backend:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./src/main/resources/songs:/app/src/main/resources/songs
+    depends_on:
+      - flask-service
+    environment:
+      - FLASK_TRANSCRIPTION_URL=http://flask-service:8889/transcribe
+      - FLASK_SPLITTER_URL=http://flask-service:8889/split
+      - RESOURCES_DIR=/app/src/main/resources/songs/
+    networks:
+      - karaoke-network
+
+  flask-service:
+    build:
+      context: ./scripts
+    ports:
+      - "8889:8889"
+    volumes:
+      - ./src/main/resources/songs:/app/src/main/resources/songs
+    environment:
+      - PYTHONUNBUFFERED=1
+      - FLASK_SERVER_PORT=8889
+    networks:
+      - karaoke-network
+
+networks:
+  karaoke-network:
+    driver: bridge
+
+
