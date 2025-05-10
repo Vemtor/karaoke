@@ -1,17 +1,4 @@
-## ⚛️ React Native Setup (with Expo)
-
-**NOTICE:** The steps below have been verified to work on **Expo CLI + Android Phone**.  
-If you're using a different setup (e.g., iOS, custom workflow, or bare React Native), please refer to the official [Expo documentation](https://docs.expo.dev/get-started/start-developing/) or relevant GitHub threads for help.
-
-This project uses **[Expo](https://expo.dev/)** — a framework and platform for universal React apps — to streamline development and deployment.
-
-If you run into any problems, check the official [Expo docs](https://docs.expo.dev/get-started/start-developing/).
-
----
-
-
 ## Docker Containerization Guide
-
 
 ### 1. Install Docker
 
@@ -38,11 +25,13 @@ docker compose up
 ### 4. Running Specific Services
 
 The application consists of three services:
+
 - `spring-service` (Java backend)
 - `frontend` (Web UI)
 - `flask-service` (Python service)
 
 Dependencies:
+
 - frontend → spring-service → flask-service
 
 To run just one service:
@@ -52,6 +41,7 @@ docker compose up <service-name>
 ```
 
 For example:
+
 ```bash
 docker compose up frontend
 ```
@@ -89,6 +79,7 @@ docker compose build <service-name>
 ```
 
 Example:
+
 ```bash
 docker compose build spring-service
 docker compose build frontend
@@ -96,13 +87,25 @@ docker compose build frontend
 
 > **Important:** Avoid rebuilding the flask-service unnecessarily as it has many dependencies and takes a long time to build.
 
-## Troubleshooting
+### Troubleshooting
 
 If you encounter issues:
+
 1. Ensure Docker is running
 2. Check service logs for errors
 3. Verify all required ports are available
 4. Make sure you're running commands from the project root directory
+
+## ⚛️ React Native Setup (with Expo)
+
+**NOTICE:** The steps below have been verified to work on **Expo CLI + Android Phone**.  
+If you're using a different setup (e.g., iOS, custom workflow, or bare React Native), please refer to the official [Expo documentation](https://docs.expo.dev/get-started/start-developing/) or relevant GitHub threads for help.
+
+This project uses **[Expo](https://expo.dev/)** — a framework and platform for universal React apps — to streamline development and deployment.
+
+If you run into any problems, check the official [Expo docs](https://docs.expo.dev/get-started/start-developing/).
+
+---
 
 ### 🧱 Prerequisites
 
