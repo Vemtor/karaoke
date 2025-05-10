@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /app
+WORKDIR /app/backend
 
 RUN mkdir -p scripts && \
     wget https://github.com/tsurumeso/vocal-remover/releases/download/v5.1.1/vocal-remover-v5.1.1.zip -O vocal-remover.zip && \
@@ -24,17 +24,17 @@ RUN mkdir -p /root/.cache/whisper && \
 
 RUN mkdir -p src/main/resources/songs
 
-COPY audio_splitter.py /app/
-COPY text_generator.py /app/
-COPY flask_server.py /app/
+COPY audio_splitter.py ./scripts
+COPY text_generator.py ./scripts
+COPY flask_server.py ./scripts
 
 
 ENV FLASK_SERVER_PORT=8889
 ENV PYTHONUNBUFFERED=1
 
-VOLUME [ "/app/src/main/resources/songs" ]
+VOLUME [ "/app/backend/src/main/resources/songs" ]
 
 EXPOSE 8889
 
-CMD ["python", "flask_server.py"]
+CMD ["python", "/app/backend/scripts/flask_server.py"]
 

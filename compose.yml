@@ -1,19 +1,52 @@
 name: karaoke-app
 services:
-    frontend:
-        build: 
-            context: ./frontend        
-        ports:
-            - "8081:8081"
-        volumes:
-            - ./frontend:/frontend
-            - /frontend/node_modules
-        environment:
-            - EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0
-    backend:
-        build: 
-            context: ./backend
-        ports:
-         - "8080:8080"
-        volumes:
-            - ./backend/src:/backend/src
+  flask-service:
+    build:
+      context: ./backend/scripts
+    ports:
+      - '8889:8889'
+    volumes:
+      - ./backend/src/main/resources/songs:/app/backend/src/main/resources/songs
+    environment:
+      - PYTHONUNBUFFERED=1
+      - FLASK_SERVER_PORT=8889
+    networks:
+      - karaoke-network
+  spring-service:
+    build:
+      context: ./backend
+    ports:
+      - '8080:8080'
+    volumes:
+      - ./backend/src/main/resources/songs:/app/backend/src/main/resources/songs
+    depends_on:
+      - flask-service
+    environment:
+      - FLASK_TRANSCRIPTION_URL=http://flask-service:8889/transcribe
+      - FLASK_SPLITTER_URL=http://flask-service:8889/split
+      - RESOURCES_DIR=/app/backend/src/main/resources/songs/
+    networks:
+      - karaoke-network
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - '8081:8081'
+    volumes:
+      - ./frontend:/frontend
+      - /frontend/node_modules
+    depends_on:
+      - spring-service
+    environment:
+      - API_URL=http://spring-service:8080
+      - EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0
+      - REACT_NATIVE_PACKAGER_HOSTNAME=0.0.0.0
+      - NODE_ENV=development
+    stdin_open: true
+    tty: true
+    networks:
+      - karaoke-network
+
+networks:
+  karaoke-network:
+    driver: bridge

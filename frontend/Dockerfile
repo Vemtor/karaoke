@@ -7,8 +7,11 @@ WORKDIR /frontend
 
 COPY package.json package-lock.json* ./
 
-RUN npm install
-RUN npm install -g expo-cli
+RUN npm install --legacy-peer-deps 
+RUN npm install -g expo-cli ts-node typescript
+
+ENV EXPO_DEVTOOLS_LISTEN_ADDRESS="0.0.0.0"
+ENV REACT_NATIVE_PACKAGER_HOSTNAME="0.0.0.0"
 
 COPY . .
 EXPOSE 8081
