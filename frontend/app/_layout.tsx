@@ -14,8 +14,6 @@ import { RobotoMono_500Medium } from '@expo-google-fonts/roboto-mono/500Medium';
 import { RobotoMono_600SemiBold } from '@expo-google-fonts/roboto-mono/600SemiBold';
 import { RobotoMono_700Bold } from '@expo-google-fonts/roboto-mono/700Bold';
 import { TrackPlayerProvider } from '@/context/trackPlayerContext';
-import { SongTextProvider } from '@/context/songTextContext';
-import { SongManagerProvider } from '@/context/songManagerContext';
 /* eslint-enable */
 
 SplashScreen.preventAutoHideAsync();
@@ -44,17 +42,13 @@ export default function RootLayout() {
 
   return (
     <>
-        <TrackPlayerProvider>
-          <SongTextProvider>
-            <SongManagerProvider>
-              <Stack>
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen name="+not-found" />
-              </Stack>
-              <StatusBar style="auto" />
-            </ SongManagerProvider>
-          </SongTextProvider>
-        </TrackPlayerProvider>
+      <TrackPlayerProvider>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+        <StatusBar style="auto" />
+      </TrackPlayerProvider>
     </>
   );
 }

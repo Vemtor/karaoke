@@ -1,50 +1,8 @@
 import { View, StyleSheet, Text } from "react-native";
-// import { ThemedView } from "./ThemedView";
-import { useEffect, useRef, useState } from "react";
 import { useTrackPlayer } from "@/context/trackPlayerContext";
-import { SongTextProvider, useSongText } from "@/context/songTextContext";
-import { useProgress } from "react-native-track-player";
-
-interface Segment {
-  end: number;
-  start: number;
-  text: string;
-}
-
-interface SongText {
-  full_text: string;
-  segments: Segment[];
-}
-
 
 export default function SongViewText() {
-  const { songText } = useSongText();
-  const progress = useProgress();
-  const [songLines, setSongLines] = useState({
-    previousLine: "",
-    currentLine: "", 
-    nextLine: ""
-  });
-  useEffect(() => {
-    if (!songText || !songText.segments) return;
-
-    const updateSongLines = () => {
-      const currentTime = progress.position;
-      const currentSegmentIndex = songText.segments.findIndex(
-        (segment) => currentTime >= segment.start - 0.5 && currentTime < segment.end - 0.5
-      );
-
-      if (currentSegmentIndex !== -1) {
-        setSongLines({
-          previousLine: songText.segments[currentSegmentIndex - 1]?.text || "",
-          currentLine: songText.segments[currentSegmentIndex]?.text || "",
-          nextLine: songText.segments[currentSegmentIndex + 1]?.text || "",
-        });
-      }
-    };
-
-    updateSongLines();
-  }, [progress.position, songText]);
+  const  { songLines } = useTrackPlayer();
 
   return (
     <View style={styles.container}>

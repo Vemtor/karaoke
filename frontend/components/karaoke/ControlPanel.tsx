@@ -1,20 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { StyleSheet, View, TouchableOpacity, Text, Animated } from 'react-native';
 import { SkipBack, SkipForward, Play, Pause, ChevronDown, ChevronUp } from 'lucide-react-native';
 import { useTrackPlayer } from '@/context/trackPlayerContext';
-import TrackPlayer, { State, Event } from 'react-native-track-player';
 import SongSpinner from './SongSpinner';
 
-interface ControlPanelProps {
-  onNext: () => void;
-  onPrevious: () => void;
-  title: string;
-}
 
-export default function ControlPanel({ onNext, onPrevious, title }: ControlPanelProps) {
-  const { isTrackPlayerReady } = useTrackPlayer(); // Use TrackPlayerContext to check readiness
+export default function ControlPanel() {
+  const { currentTrack, playNextSong, isPlaying, playPauseSong, playPreviousSong } = useTrackPlayer();
   const [isOpen, setIsOpen] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false); // Tracks whether the song is playing
   const animation = useRef(new Animated.Value(0)).current;
 
   const togglePanel = () => {
@@ -31,47 +24,10 @@ export default function ControlPanel({ onNext, onPrevious, title }: ControlPanel
     outputRange: [0, 150], // Adjust the height range as needed
   });
 
-  // Update `isPlaying` based on the TrackPlayer state
-  useEffect(() => {
-    if (!isTrackPlayerReady) return; // Ensure TrackPlayer is ready before interacting
-
-    const updatePlaybackState = async () => {
-      const state = await TrackPlayer.getState();
-      setIsPlaying(state === State.Playing);
-    };
-
-    // Listen for playback state changes
-    const subscription = TrackPlayer.addEventListener(Event.PlaybackState, async () => {
-      const state = await TrackPlayer.getState();
-      setIsPlaying(state === State.Playing);
-    });
-
-    // Initial state check
-    updatePlaybackState();
-
-    return () => {
-      subscription.remove(); // Clean up the event listener
-    };
-  }, [isTrackPlayerReady]);
-
-  const handlePlayPause = async () => {
-    if (!isTrackPlayerReady) {
-      console.warn('TrackPlayer is not ready yet!');
-      return;
-    }
-
-    const state = await TrackPlayer.getState();
-    if (state === State.Playing) {
-      TrackPlayer.pause();
-    } else {
-      TrackPlayer.play();
-    }
-  };
-
   return (
     <View style={styles.container}>
       <View style={[styles.rowContainer]}>
-        <Text style={styles.songTitle}>{title}</Text>
+        <Text style={styles.songTitle}>{currentTrack ? currentTrack.title :  "title not provide"}</Text>
         <TouchableOpacity style={styles.button} onPress={togglePanel}>
           {isOpen ? <ChevronDown /> : <ChevronUp />}
         </TouchableOpacity>
@@ -89,18 +45,16 @@ export default function ControlPanel({ onNext, onPrevious, title }: ControlPanel
         </View>
       </Animated.View>
       <View style={styles.songControlContainer}>
-        <TouchableOpacity style={styles.button} onPress={onPrevious}>
+        <TouchableOpacity style={styles.button} onPress={playPreviousSong}>
           <SkipBack size={32} color="black" />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={async () => {
-            handlePlayPause();
-          }}
+          onPress={playPauseSong}
         >
           {isPlaying ? <Pause size={32} color="black" /> : <Play size={32} color="black" />}
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={onNext}>
+        <TouchableOpacity style={styles.button} onPress={playNextSong}>
           <SkipForward size={32} color="black" />
         </TouchableOpacity>
       </View>
