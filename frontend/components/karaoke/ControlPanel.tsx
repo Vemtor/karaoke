@@ -4,9 +4,9 @@ import { SkipBack, SkipForward, Play, Pause, ChevronDown, ChevronUp } from 'luci
 import { useTrackPlayer } from '@/context/trackPlayerContext';
 import SongSpinner from './SongSpinner';
 
-
 export default function ControlPanel() {
-  const { currentTrack, playNextSong, isPlaying, playPauseSong, playPreviousSong } = useTrackPlayer();
+  const { currentTrack, playNextSong, isPlaying, playPauseSong, playPreviousSong } =
+    useTrackPlayer();
   const [isOpen, setIsOpen] = useState(false);
   const animation = useRef(new Animated.Value(0)).current;
 
@@ -27,7 +27,9 @@ export default function ControlPanel() {
   return (
     <View style={styles.container}>
       <View style={[styles.rowContainer]}>
-        <Text style={styles.songTitle}>{currentTrack ? currentTrack.title :  "title not provide"}</Text>
+        <Text style={styles.songTitle}>
+          {currentTrack ? currentTrack.title : 'title not provide'}
+        </Text>
         <TouchableOpacity style={styles.button} onPress={togglePanel}>
           {isOpen ? <ChevronDown /> : <ChevronUp />}
         </TouchableOpacity>
@@ -48,19 +50,16 @@ export default function ControlPanel() {
         <TouchableOpacity style={styles.button} onPress={playPreviousSong}>
           <SkipBack size={32} color="black" />
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={playPauseSong}
-        >
+        <TouchableOpacity style={styles.button} onPress={playPauseSong}>
           {isPlaying ? <Pause size={32} color="black" /> : <Play size={32} color="black" />}
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={playNextSong}>
           <SkipForward size={32} color="black" />
         </TouchableOpacity>
       </View>
-      </View>
-  )
-};
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {

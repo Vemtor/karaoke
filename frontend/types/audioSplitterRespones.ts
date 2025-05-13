@@ -1,4 +1,4 @@
 export default interface AudioSplitterResponse {
-    "instrumentsPath": string,
-    "vocalsPath": string,
+  instrumentsPath: string;
+  vocalsPath: string;
 }
