@@ -72,3 +72,12 @@ Once the server is running, you can preview the app using one of the following m
 > 📘 For running on iOS or physical devices, follow the official [Expo device guide](https://docs.expo.dev/workflow/run-on-device/)
 
 ---
+
+## Team conclusions and rules 
+This section focuses on our common arrangements which we establish during retro meetings.
+### PR reminding
+We have noticed that delays in development are also by waiting for PR's review.
+Now, it is the responsibility of the person who requests PR's to remind reviers of them. Preferably every 2 days.
+### Task dependencies
+Some of us prefer last-minute working. On the other hand, some of us perfer finish work earlier. 
+Now on planning meetings we will take this into consideration. The selection of tasks for particular person will also depend on deveoper's preferences.
