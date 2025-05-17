@@ -18,8 +18,10 @@ module.exports = {
     },
   },
   extends: ['expo', 'prettier', 'eslint:recommended', 'plugin:@typescript-eslint/recommended'],
-  plugins: ['prettier', '@typescript-eslint'],
+  plugins: ['prettier', '@typescript-eslint', 'simple-import-sort'],
   rules: {
+    'simple-import-sort/imports': 'error',
+    'simple-import-sort/exports': 'error',
     'prettier/prettier': 'error',
     'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     'no-console': ['warn', { allow: ['warn', 'error', 'debug'] }],
