@@ -38,12 +38,12 @@ export const mockSongs: SongTileProps[] = [
 export const mockPlaylists: PlaylistTileProps[] = [
   {
     title: 'RADDDICAL',
-    subtitle: 'Dua Lipa',
+    subtitle: '21',
     image: dua,
   },
   {
     title: 'OPTIMISSSSM',
-    subtitle: 'Dua Lipa',
+    subtitle: '37',
     image: dua,
   },
 ];
