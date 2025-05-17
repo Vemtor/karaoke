@@ -3,7 +3,6 @@ import { TileModalActionVariant } from './types/tile-modal-action';
 import { StyleSheet, Pressable, Text } from 'react-native';
 import Typography from '@/constants/typography';
 import Colors from '@/constants/colors';
-import useSelectedTileStore from '@/stores/selected-tile.store';
 
 export interface TileModalActionProps {
   label: string;
