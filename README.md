@@ -1,28 +1,43 @@
+## Project setup
+
+From the root directory run:
+
+```bash
+npm i
+```
+
+### To install dependencies locally
+
+For frontend:
+
+```bash
+cd frontend
+npm i
+```
+
+For backend:
+
+```bash
+
+```
+
 ## Docker Containerization Guide
+
+Project can also be run from a container. Follow steps below to do so.
 
 ### 1. Install Docker
 
 Download and install Docker for your operating system from the [official Docker website](https://docs.docker.com/get-docker/).
 
-### 2. Build the Java Application
-
-Navigate to the project root directory and build the Java backend:
+### 2. Build the Java Application and run the Container
 
 ```bash
-mvn -f backend/pom.xml clean package
-```
-
-### 3. Run the Application
-
-From the root directory, start all services with:
-
-```bash
-docker compose up
+npm run container
 ```
 
 > **Note:** The first build will take approximately 15 minutes. Subsequent starts will be much faster.
 
-### 4. Running Specific Services
+### 3. Running Specific Services
 
 The application consists of three services:
 
@@ -46,7 +61,7 @@ For example:
 docker compose up frontend
 ```
 
-### 5. Run in Background Mode
+### 4. Run in Background Mode
 
 To run containers in detached mode (background):
 
@@ -62,7 +77,7 @@ docker compose logs -f spring-service
 docker compose logs -f flask-service
 ```
 
-### 6. Stopping the Application
+### 5. Stopping the Application
 
 To stop and remove all containers:
 
@@ -70,7 +85,7 @@ To stop and remove all containers:
 docker compose down
 ```
 
-### 7. Rebuilding Services
+### 6. Rebuilding Services
 
 If you need to rebuild after making changes:
 
@@ -171,11 +186,16 @@ Once the server is running, you can preview the app using one of the following m
 
 ---
 
-## Team conclusions and rules 
+## Team conclusions and rules
+
 This section focuses on our common arrangements which we establish during retro meetings.
+
 ### PR reminding
+
 We have noticed that delays in development are also by waiting for PR's review.
 Now, it is the responsibility of the person who requests PR's to remind reviers of them. Preferably every 2 days.
+
 ### Task dependencies
-Some of us prefer last-minute working. On the other hand, some of us perfer finish work earlier. 
+
+Some of us prefer last-minute working. On the other hand, some of us perfer finish work earlier.
 Now on planning meetings we will take this into consideration. The selection of tasks for particular person will also depend on deveoper's preferences.
