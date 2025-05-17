@@ -1,0 +1,21 @@
+# Build files
+**/target/
+**/*.jar
+**/*.war
+
+# Version control
+.git/
+.gitignore
+
+# IDE
+**/.idea/
+**/*.iml
+**/.vscode/
+
+# Environment files
+**/.env
+**/*.secret
+
+# Logs and temp files
+**/*.log
+**/tmp/
