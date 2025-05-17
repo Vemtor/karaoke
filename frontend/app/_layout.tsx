@@ -1,4 +1,4 @@
-import 'react-native-reanimated';
+import '@/global.css';
 
 /* eslint-disable */
 import { RobotoMono_100Thin } from '@expo-google-fonts/roboto-mono/100Thin';
@@ -15,10 +15,6 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { Platform } from 'react-native';
 /* eslint-enable */
-
-if (Platform.OS === 'web') {
-  require('../global.css');
-}
 
 SplashScreen.preventAutoHideAsync();
 

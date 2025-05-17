@@ -27,7 +27,7 @@ const TileModal: React.FC = () => {
   return (
     <Modal visible={visible} animationType="fade" transparent onRequestClose={onClose}>
       <TouchableWithoutFeedback onPress={onClose}>
-        <View className="flex-1 bg-black bg-opacity-50 justify-center items-center">
+        <View className="flex-1  bg-black/50 justify-center items-center">
           <View className="bg-onyx rounded-lg p-4 w-72 items-center">
             <Image
               className="rounded-md mb-2.5"
