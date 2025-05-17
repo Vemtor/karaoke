@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# ESLint
+( cd frontend && npm run lint:fix )
+if [ $? -eq 0 ]; then
+  echo "✅ ESLint passed"
+else
+  echo "❌ ESLint failed! Please fix JS/TS issues."
+  exit 1
+fi

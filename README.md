@@ -1,3 +1,101 @@
+## Docker Containerization Guide
+
+### 1. Install Docker
+
+Download and install Docker for your operating system from the [official Docker website](https://docs.docker.com/get-docker/).
+
+### 2. Build the Java Application
+
+Navigate to the project root directory and build the Java backend:
+
+```bash
+mvn -f backend/pom.xml clean package
+```
+
+### 3. Run the Application
+
+From the root directory, start all services with:
+
+```bash
+docker compose up
+```
+
+> **Note:** The first build will take approximately 15 minutes. Subsequent starts will be much faster.
+
+### 4. Running Specific Services
+
+The application consists of three services:
+
+- `spring-service` (Java backend)
+- `frontend` (Web UI)
+- `flask-service` (Python service)
+
+Dependencies:
+
+- frontend → spring-service → flask-service
+
+To run just one service:
+
+```bash
+docker compose up <service-name>
+```
+
+For example:
+
+```bash
+docker compose up frontend
+```
+
+### 5. Run in Background Mode
+
+To run containers in detached mode (background):
+
+```bash
+docker compose up -d
+```
+
+You can view logs in a separate terminal:
+
+```bash
+docker compose logs -f frontend
+docker compose logs -f spring-service
+docker compose logs -f flask-service
+```
+
+### 6. Stopping the Application
+
+To stop and remove all containers:
+
+```bash
+docker compose down
+```
+
+### 7. Rebuilding Services
+
+If you need to rebuild after making changes:
+
+```bash
+docker compose build <service-name>
+```
+
+Example:
+
+```bash
+docker compose build spring-service
+docker compose build frontend
+```
+
+> **Important:** Avoid rebuilding the flask-service unnecessarily as it has many dependencies and takes a long time to build.
+
+### Troubleshooting
+
+If you encounter issues:
+
+1. Ensure Docker is running
+2. Check service logs for errors
+3. Verify all required ports are available
+4. Make sure you're running commands from the project root directory
+
 ## ⚛️ React Native Setup (with Expo)
 
 **NOTICE:** The steps below have been verified to work on **Expo CLI + Android Phone**.  
@@ -72,3 +170,12 @@ Once the server is running, you can preview the app using one of the following m
 > 📘 For running on iOS or physical devices, follow the official [Expo device guide](https://docs.expo.dev/workflow/run-on-device/)
 
 ---
+
+## Team conclusions and rules 
+This section focuses on our common arrangements which we establish during retro meetings.
+### PR reminding
+We have noticed that delays in development are also by waiting for PR's review.
+Now, it is the responsibility of the person who requests PR's to remind reviers of them. Preferably every 2 days.
+### Task dependencies
+Some of us prefer last-minute working. On the other hand, some of us perfer finish work earlier. 
+Now on planning meetings we will take this into consideration. The selection of tasks for particular person will also depend on deveoper's preferences.
