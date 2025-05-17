@@ -1,8 +1,8 @@
+import clsx from 'clsx';
 import { FC } from 'react';
+import { Pressable, Text } from 'react-native';
+
 import { TileModalActionVariant } from './types/tile-modal-action';
-import { StyleSheet, Pressable, Text } from 'react-native';
-import Typography from '@/constants/typography';
-import Colors from '@/constants/colors';
 
 export interface TileModalActionProps {
   label: string;
@@ -15,35 +15,14 @@ export interface TileModalActionProps {
 export const TileModalActionPressable: FC<TileModalActionProps> = ({ label, onPress, type }) => {
   return (
     <Pressable
-      style={[
-        styles.button,
-        type === TileModalActionVariant.SUCCESS && styles.success,
-        type === TileModalActionVariant.DANGER && styles.danger,
-      ]}
-      onPress={onPress}>
-      <Text style={styles.buttonText}>{label}</Text>
+      onPress={onPress}
+      className={clsx(
+        'rounded-md py-2 px-4 mt-2 w-full',
+        type === TileModalActionVariant.NEUTRAL && 'bg-white',
+        type === TileModalActionVariant.SUCCESS && 'bg-tea-green',
+        type === TileModalActionVariant.DANGER && 'bg-pomegranate',
+      )}>
+      <Text className="text-black text-center font-roboto-mono">{label}</Text>
     </Pressable>
   );
 };
-
-const styles = StyleSheet.create({
-  button: {
-    backgroundColor: Colors.white,
-    borderRadius: 4,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    marginTop: 8,
-    width: '100%',
-  },
-  buttonText: {
-    color: Colors.black,
-    textAlign: 'center',
-    ...Typography['font-medium'],
-  },
-  success: {
-    backgroundColor: Colors['tea-green'],
-  },
-  danger: {
-    backgroundColor: Colors.pomegranate,
-  },
-});

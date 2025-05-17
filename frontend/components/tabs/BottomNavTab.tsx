@@ -1,10 +1,11 @@
-import React, { useRef, useEffect } from 'react';
-import { GestureResponderEvent, Platform, Animated } from 'react-native';
 import { BottomTabBarButtonProps } from '@react-navigation/bottom-tabs';
 import { PlatformPressable } from '@react-navigation/elements';
 import * as Haptics from 'expo-haptics';
-import Colors from '@/constants/colors';
 import { LucideIcon } from 'lucide-react-native';
+import React, { useEffect, useRef } from 'react';
+import { Animated, GestureResponderEvent, Platform } from 'react-native';
+
+import colors from '@/constants/colors';
 
 export interface BottomNavTabProps extends BottomTabBarButtonProps {
   icon: LucideIcon;
@@ -30,7 +31,7 @@ export default function BottomNavTab({
 
   const backgroundColor = backgroundColorAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: [Colors.quartz, Colors['slate-gray']],
+    outputRange: [colors.quartz, colors['slate-gray']],
   });
 
   return (
@@ -45,7 +46,7 @@ export default function BottomNavTab({
           onTabPress();
           props.onPressIn?.(ev);
         }}>
-        <Icon color={Colors.onyx} size={40} />
+        <Icon color={colors.onyx} size={40} />
       </PlatformPressable>
     </Animated.View>
   );

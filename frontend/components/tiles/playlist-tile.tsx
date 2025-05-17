@@ -1,7 +1,6 @@
-import Colors from '@/constants/colors';
-import Typography from '@/constants/typography';
 import { FC } from 'react';
-import { View, StyleSheet, Image, Text, Pressable } from 'react-native';
+import { Image, Pressable, Text, View } from 'react-native';
+
 import { ImageTileProps } from '@/components/tiles/types/image-tile';
 
 export interface PlaylistTileProps extends ImageTileProps {
@@ -13,47 +12,19 @@ const PlaylistTile: FC<PlaylistTileProps> = ({ title, subtitle, image, onPress }
   return (
     <Pressable
       onPress={onPress}
-      style={({ pressed }) => [styles.container, pressed && styles.pressed]}>
-      <Image style={styles.image} source={typeof image === 'string' ? { uri: image } : image} />
-      <View style={styles.textContainer}>
-        <Text style={styles.songTitle}>{title}</Text>
-        <Text style={styles.artistName}>{subtitle}</Text>
+      className="flex-1 flex-row bg-onyx p-1.5 rounded-md"
+      style={({ pressed }) => pressed && { opacity: 0.8 }}>
+      <Image
+        source={typeof image === 'string' ? { uri: image } : image}
+        className="rounded-sm"
+        style={{ height: 78, width: 130 }}
+      />
+      <View className="flex-col justify-evenly ml-3">
+        <Text className="text-white font-roboto-mono text-md">{title}</Text>
+        <Text className="text-white font-roboto-mono text-base">{subtitle}</Text>
       </View>
     </Pressable>
   );
 };
 
 export default PlaylistTile;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'row',
-    backgroundColor: Colors.onyx,
-    padding: 6,
-    gap: 14,
-    borderRadius: 6,
-  },
-  pressed: {
-    opacity: 0.8,
-  },
-  image: {
-    height: 78,
-    width: 130,
-    borderRadius: 5,
-  },
-  textContainer: {
-    flexDirection: 'column',
-    justifyContent: 'space-evenly',
-  },
-  songTitle: {
-    color: Colors.white,
-    ...Typography['font-regular'],
-    ...Typography['text-md'],
-  },
-  artistName: {
-    color: Colors.white,
-    ...Typography['font-regular'],
-    ...Typography['text-base'],
-  },
-});

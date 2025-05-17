@@ -1,4 +1,5 @@
 import { FlatList, StyleSheet } from 'react-native';
+
 import { ImageTileProps } from '@/components/tiles/types/image-tile';
 
 interface TileGridProps<T> {

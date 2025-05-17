@@ -1,8 +1,9 @@
 /* eslint-disable no-unused-vars */
 
+import { create } from 'zustand';
+
 import { TileModalVariant } from '@/components/modals/types/tile-modal.enum';
 import { ImageTileProps } from '@/components/tiles/types/image-tile';
-import { create } from 'zustand';
 
 interface SelectedTileState {
   visible: boolean;

@@ -1,11 +1,10 @@
 import React from 'react';
-import { Modal, View, Text, Image, StyleSheet, TouchableWithoutFeedback } from 'react-native';
-import Colors from '@/constants/colors';
-import Typography from '@/constants/typography';
+import { Image, Modal, Text, TouchableWithoutFeedback, View } from 'react-native';
 
-import { TILE_MODAL_ACTIONS_DATA } from './tile-modal-actions-data';
-import { TileModalActionPressable, TileModalActionProps } from './tile-modal-action-pressable';
 import useSelectedTileStore from '@/stores/selected-tile.store';
+
+import { TileModalActionPressable, TileModalActionProps } from './tile-modal-action-pressable';
+import { TILE_MODAL_ACTIONS_DATA } from './tile-modal-actions-data';
 
 const TileModal: React.FC = () => {
   const visible = useSelectedTileStore((state) => state.visible);
@@ -28,16 +27,17 @@ const TileModal: React.FC = () => {
   return (
     <Modal visible={visible} animationType="fade" transparent onRequestClose={onClose}>
       <TouchableWithoutFeedback onPress={onClose}>
-        <View style={styles.overlay}>
-          <View style={styles.modal}>
+        <View className="flex-1 bg-black bg-opacity-50 justify-center items-center">
+          <View className="bg-onyx rounded-lg p-4 w-72 items-center">
             <Image
-              style={styles.image}
-              source={
-                typeof tileData.image === 'string' ? { uri: tileData!.image } : tileData.image
-              }
+              className="rounded-md mb-2.5"
+              style={{ height: 120, width: 120 }}
+              source={typeof tileData.image === 'string' ? { uri: tileData.image } : tileData.image}
             />
-            <Text style={styles.title}>{tileData.title}</Text>
-            <Text style={styles.subtitle}>{tileData.subtitle}</Text>
+            <Text className="text-base font-bold text-white text-center mb-1 font-roboto-mono">
+              {tileData.title}
+            </Text>
+            <Text className="text-sm text-white mb-3 font-roboto-mono">{tileData.subtitle}</Text>
 
             {actions.map((action, index) => (
               <TileModalActionPressable
@@ -58,40 +58,3 @@ const TileModal: React.FC = () => {
 };
 
 export default TileModal;
-
-const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: '#00000088',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modal: {
-    backgroundColor: Colors.onyx,
-    borderRadius: 8,
-    padding: 16,
-    width: 300,
-    alignItems: 'center',
-  },
-  image: {
-    width: 120,
-    height: 120,
-    borderRadius: 6,
-    marginBottom: 10,
-  },
-  title: {
-    ...Typography['text-base'],
-    ...Typography['font-bold'],
-    color: Colors.white,
-    textAlign: 'center',
-  },
-  subtitle: {
-    ...Typography['text-xs'],
-    color: Colors.white,
-    marginBottom: 12,
-  },
-
-  whiteText: {
-    color: Colors.white,
-  },
-});

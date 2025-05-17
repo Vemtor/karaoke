@@ -1,6 +1,7 @@
+import dua from '@/assets/images/dua-lipa.png';
+
 import { PlaylistTileProps } from '../tiles/playlist-tile';
 import { SongTileProps } from '../tiles/song-tile';
-import dua from '@/assets/images/dua-lipa.png';
 
 export const mockSongs: SongTileProps[] = [
   {

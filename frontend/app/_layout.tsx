@@ -1,8 +1,3 @@
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 /* eslint-disable */
@@ -13,7 +8,17 @@ import { RobotoMono_400Regular } from '@expo-google-fonts/roboto-mono/400Regular
 import { RobotoMono_500Medium } from '@expo-google-fonts/roboto-mono/500Medium';
 import { RobotoMono_600SemiBold } from '@expo-google-fonts/roboto-mono/600SemiBold';
 import { RobotoMono_700Bold } from '@expo-google-fonts/roboto-mono/700Bold';
+import { useFonts } from 'expo-font';
+import { Stack } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
+import { StatusBar } from 'expo-status-bar';
+import { useEffect } from 'react';
+import { Platform } from 'react-native';
 /* eslint-enable */
+
+if (Platform.OS === 'web') {
+  require('../global.css');
+}
 
 SplashScreen.preventAutoHideAsync();
 
