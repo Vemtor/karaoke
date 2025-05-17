@@ -18,7 +18,7 @@ const TileModal: React.FC = () => {
     return null;
   }
 
-  const actions: TileModalActionProps[] = TILE_MODAL_ACTIONS_DATA[variant!];
+  const actions: TileModalActionProps[] = TILE_MODAL_ACTIONS_DATA[variant];
 
   const onClose = () => {
     setVisible(false);
@@ -33,11 +33,11 @@ const TileModal: React.FC = () => {
             <Image
               style={styles.image}
               source={
-                typeof tileData!.image === 'string' ? { uri: tileData!.image } : tileData!.image
+                typeof tileData.image === 'string' ? { uri: tileData!.image } : tileData.image
               }
             />
-            <Text style={styles.title}>{tileData!.title}</Text>
-            <Text style={styles.subtitle}>{tileData!.subtitle}</Text>
+            <Text style={styles.title}>{tileData.title}</Text>
+            <Text style={styles.subtitle}>{tileData.subtitle}</Text>
 
             {actions.map((action, index) => (
               <TileModalActionPressable
