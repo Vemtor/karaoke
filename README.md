@@ -96,6 +96,32 @@ If you encounter issues:
 3. Verify all required ports are available
 4. Make sure you're running commands from the project root directory
 
+## Backend Local Setup
+Set up virtual env for python libraries
+
+```bash
+cd backend
+python3.10 -m venv .venv
+source .venv/bin/activate # On Windows use: .venv\Scripts\activate
+```
+Install dependencies
+```bash
+cd scripts && pip install -r requirements.txt
+```
+Download vocal remover and place it in backend/scripts 
+https://github.com/tsurumeso/vocal-remover/releases/download/v5.1.1/vocal-remover-v5.1.1.zip
+```bash
+wget https://github.com/tsurumeso/vocal-remover/releases/download/v5.1.1/vocal-remover-v5.1.1.zip -O vocal-remover.zip && \
+unzip vocal-remover.zip -d scripts/ && \
+rm vocal-remover.zip
+```
+Launch the servers from backend root
+```bash
+python3 scripts/flask_server.py
+```
+Run Spring app from your IDE
+
+
 ## ⚛️ React Native Setup (with Expo)
 
 **NOTICE:** The steps below have been verified to work on **Expo CLI + Android Phone**.  
