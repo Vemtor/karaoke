@@ -7,37 +7,31 @@ export const mockSongs: SongTileProps[] = [
     title: 'Whatcha Doing',
     subtitle: 'Dua Lipa',
     image: dua,
-    isQueued: false,
   },
   {
     title: 'Whatcha Doing',
     subtitle: 'Dua Lipa',
     image: dua,
-    isQueued: false,
   },
   {
     title: 'Whatcha Doing',
     subtitle: 'Dua Lipa',
     image: dua,
-    isQueued: false,
   },
   {
     title: 'Whatcha Doing',
     subtitle: 'Dua Lipa',
     image: dua,
-    isQueued: false,
   },
   {
     title: 'Whatcha Doing',
     subtitle: 'Dua Lipa',
     image: dua,
-    isQueued: false,
   },
   {
     title: 'Whatcha Doing',
     subtitle: 'Dua Lipa',
     image: dua,
-    isQueued: false,
   },
 ];
 

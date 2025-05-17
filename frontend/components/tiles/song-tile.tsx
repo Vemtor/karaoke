@@ -4,12 +4,11 @@ import { FC } from 'react';
 import { View, StyleSheet, Image, Text, Pressable } from 'react-native';
 import { ImageTileProps } from '@/components/tiles/types/image-tile';
 export interface SongTileProps extends ImageTileProps {
-  isQueued: boolean;
   onPress?: () => void; // click handler here
   // otherProps: any; // other props if needed
 }
 
-const SongTile: FC<SongTileProps> = ({ isQueued = false, title, subtitle, image, onPress }) => {
+const SongTile: FC<SongTileProps> = ({ title, subtitle, image, onPress }) => {
   return (
     <Pressable
       onPress={onPress}

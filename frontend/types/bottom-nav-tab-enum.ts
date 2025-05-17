@@ -1,10 +1,9 @@
 /* eslint-disable no-unused-vars */
-export enum BottomNavTabNameEnum {
+export enum BottomNavTabName {
   HOME = 'index',
   SEARCH = 'search',
   QUEUE = 'queue',
   DOWNLOADS = 'downloads',
 }
 
-export type BottomNavTabName = BottomNavTabNameEnum;
 /* eslint-enable no-unused-vars */
