@@ -1,35 +1,45 @@
 ## Project setup
 
+### 🧱  Prerequisites
+
+- [Node.js](https://nodejs.org/en/)
+- npm or yarn
+
+You can install Node.js using any package manager. Below is an example setup using [`fnm`](https://github.com/Schniz/fnm) and Node.js v22:
+
+```bash
+# Install fnm (Fast Node Manager)
+curl -o- https://fnm.vercel.app/install | bash
+
+# Install Node.js v22
+fnm install 22
+
+# Check Node.js version
+node -v # Should print something like "v22.14.0"
+
+# Check npm version
+npm -v # Should print something like "10.9.2"
+```
+
+---
+
 From the root directory run:
 
 ```bash
 npm i
 ```
 
-### To install dependencies locally
+To setup the project locally skip the next section and go directly to **Local setup**.
 
-For frontend:
+### Docker Containerization Guide
 
-```bash
-cd frontend
-npm i
-```
+This project can be run from a container. Follow steps below to do so.
 
-For backend:
-
-```bash
-
-```
-
-## Docker Containerization Guide
-
-Project can also be run from a container. Follow steps below to do so.
-
-### 1. Install Docker
+#### 1. Install Docker
 
 Download and install Docker for your operating system from the [official Docker website](https://docs.docker.com/get-docker/).
 
-### 2. Build the Java Application and run the Container
+#### 2. Build the Java Application and run the Container
 
 ```bash
 npm run container
@@ -37,7 +47,7 @@ npm run container
 
 > **Note:** The first build will take approximately 15 minutes. Subsequent starts will be much faster.
 
-### 3. Running Specific Services
+#### 3. Running Specific Services
 
 The application consists of three services:
 
@@ -61,7 +71,7 @@ For example:
 docker compose up frontend
 ```
 
-### 4. Run in Background Mode
+#### 4. Run in Background Mode
 
 To run containers in detached mode (background):
 
@@ -77,7 +87,7 @@ docker compose logs -f spring-service
 docker compose logs -f flask-service
 ```
 
-### 5. Stopping the Application
+#### 5. Stopping the Application
 
 To stop and remove all containers:
 
@@ -85,7 +95,7 @@ To stop and remove all containers:
 docker compose down
 ```
 
-### 6. Rebuilding Services
+#### 6. Rebuilding Services
 
 If you need to rebuild after making changes:
 
@@ -102,7 +112,7 @@ docker compose build frontend
 
 > **Important:** Avoid rebuilding the flask-service unnecessarily as it has many dependencies and takes a long time to build.
 
-### Troubleshooting
+#### Troubleshooting
 
 If you encounter issues:
 
@@ -111,7 +121,10 @@ If you encounter issues:
 3. Verify all required ports are available
 4. Make sure you're running commands from the project root directory
 
-## Backend Local Setup
+### Local setup
+
+#### Backend setup (☕Java + 🐍Python)
+
 Set up virtual env for python libraries
 
 ```bash
@@ -119,25 +132,31 @@ cd backend
 python3.10 -m venv .venv
 source .venv/bin/activate # On Windows use: .venv\Scripts\activate
 ```
+
 Install dependencies
+
 ```bash
 cd scripts && pip install -r requirements.txt
 ```
-Download vocal remover and place it in backend/scripts 
-https://github.com/tsurumeso/vocal-remover/releases/download/v5.1.1/vocal-remover-v5.1.1.zip
+
+Download vocal remover and place it in backend/scripts
+<https://github.com/tsurumeso/vocal-remover/releases/download/v5.1.1/vocal-remover-v5.1.1.zip>
+
 ```bash
 wget https://github.com/tsurumeso/vocal-remover/releases/download/v5.1.1/vocal-remover-v5.1.1.zip -O vocal-remover.zip && \
 unzip vocal-remover.zip -d scripts/ && \
 rm vocal-remover.zip
 ```
+
 Launch the servers from backend root
+
 ```bash
 python3 scripts/flask_server.py
 ```
+
 Run Spring app from your IDE
 
-
-## ⚛️ React Native Setup (with Expo)
+#### Frontend setup (⚛️Expo)
 
 **NOTICE:** The steps below have been verified to work on **Expo CLI + Android Phone**.  
 If you're using a different setup (e.g., iOS, custom workflow, or bare React Native), please refer to the official [Expo documentation](https://docs.expo.dev/get-started/start-developing/) or relevant GitHub threads for help.
@@ -148,31 +167,7 @@ If you run into any problems, check the official [Expo docs](https://docs.expo.d
 
 ---
 
-### 🧱 Prerequisites
-
-- [Node.js](https://nodejs.org/en/)
-- npm or yarn
-- Expo CLI
-
-You can install Node.js using any package manager. Below is an example setup using [`fnm`](https://github.com/Schniz/fnm) and Node.js v22:
-
-```bash
-# Install fnm (Fast Node Manager)
-curl -o- https://fnm.vercel.app/install | bash
-
-# Install Node.js v22
-fnm install 22
-
-# Check Node.js version
-node -v # Should print something like "v22.14.0"
-
-# Check npm version
-npm -v # Should print something like "10.9.2"
-```
-
----
-
-### 📦 Install Project Dependencies
+##### 📦 Install Project Dependencies
 
 Navigate to the frontend directory and install all dependencies:
 
@@ -183,7 +178,7 @@ npm install
 
 ---
 
-### 🚀 Install Expo CLI
+##### 🚀 Install Expo CLI
 
 To install Expo CLI globally:
 
@@ -195,7 +190,7 @@ npm install -g expo-cli
 
 ---
 
-### 🧪 Start Development Server
+##### 🧪 Start Development Server
 
 To start the Expo development server:
 
