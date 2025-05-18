@@ -120,6 +120,18 @@ If you encounter issues:
 2. Check service logs for errors
 3. Verify all required ports are available
 4. Make sure you're running commands from the project root directory
+5. It is possible that some cached dependecies are blocking/breaking your build, in that case execute the following command:
+
+    ```bash
+    docker compose build --no-cache <service-name>
+    ```
+
+    then reset services' state:
+
+    ```bash
+    docker compose down
+    docker compose up <service-name>
+    ```
 
 ### Local setup
 
@@ -181,7 +193,7 @@ npm install
 
 To start the development server go to the `frontend` directory and choose one of those two options:
 
-1. This will run a bare development server with clean cache and tunneling (for testing on tour own mobile device):
+1. This will run a bare development server with clean cache and tunneling (for testing on your own mobile device):
 
 ```bash
 npm run start
@@ -206,7 +218,7 @@ This section focuses on our common arrangements which we establish during retro 
 
 ### PR reminding
 
-We have noticed that delays in development are also by waiting for PR's review.
+We have noticed that delays in development are caused by waiting for PR's review.
 Now, it is the responsibility of the person who requests PR's to remind reviers of them. Preferably every 2 days.
 
 ### Task dependencies
