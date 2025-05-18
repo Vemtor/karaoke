@@ -1,7 +1,9 @@
+/* eslint-disable no-unused-vars */
+
 import { TILE_MODAL_ACTION_CONFIG } from './tile-actions-data';
 import { TileModalActionProps } from './tile-modal-action-pressable';
-import { TileModalAction } from './types/tile-modal-action';
 import { TileModalVariant } from './types/tile-modal.enum';
+import { TileModalAction } from './types/tile-modal-action';
 
 export const TILE_MODAL_ACTIONS_DATA: Record<TileModalVariant, TileModalActionProps[]> = {
   [TileModalVariant.NEW_SONG]: [

@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 export enum TileModalActionVariant {
   SUCCESS = 'success',
   DANGER = 'danger',

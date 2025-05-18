@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 export enum TileModalVariant {
   NEW_SONG = 'new-song',
   QUEUED_SONG = 'queue-song',

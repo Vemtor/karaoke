@@ -1,9 +1,10 @@
+import { Tabs } from 'expo-router';
+import { Bookmark, House, List, LucideIcon, Search } from 'lucide-react-native';
 import { useCallback, useState } from 'react';
 import { Platform } from 'react-native';
-import { Tabs } from 'expo-router';
-import { House, Search, List, Bookmark, LucideIcon } from 'lucide-react-native';
-import { BottomNavTabName } from '@/types/bottom-nav-tab-enum';
+
 import BottomNavTab, { BottomNavTabProps } from '@/components/tabs/BottomNavTab';
+import { BottomNavTabName } from '@/types/bottom-nav-tab-enum';
 
 const TABS: { name: BottomNavTabName; icon: LucideIcon }[] = [
   { name: BottomNavTabName.HOME, icon: House },
@@ -37,7 +38,6 @@ export default function TabLayout() {
           ios: { position: 'absolute' },
           default: {
             minHeight: 60,
-
             borderTopWidth: 0,
           },
         }),

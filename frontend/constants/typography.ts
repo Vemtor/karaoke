@@ -1,57 +1,17 @@
-import { StyleSheet } from 'react-native';
+// Below is the typography configuration for our application.
 
-const Typography = StyleSheet.create({
-  'text-xl': {
-    fontSize: 40,
-    lineHeight: 48,
-    letterSpacing: 0.5,
+const typography = {
+  fontSize: {
+    xl: ['40px', { lineHeight: '48px', letterSpacing: '0.5px' }],
+    lg: ['32px', { lineHeight: '24px', letterSpacing: '0.5px' }],
+    md: ['20px', { lineHeight: '24px', letterSpacing: '0.5px' }],
+    base: ['16px', { lineHeight: '24px', letterSpacing: '0.5px' }],
+    sm: ['12px', { lineHeight: '24px', letterSpacing: '0.5px' }],
+    xs: ['10px', { lineHeight: '24px', letterSpacing: '0.5px' }],
   },
-  'text-lg': {
-    fontSize: 32,
-    lineHeight: 24,
-    letterSpacing: 0.5,
+  fontFamily: {
+    'roboto-mono': ['RobotoMono400'],
   },
-  'text-md': {
-    fontSize: 20,
-    lineHeight: 24,
-    letterSpacing: 0.5,
-  },
-  'text-base': {
-    fontSize: 16,
-    lineHeight: 24,
-    letterSpacing: 0.5,
-  },
-  'text-sm': {
-    fontSize: 12,
-    lineHeight: 24,
-    letterSpacing: 0.5,
-  },
-  'text-xs': {
-    fontSize: 10,
-    lineHeight: 24,
-    letterSpacing: 0.5,
-  },
-  'font-thin': {
-    fontFamily: 'RobotoMono100',
-  },
-  'font-extra-light': {
-    fontFamily: 'RobotoMono200',
-  },
-  'font-light': {
-    fontFamily: 'RobotoMono300',
-  },
-  'font-regular': {
-    fontFamily: 'RobotoMono400',
-  },
-  'font-medium': {
-    fontFamily: 'RobotoMono500',
-  },
-  'font-semi-bold': {
-    fontFamily: 'RobotoMono600',
-  },
-  'font-bold': {
-    fontFamily: 'RobotoMono700',
-  },
-});
+};
 
-export default Typography;
+export default typography;

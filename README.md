@@ -120,6 +120,18 @@ If you encounter issues:
 2. Check service logs for errors
 3. Verify all required ports are available
 4. Make sure you're running commands from the project root directory
+5. It is possible that some cached dependecies are blocking/breaking your build, in that case execute the following command:
+
+    ```bash
+    docker compose build --no-cache <service-name>
+    ```
+
+    then reset services' state:
+
+    ```bash
+    docker compose down
+    docker compose up <service-name>
+    ```
 
 ### Local setup
 
@@ -133,14 +145,13 @@ python3.10 -m venv .venv
 source .venv/bin/activate # On Windows use: .venv\Scripts\activate
 ```
 
-Install dependencies
+Install dependencies:
 
 ```bash
 cd scripts && pip install -r requirements.txt
 ```
 
-Download vocal remover and place it in backend/scripts
-<https://github.com/tsurumeso/vocal-remover/releases/download/v5.1.1/vocal-remover-v5.1.1.zip>
+Download [vocal remover](<https://github.com/tsurumeso/vocal-remover/releases/download/v5.1.1/vocal-remover-v5.1.1.zip>) and place it in backend/scripts.
 
 ```bash
 wget https://github.com/tsurumeso/vocal-remover/releases/download/v5.1.1/vocal-remover-v5.1.1.zip -O vocal-remover.zip && \
@@ -148,7 +159,7 @@ unzip vocal-remover.zip -d scripts/ && \
 rm vocal-remover.zip
 ```
 
-Launch the servers from backend root
+Launch the servers from backend root:
 
 ```bash
 python3 scripts/flask_server.py
@@ -158,12 +169,12 @@ Run Spring app from your IDE
 
 #### Frontend setup (⚛️Expo)
 
-**NOTICE:** The steps below have been verified to work on **Expo CLI + Android Phone**.  
-If you're using a different setup (e.g., iOS, custom workflow, or bare React Native), please refer to the official [Expo documentation](https://docs.expo.dev/get-started/start-developing/) or relevant GitHub threads for help.
+**NOTICE:** The steps below have been verified to work on **Expo CLI + Android Phone/Web**. Both Windows and WSL enviroment were tested with successful outcome.
+If you're using a different setup (e.g., iOS or custom workflow), please refer to the official [Expo documentation](https://docs.expo.dev/get-started/start-developing/) or relevant GitHub threads for help.
 
-This project uses **[Expo](https://expo.dev/)** — a framework and platform for universal React apps — to streamline development and deployment.
+This project uses **[Expo](https://expo.dev/)**.
 
-If you run into any problems, check the official [Expo docs](https://docs.expo.dev/get-started/start-developing/).
+If you run into any problems, check the official [Expo docs](https://docs.expo.dev/get-started/start-developing/) or contact @galakitkkon.
 
 ---
 
@@ -178,32 +189,26 @@ npm install
 
 ---
 
-##### 🚀 Install Expo CLI
-
-To install Expo CLI globally:
-
-```bash
-npm install -g expo-cli
-```
-
-> 📘 Official Expo CLI installation guide: [https://docs.expo.dev/get-started/installation/](https://docs.expo.dev/get-started/installation/)
-
----
-
 ##### 🧪 Start Development Server
 
-To start the Expo development server:
+To start the development server go to the `frontend` directory and choose one of those two options:
+
+1. This will run a bare development server with clean cache and tunneling (for testing on your own mobile device):
 
 ```bash
-npx expo start
+npm run start
 ```
 
-Once the server is running, you can preview the app using one of the following methods:
-
-- Press `a` to open in an Android emulator (e.g. via [Android Studio](https://developer.android.com/studio))
+- Press `a` to open in an Android emulator (e.g. via [Android Studio](https://developer.android.com/studio) - needs to be configured first!)
 - Or scan the QR code with the [Expo Go app](https://play.google.com/store/apps/details?id=host.exp.exponent&pli=1) on your Android phone (**recommended**)
 
 > 📘 For running on iOS or physical devices, follow the official [Expo device guide](https://docs.expo.dev/workflow/run-on-device/)
+
+2. This will run a development server with clean cache and open the web-compiled instance in your primary browser (good for quick testing):
+
+```bash
+npm run web
+```
 
 ---
 
@@ -213,7 +218,7 @@ This section focuses on our common arrangements which we establish during retro 
 
 ### PR reminding
 
-We have noticed that delays in development are also by waiting for PR's review.
+We have noticed that delays in development are caused by waiting for PR's review.
 Now, it is the responsibility of the person who requests PR's to remind reviers of them. Preferably every 2 days.
 
 ### Task dependencies

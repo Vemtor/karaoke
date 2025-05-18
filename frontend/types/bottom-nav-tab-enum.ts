@@ -5,5 +5,3 @@ export enum BottomNavTabName {
   QUEUE = 'queue',
   DOWNLOADS = 'downloads',
 }
-
-/* eslint-enable no-unused-vars */
