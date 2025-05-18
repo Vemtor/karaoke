@@ -1,9 +1,6 @@
-/**
- * Below are the colors that are used in the app.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
- */
+// Below are the colors that are used in the application.
 
-const Colors = {
+const colors = {
   white: '#FFFFFF',
   black: '#000000',
   'coffee-black': '#191414',
@@ -15,4 +12,4 @@ const Colors = {
   lime: '#95E558',
 };
 
-export default Colors;
+export default colors;

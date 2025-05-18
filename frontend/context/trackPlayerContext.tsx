@@ -5,9 +5,8 @@ import TrackPlayer, {
   useProgress,
   State,
 } from 'react-native-track-player';
-import SongTrack from '@/types/songTrack';
+import { SongTrack, SongSegment } from '@/types/songTypes';
 import { fetchSongLyrics, splitAudio } from '@/services/backendApi';
-import SongSegment from '@/types/songSegment';
 
 interface TrackPlayerContextType {
   isTrackPlayerReady: boolean;

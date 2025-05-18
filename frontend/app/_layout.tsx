@@ -1,9 +1,4 @@
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import '@/global.css';
 
 /* eslint-disable */
 import { RobotoMono_100Thin } from '@expo-google-fonts/roboto-mono/100Thin';
@@ -13,7 +8,16 @@ import { RobotoMono_400Regular } from '@expo-google-fonts/roboto-mono/400Regular
 import { RobotoMono_500Medium } from '@expo-google-fonts/roboto-mono/500Medium';
 import { RobotoMono_600SemiBold } from '@expo-google-fonts/roboto-mono/600SemiBold';
 import { RobotoMono_700Bold } from '@expo-google-fonts/roboto-mono/700Bold';
+<<<<<<< HEAD
 import { TrackPlayerProvider } from '@/context/trackPlayerContext';
+=======
+import { useFonts } from 'expo-font';
+import { Stack } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
+import { StatusBar } from 'expo-status-bar';
+import { useEffect } from 'react';
+import { Platform } from 'react-native';
+>>>>>>> origin/develop
 /* eslint-enable */
 
 SplashScreen.preventAutoHideAsync();
@@ -42,6 +46,7 @@ export default function RootLayout() {
 
   return (
     <>
+<<<<<<< HEAD
       <TrackPlayerProvider>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -49,6 +54,12 @@ export default function RootLayout() {
         </Stack>
         <StatusBar style="auto" />
       </TrackPlayerProvider>
+=======
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      </Stack>
+      <StatusBar style="auto" />
+>>>>>>> origin/develop
     </>
   );
 }
