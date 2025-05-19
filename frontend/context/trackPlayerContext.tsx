@@ -18,7 +18,7 @@ interface TrackPlayerContextType {
   playNextSong: () => void;
   playPreviousSong: () => void;
   loadSong: (track: SongTrack) => void;
-  // expand further if you need to interact with track player
+  // expand further if you need more interactions with track player
   // addSongToQueue: (songTrack: SongTrack) => void; // Could be used to check if song is cached, if not it will invoke loadSong
 }
 
