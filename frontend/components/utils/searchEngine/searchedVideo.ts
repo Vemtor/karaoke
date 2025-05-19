@@ -6,11 +6,7 @@ export class SearchedVideo {
   channelTitle: string;
   videoUrl: string;
   rawDuration?: string;
-<<<<<<< HEAD
-  formattedDuration?: string;
-=======
   formattedDuration?: number;
->>>>>>> develop
 
   constructor(
     id: string,
