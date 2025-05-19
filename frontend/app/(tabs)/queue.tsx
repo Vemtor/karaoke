@@ -1,41 +1,18 @@
-<<<<<<< HEAD
-import React, {useEffect, useState} from 'react';
-import global from '@/styles/global';
+import React from 'react';
 import {StyleSheet, SafeAreaView, Dimensions, FlatList} from 'react-native';
-import QueueService from "@/utils/queueService";
-import {SearchedVideo} from "@/components/utils/searchEngine/searchedVideo";
-import SongTile from "@/components/SongTile";
+import { useTrackPlayer } from '@/context/trackPlayerContext';
+import SongTile from '@/components/tiles/song-tile';
 const { width } = Dimensions.get('window');
 
 const HomeScreen = () => {
-  const [queue, setQueue] = useState<SearchedVideo[]>([]);
-
-  useEffect(() => {
-    const fetchQueue = async () => {
-      try {
-        const data = QueueService.getShiftedQueue();
-        setQueue(data);
-      } catch (err) {
-        console.error('Failed to fetch queue:', err);
-      }
-    };
-
-    fetchQueue().catch(console.error);
-
-    const interval = setInterval(() => {
-      fetchQueue().catch(console.error);
-    }, 500);
-
-    return () => clearInterval(interval);
-  }, []);
+  const { queueState } = useTrackPlayer();
 
   return (
-    <SafeAreaView style={global['safe-area-container']}>
+    <SafeAreaView>
       <FlatList
         contentContainerStyle={styles.listContainerFlatList}
-        data={queue}
-        renderItem={({ item }) => <SongTile {...item} />}
-        keyExtractor={(item, index) => item.id || index.toString()}
+        data={queueState}
+        renderItem={({ item }) => <SongTile title={item.title || ''} subtitle={item.artist || 'unkown'} image={item.thumbnailUrl || ''}  />}
       />
     </SafeAreaView>
   );
@@ -99,21 +76,3 @@ const styles = StyleSheet.create({
 });
 
 export default HomeScreen;
-=======
-import React from 'react';
-import { Text, View } from 'react-native';
-
-import ViewLayout from '@/components/wrappers/view-laytout';
-
-const Queue = () => {
-  return (
-    <ViewLayout>
-      <View className="flex-1 justify-center items-center">
-        <Text className="text-white text-[24px] font-bold font-roboto-mono">Queue</Text>
-      </View>
-    </ViewLayout>
-  );
-};
-
-export default Queue;
->>>>>>> develop

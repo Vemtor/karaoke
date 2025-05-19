@@ -10,20 +10,13 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import {SearchedVideo} from "@/components/utils/searchEngine/searchedVideo";
-import {mapToSearchedVideo} from "@/components/utils/searchEngine/mapToSearchedVideo";
+import {SearchedVideo} from "@/utils/searchEngine/searchedVideo";
+import {mapToSearchedVideo} from "@/utils/searchEngine/mapToSearchedVideo";
 import { Ionicons } from '@expo/vector-icons';
-import { parseISO8601Duration} from "@/components/utils/searchEngine/durationParser";
+import { parseISO8601Duration} from "@/utils/searchEngine/durationParser";
 import colors from "@/constants/colors";
-<<<<<<< HEAD
-import QueueService from "@/utils/queueService";
-
-
-=======
-import { SongTrack } from "@/types/songTypes"
 import { useTrackPlayer } from '@/context/trackPlayerContext';
 
->>>>>>> develop
 export default function SearchScreen() {
   const apiKey = process.env.EXPO_PUBLIC_SEARCH_APP_API_KEY;
 
@@ -33,14 +26,7 @@ export default function SearchScreen() {
   const [loading, setLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [nextPageToken, setNextPageToken] = useState<string | null>(null);
-<<<<<<< HEAD
-
-
-
-
-=======
   const { loadSong } = useTrackPlayer();
->>>>>>> develop
 
   const fetchVideoDetails = async (videoIds: string[]): Promise<Map<string, string>> => {
     if (videoIds.length === 0) {
@@ -172,10 +158,6 @@ export default function SearchScreen() {
 
   const renderVideoItem = ({ item }: { item: SearchedVideo }) => (
       <TouchableOpacity style={styles.listItem}
-<<<<<<< HEAD
-                        onPress={() => {
-                          QueueService.addTrackToQueue(item);
-=======
                         onPress={async () => {
                           console.log('Item clicked:', item.title);
                           console.log('Video URL:', item.videoUrl);
@@ -188,7 +170,6 @@ export default function SearchScreen() {
                             thumbnailUrl: item.thumbnailUrl
                           }
                           await loadSong(songTrack)
->>>>>>> develop
                         }}
                         activeOpacity={0.7}
       >
@@ -346,25 +327,4 @@ const styles = useMemo(() => StyleSheet.create({
   footerActivityIndicator: {
     paddingVertical: 20,
   },
-<<<<<<< HEAD
-  modalOverlay: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    width: '80%',
-    backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-=======
->>>>>>> develop
 }), [isDarkMode]);

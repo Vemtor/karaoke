@@ -4,6 +4,7 @@ import TrackPlayer, {
   useTrackPlayerEvents,
   useProgress,
   State,
+  Track,
 } from 'react-native-track-player';
 import { SongTrack, SongSegment } from '@/types/songTypes';
 import { fetchSongLyrics, splitAudio } from '@/services/backendApi';
@@ -14,6 +15,7 @@ interface TrackPlayerContextType {
   currentTrack: SongTrack; // use to get info about current song
   songLines: { currentLine: string; previousLine: string; nextLine: string }; // current song lines
   isPlaying: boolean; // use to get info if song is playing
+  queueState: SongTrack[];
   // song controls
   toggleSong: () => void;
   playNextSong: () => void;
@@ -36,6 +38,7 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
   });
   const [isPlaying, setIsPlaying] = useState(false);
   const progress = useProgress();
+  const [ queueState, setQueueState ] = useState<SongTrack[]>([]);
 
   const loadSong = async (track: SongTrack) => {
     if (!isTrackPlayerReady) {
@@ -61,6 +64,8 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
         console.error('Error loading song:', error.message);
       }
     }
+
+    setQueueState(await TrackPlayer.getQueue());
   };
 
   const playNextSong = async () => {
@@ -188,6 +193,7 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
         currentTrack,
         songLines,
         isPlaying,
+        queueState,
         playNextSong,
         playPreviousSong,
         toggleSong,
