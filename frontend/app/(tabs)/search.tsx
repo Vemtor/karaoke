@@ -15,9 +15,15 @@ import {mapToSearchedVideo} from "@/components/utils/searchEngine/mapToSearchedV
 import { Ionicons } from '@expo/vector-icons';
 import { parseISO8601Duration} from "@/components/utils/searchEngine/durationParser";
 import colors from "@/constants/colors";
+<<<<<<< HEAD
 import QueueService from "@/utils/queueService";
 
 
+=======
+import { SongTrack } from "@/types/songTypes"
+import { useTrackPlayer } from '@/context/trackPlayerContext';
+
+>>>>>>> develop
 export default function SearchScreen() {
   const apiKey = process.env.EXPO_PUBLIC_SEARCH_APP_API_KEY;
 
@@ -27,10 +33,14 @@ export default function SearchScreen() {
   const [loading, setLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [nextPageToken, setNextPageToken] = useState<string | null>(null);
+<<<<<<< HEAD
 
 
 
 
+=======
+  const { loadSong } = useTrackPlayer();
+>>>>>>> develop
 
   const fetchVideoDetails = async (videoIds: string[]): Promise<Map<string, string>> => {
     if (videoIds.length === 0) {
@@ -162,8 +172,23 @@ export default function SearchScreen() {
 
   const renderVideoItem = ({ item }: { item: SearchedVideo }) => (
       <TouchableOpacity style={styles.listItem}
+<<<<<<< HEAD
                         onPress={() => {
                           QueueService.addTrackToQueue(item);
+=======
+                        onPress={async () => {
+                          console.log('Item clicked:', item.title);
+                          console.log('Video URL:', item.videoUrl);
+                          console.log('Raw Duration:', item.rawDuration);
+                          console.log('Formatted Duration:', item.formattedDuration);
+                          const songTrack = {
+                            title: item.title,
+                            youtubeUrl: item.videoUrl,
+                            url: '',
+                            thumbnailUrl: item.thumbnailUrl
+                          }
+                          await loadSong(songTrack)
+>>>>>>> develop
                         }}
                         activeOpacity={0.7}
       >
@@ -321,6 +346,7 @@ const styles = useMemo(() => StyleSheet.create({
   footerActivityIndicator: {
     paddingVertical: 20,
   },
+<<<<<<< HEAD
   modalOverlay: {
     flex: 1,
     justifyContent: 'center',
@@ -339,4 +365,6 @@ const styles = useMemo(() => StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
   },
+=======
+>>>>>>> develop
 }), [isDarkMode]);

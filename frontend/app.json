@@ -47,6 +47,9 @@
         "projectId": "b14a6cce-1cc5-4a39-b8a7-77b48e1afc88"
       }
     },
-    "owner": "galaktikkon"
+    "owner": "galaktikkon",
+    "expo": {
+      "jsEngine": "hermes"
+    }
   }
 }
