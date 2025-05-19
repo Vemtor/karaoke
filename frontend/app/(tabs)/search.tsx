@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { useEffect, useState, useMemo } from 'react';
 import {
   TextInput,
@@ -16,7 +15,8 @@ import {mapToSearchedVideo} from "@/components/utils/searchEngine/mapToSearchedV
 import { Ionicons } from '@expo/vector-icons';
 import { parseISO8601Duration} from "@/components/utils/searchEngine/durationParser";
 import colors from "@/constants/colors";
-
+import { SongTrack } from "@/types/songTypes"
+import { useTrackPlayer } from '@/context/trackPlayerContext';
 
 export default function SearchScreen() {
   const apiKey = process.env.EXPO_PUBLIC_SEARCH_APP_API_KEY;
@@ -27,10 +27,7 @@ export default function SearchScreen() {
   const [loading, setLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [nextPageToken, setNextPageToken] = useState<string | null>(null);
-
-
-
-
+  const { loadSong } = useTrackPlayer();
 
   const fetchVideoDetails = async (videoIds: string[]): Promise<Map<string, string>> => {
     if (videoIds.length === 0) {
@@ -162,11 +159,18 @@ export default function SearchScreen() {
 
   const renderVideoItem = ({ item }: { item: SearchedVideo }) => (
       <TouchableOpacity style={styles.listItem}
-                        onPress={() => {
+                        onPress={async () => {
                           console.log('Item clicked:', item.title);
                           console.log('Video URL:', item.videoUrl);
                           console.log('Raw Duration:', item.rawDuration);
                           console.log('Formatted Duration:', item.formattedDuration);
+                          const songTrack = {
+                            title: item.title,
+                            youtubeUrl: item.videoUrl,
+                            url: '',
+                            thumbnailUrl: item.thumbnailUrl
+                          }
+                          await loadSong(songTrack)
                         }}
                         activeOpacity={0.7}
       >
@@ -182,31 +186,8 @@ export default function SearchScreen() {
           <Text style={styles.durationText} numberOfLines={1}>{item.formattedDuration}</Text>
         </View>
       </TouchableOpacity>
-=======
-import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
-import { useTrackPlayer } from '@/context/trackPlayerContext'
-
-import ViewLayout from '@/components/wrappers/view-laytout';
-
-const Search = () => {
-  const { loadSong } = useTrackPlayer();
-  return (
-    <ViewLayout>
-      <View className="flex-1 justify-center items-center">
-        <Text className="text-white text-[24px] font-bold font-roboto-mono">Search</Text>
-        <TouchableOpacity onPress={() => loadSong({title: "On melancholy hill", url: "",youtubeUrl: "https://www.youtube.com/watch?v=BGn2oo-0Dqc", duration: 208})}>
-          <Text className="text-white text-[24px] font-bold font-roboto-mono">On Melancholy Hill</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => loadSong({title: "Linkin Park", url: "",youtubeUrl: "https://www.youtube.com/watch?v=eVTXPUF4Oz4", duration: 278})}>
-          <Text className="text-white text-[24px] font-bold font-roboto-mono">Linkin Park</Text>
-        </TouchableOpacity>
-      </View>
-    </ViewLayout>
->>>>>>> origin/develop
   );
 
-<<<<<<< HEAD
   return (
       <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
         <View style={{ flex: 1 }}>
@@ -348,6 +329,3 @@ const styles = useMemo(() => StyleSheet.create({
     paddingVertical: 20,
   },
 }), [isDarkMode]);
-=======
-export default Search;
->>>>>>> origin/develop

@@ -6,7 +6,7 @@ export class SearchedVideo {
   channelTitle: string;
   videoUrl: string;
   rawDuration?: string;
-  formattedDuration?: string;
+  formattedDuration?: number;
 
   constructor(
     id: string,
