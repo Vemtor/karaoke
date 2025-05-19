@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, SafeAreaView, Dimensions, FlatList} from 'react-native';
+import {StyleSheet, SafeAreaView, Dimensions, FlatList, View} from 'react-native';
 import { useTrackPlayer } from '@/context/trackPlayerContext';
 import SongTile from '@/components/tiles/song-tile';
 const { width } = Dimensions.get('window');
@@ -12,7 +12,7 @@ const HomeScreen = () => {
       <FlatList
         contentContainerStyle={styles.listContainerFlatList}
         data={queueState}
-        renderItem={({ item }) => <SongTile title={item.title || ''} subtitle={item.artist || 'unkown'} image={item.thumbnailUrl || ''}  />}
+        renderItem={({ item }) => <View className='py-1'><SongTile title={item.title || ''} subtitle={item.artist || 'unkown'} image={item.thumbnailUrl || ''}  /></View>}
         keyExtractor={(_, index) => index.toString()}
       />
     </SafeAreaView>
