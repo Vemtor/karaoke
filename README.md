@@ -169,6 +169,8 @@ Run Spring app from your IDE
 
 #### Frontend setup (⚛️Expo)
 
+[Figma - Wireframes](https://www.figma.com/design/BqJio0jYeWKEkCZr02KSZ1/Karaoke-Generator-Mobile-UI?node-id=44-374&t=Mv7cUoWs42FJczg2-0)
+
 **NOTICE:** The steps below have been verified to work on **Expo CLI + Android Phone/Web**. Both Windows and WSL enviroment were tested with successful outcome.
 If you're using a different setup (e.g., iOS or custom workflow), please refer to the official [Expo documentation](https://docs.expo.dev/get-started/start-developing/) or relevant GitHub threads for help.
 
