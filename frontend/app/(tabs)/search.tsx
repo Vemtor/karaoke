@@ -16,6 +16,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { parseISO8601Duration} from "@/utils/searchEngine/durationParser";
 import colors from "@/constants/colors";
 import { useTrackPlayer } from '@/context/trackPlayerContext';
+import { SongTrack } from '@/types/songTypes';
 
 export default function SearchScreen() {
   const apiKey = process.env.EXPO_PUBLIC_SEARCH_APP_API_KEY;
@@ -159,16 +160,13 @@ export default function SearchScreen() {
   const renderVideoItem = ({ item }: { item: SearchedVideo }) => (
       <TouchableOpacity style={styles.listItem}
                         onPress={async () => {
-                          console.log('Item clicked:', item.title);
-                          console.log('Video URL:', item.videoUrl);
-                          console.log('Raw Duration:', item.rawDuration);
-                          console.log('Formatted Duration:', item.formattedDuration);
                           const songTrack = {
                             title: item.title,
                             youtubeUrl: item.videoUrl,
                             url: '',
-                            thumbnailUrl: item.thumbnailUrl
-                          }
+                            thumbnailUrl: item.thumbnailUrl,
+                            artist: item.channelTitle,
+                          } as SongTrack
                           await loadSong(songTrack)
                         }}
                         activeOpacity={0.7}

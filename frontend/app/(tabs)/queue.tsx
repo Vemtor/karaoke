@@ -13,6 +13,7 @@ const HomeScreen = () => {
         contentContainerStyle={styles.listContainerFlatList}
         data={queueState}
         renderItem={({ item }) => <SongTile title={item.title || ''} subtitle={item.artist || 'unkown'} image={item.thumbnailUrl || ''}  />}
+        keyExtractor={(_, index) => index.toString()}
       />
     </SafeAreaView>
   );
