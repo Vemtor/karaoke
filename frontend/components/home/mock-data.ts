@@ -1,6 +1,7 @@
+import dua from '@/assets/images/dua-lipa.png';
+
 import { PlaylistTileProps } from '../tiles/playlist-tile';
 import { SongTileProps } from '../tiles/song-tile';
-import dua from '@/assets/images/dua-lipa.png';
 
 export const mockSongs: SongTileProps[] = [
   {
@@ -38,12 +39,12 @@ export const mockSongs: SongTileProps[] = [
 export const mockPlaylists: PlaylistTileProps[] = [
   {
     title: 'RADDDICAL',
-    subtitle: 'Dua Lipa',
+    subtitle: '21',
     image: dua,
   },
   {
     title: 'OPTIMISSSSM',
-    subtitle: 'Dua Lipa',
+    subtitle: '37',
     image: dua,
   },
 ];
