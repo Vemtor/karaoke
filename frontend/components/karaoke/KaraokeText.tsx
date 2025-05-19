@@ -11,7 +11,7 @@ export default function SongViewText() {
         </Text>
         <View className="absolute w-full h-full top-0 left-0 z-1 bg-gradient-to-b from-[rgba(25,20,20,1)] from-[75%_rgba(25,20,20,0.5)] to-[rgba(0,0,0,0)]" />
       </View>
-      <Text className="text-[22px] font-roboto-mono text-[#95E558] text-center my-2">
+      <Text className="text-[22px] font-roboto-mono text-lime text-center my-2">
         {songLines.currentLine}
       </Text>
       <View className="relative w-full flex justify-center items-center">

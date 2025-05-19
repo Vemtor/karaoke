@@ -25,12 +25,12 @@ export default function ControlPanel() {
   });
 
   return (
-    <View className="bg-gray-300 py-2 border-t border-gray-400 justify-around items-center flex flex-col absolute w-full bottom-0">
+    <View className="pt-1 bg-gray-300 border-t border-gray-400 justify-around items-center flex flex-col absolute w-full bottom-0 left-0">
       <View className="px-3 w-full flex flex-row justify-between items-center">
         <Text className="text-base font-roboto-mono truncate">
           {currentTrack ? currentTrack.title : ' '}
         </Text>
-        <TouchableOpacity className="items-center" onPress={togglePanel}>
+        <TouchableOpacity className="items-center h-[30px] w-[30px] flex justify-center align-center" onPress={togglePanel}>
           {isOpen ? <ChevronDown /> : <ChevronUp />}
         </TouchableOpacity>
       </View>
@@ -42,7 +42,7 @@ export default function ControlPanel() {
         }}
       >
         <View className="w-full items-center justify-around flex flex-col h-full">
-          <View className='w-full h-[1px] my-0 bg-gray-600'/>
+          <View className='w-full h-[1px] my-0 bg-slate-gray'/>
           <SongSpinner />
           <View className="px-3 w-full flex flex-row justify-around">
             <Text>Vocal Volume</Text>
@@ -50,8 +50,9 @@ export default function ControlPanel() {
           </View>
         </View>
       </Animated.View>
-      <View className='w-full h-[1px] my-2 bg-gray-600'/>
+      <View className='w-full h-[1px] mb-2 bg-slate-gray'/>
       <Controls />
+      <View className='w-full h-[1px] my-0 bg-slate-gray'/>
     </View>
   );
 };

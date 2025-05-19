@@ -7,6 +7,7 @@ import TrackPlayer, {
 } from 'react-native-track-player';
 import { SongTrack, SongSegment } from '@/types/songTypes';
 import { fetchSongLyrics, splitAudio } from '@/services/backendApi';
+import API_ROUTES from '@/constants/apiRoutes';
 
 interface TrackPlayerContextType {
   isTrackPlayerReady: boolean; // use for interactions with track player
@@ -14,7 +15,7 @@ interface TrackPlayerContextType {
   songLines: { currentLine: string; previousLine: string; nextLine: string }; // current song lines
   isPlaying: boolean; // use to get info if song is playing
   // song controls
-  playPauseSong: () => void;
+  toggleSong: () => void;
   playNextSong: () => void;
   playPreviousSong: () => void;
   loadSong: (track: SongTrack) => void;
@@ -49,7 +50,7 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
       }
       const fetchedSongText = await fetchSongLyrics(youtubeUrl);
       const fetchedAudioSplitterResponse = await splitAudio(youtubeUrl);
-      const songUrl = 'http://localhost:8080' + fetchedAudioSplitterResponse.instrumentsPath;
+      const songUrl = API_ROUTES.API_BASE_URL + fetchedAudioSplitterResponse.instrumentsPath;
 
       track.url = songUrl; // provide url of the file location to the track
       track.songText = fetchedSongText; // provide song text to the track
@@ -86,7 +87,7 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
     }
   };
 
-  const playPauseSong = async () => {
+  const toggleSong = async () => {
     if (!isTrackPlayerReady) {
       console.warn('TrackPlayer is not ready yet!');
       return;
@@ -189,7 +190,7 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
         isPlaying,
         playNextSong,
         playPreviousSong,
-        playPauseSong,
+        toggleSong,
         loadSong,
       }}>
       {children}

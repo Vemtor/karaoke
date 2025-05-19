@@ -1,7 +1,6 @@
 import { SongText } from '@/types/songTypes';
 import axios from 'axios';
-
-const API_BASE_URL = 'http://localhost:8080/api/audio';
+import API_ROUTES from '@/constants/apiRoutes';
 
 export async function fetchSongLyrics(youtubeUrl: string): Promise<SongText> {
   if (!youtubeUrl || !youtubeUrl.startsWith('http')) {
@@ -9,7 +8,7 @@ export async function fetchSongLyrics(youtubeUrl: string): Promise<SongText> {
   }
 
   try {
-    const response = await axios.post(`${API_BASE_URL}/transcribe`, null, {
+    const response = await axios.post(`${API_ROUTES.API_AUDIO_URL}/transcribe`, null, {
       params: { youtubeUrl },
     });
     return response.data;
@@ -27,7 +26,7 @@ export async function splitAudio(
   }
 
   try {
-    const response = await axios.post(`${API_BASE_URL}/split`, null, {
+    const response = await axios.post(`${API_ROUTES.API_AUDIO_URL}/split`, null, {
       params: { youtubeUrl },
     });
     return response.data;

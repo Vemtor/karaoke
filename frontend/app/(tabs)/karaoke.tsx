@@ -1,14 +1,15 @@
 import React from 'react';
-import { SafeAreaView } from 'react-native';
+import ViewLayout from '@/components/wrappers/view-laytout';
 import SongViewText from '@/components/karaoke/KaraokeText';
 import ControlPanel from '@/components/karaoke/ControlPanel';
 
+
 const KaraokeScreen = () => {
   return (
-    <SafeAreaView className="h-full">
+    <ViewLayout>
       <SongViewText />
       <ControlPanel />
-    </SafeAreaView>
+    </ViewLayout>
   );
 };
 
