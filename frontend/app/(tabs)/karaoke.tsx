@@ -1,12 +1,11 @@
 import React from 'react';
-import global from '@/styles/global';
 import { SafeAreaView } from 'react-native';
 import SongViewText from '@/components/karaoke/KaraokeText';
 import ControlPanel from '@/components/karaoke/ControlPanel';
 
 const KaraokeScreen = () => {
   return (
-    <SafeAreaView style={global['safe-area-container']}>
+    <SafeAreaView className="h-full">
       <SongViewText />
       <ControlPanel />
     </SafeAreaView>

@@ -1,4 +1,4 @@
-import SongText from '@/types/songText';
+import { SongText } from '@/types/songTypes';
 import axios from 'axios';
 
 const API_BASE_URL = 'http://localhost:8080/api/audio';

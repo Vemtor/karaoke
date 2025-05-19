@@ -17,7 +17,7 @@ export default function SongSpinner() {
           <View
             style={{
               height: '100%',
-              width: `${progress.duration > 0 ? progress.position / progress.duration : 0 * 100}%`,
+              width: `${(progress.duration > 0 ? progress.position / progress.duration : 0) * 100}%`,
               backgroundColor: '#3b5998',
             }}
           />

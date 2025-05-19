@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
-
 import { mockPlaylists, mockSongs } from '@/components/home/mock-data';
 import TileModal from '@/components/modals/tile-modal';
 import { TileModalVariant } from '@/components/modals/types/tile-modal.enum';

@@ -1,12 +1,12 @@
 import React, { useRef, useState } from 'react';
-import { StyleSheet, View, TouchableOpacity, Text, Animated } from 'react-native';
-import { SkipBack, SkipForward, Play, Pause, ChevronDown, ChevronUp } from 'lucide-react-native';
+import { View, TouchableOpacity, Text, Animated } from 'react-native';
+import { ChevronDown, ChevronUp } from 'lucide-react-native';
 import { useTrackPlayer } from '@/context/trackPlayerContext';
-import SongSpinner from './SongSpinner';
+import SongSpinner from '@/components/karaoke/SongSpinner';
+import Controls from '@/components/karaoke/Controls';
 
 export default function ControlPanel() {
-  const { currentTrack, playNextSong, isPlaying, playPauseSong, playPreviousSong } =
-    useTrackPlayer();
+  const { currentTrack } = useTrackPlayer();
   const [isOpen, setIsOpen] = useState(false);
   const animation = useRef(new Animated.Value(0)).current;
 
@@ -25,73 +25,33 @@ export default function ControlPanel() {
   });
 
   return (
-    <View style={styles.container}>
-      <View style={[styles.rowContainer]}>
-        <Text style={styles.songTitle}>
-          {currentTrack ? currentTrack.title : 'title not provide'}
+    <View className="bg-gray-300 py-2 border-t border-gray-400 justify-around items-center flex flex-col absolute w-full bottom-0">
+      <View className="px-3 w-full flex flex-row justify-between items-center">
+        <Text className="text-base font-roboto-mono truncate">
+          {currentTrack ? currentTrack.title : ' '}
         </Text>
-        <TouchableOpacity style={styles.button} onPress={togglePanel}>
+        <TouchableOpacity className="items-center" onPress={togglePanel}>
           {isOpen ? <ChevronDown /> : <ChevronUp />}
         </TouchableOpacity>
       </View>
       <Animated.View
-        id="additionalControls"
         style={{
           height: animatedHeight,
           overflow: 'hidden',
-        }}>
-        <SongSpinner />
-        <View style={styles.rowContainer}>
-          <Text>Vocal Volume</Text>
-          <Text>VocalSpinner</Text>
+          width: '100%',
+        }}
+      >
+        <View className="w-full items-center justify-around flex flex-col h-full">
+          <View className='w-full h-[1px] my-0 bg-gray-600'/>
+          <SongSpinner />
+          <View className="px-3 w-full flex flex-row justify-around">
+            <Text>Vocal Volume</Text>
+            <Text>VocalSpinner</Text>
+          </View>
         </View>
       </Animated.View>
-      <View style={styles.songControlContainer}>
-        <TouchableOpacity style={styles.button} onPress={playPreviousSong}>
-          <SkipBack size={32} color="black" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={playPauseSong}>
-          {isPlaying ? <Pause size={32} color="black" /> : <Play size={32} color="black" />}
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={playNextSong}>
-          <SkipForward size={32} color="black" />
-        </TouchableOpacity>
-      </View>
+      <View className='w-full h-[1px] my-2 bg-gray-600'/>
+      <Controls />
     </View>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#ccc',
-    paddingVertical: 12,
-    borderTopWidth: 1,
-    borderTopColor: '#aaa',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'column',
-    position: 'absolute',
-    width: '100%',
-    bottom: 0,
-  },
-  button: {
-    alignItems: 'center',
-  },
-  songControlContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    width: '100%',
-  },
-  songTitle: {},
-  rowContainer: {
-    paddingLeft: 12,
-    paddingRight: 12,
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-});
+};

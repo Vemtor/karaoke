@@ -1,9 +1,11 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
+import { useTrackPlayer } from '@/context/trackPlayerContext'
 
 import ViewLayout from '@/components/wrappers/view-laytout';
 
 const Search = () => {
+  const { loadSong } = useTrackPlayer();
   return (
     <ViewLayout>
       <View className="flex-1 justify-center items-center">

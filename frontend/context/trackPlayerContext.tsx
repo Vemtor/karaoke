@@ -9,14 +9,16 @@ import { SongTrack, SongSegment } from '@/types/songTypes';
 import { fetchSongLyrics, splitAudio } from '@/services/backendApi';
 
 interface TrackPlayerContextType {
-  isTrackPlayerReady: boolean;
-  currentTrack: SongTrack;
-  songLines: { currentLine: string; previousLine: string; nextLine: string };
-  isPlaying: boolean;
+  isTrackPlayerReady: boolean; // use for interactions with track player
+  currentTrack: SongTrack; // use to get info about current song
+  songLines: { currentLine: string; previousLine: string; nextLine: string }; // current song lines
+  isPlaying: boolean; // use to get info if song is playing
+  // song controls
   playPauseSong: () => void;
   playNextSong: () => void;
   playPreviousSong: () => void;
   loadSong: (track: SongTrack) => void;
+  // expand further if you need to interact with track player
   // addSongToQueue: (songTrack: SongTrack) => void; // Could be used to check if song is cached, if not it will invoke loadSong
 }
 
@@ -35,31 +37,24 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const progress = useProgress();
 
   const loadSong = async (track: SongTrack) => {
+    if (!isTrackPlayerReady) {
+      console.warn('TrackPlayer is not ready yet!');
+      return;
+    }
     try {
       const youtubeUrl = track.youtubeUrl;
       if (!youtubeUrl) {
         console.warn('No YouTube URL provided for the track.');
         return;
       }
-      console.log('Loading song from URL:', youtubeUrl);
       const fetchedSongText = await fetchSongLyrics(youtubeUrl);
-
-      console.log('Fetched song text:', fetchedSongText);
-
       const fetchedAudioSplitterResponse = await splitAudio(youtubeUrl);
-      console.log('Fetched audio splitter response:', fetchedAudioSplitterResponse);
-
       const songUrl = 'http://localhost:8080' + fetchedAudioSplitterResponse.instrumentsPath;
-      console.log('Song URL:', songUrl);
+
       track.url = songUrl; // provide url of the file location to the track
       track.songText = fetchedSongText; // provide song text to the track
 
-      if (isTrackPlayerReady) {
-        await TrackPlayer.add(track, null);
-        console.log('Track added to TrackPlayer:', track);
-      } else {
-        console.warn('TrackPlayer is not ready yet!');
-      }
+      await TrackPlayer.add(track, null);
     } catch (error) {
       if (error instanceof Error) {
         console.error('Error loading song:', error.message);
@@ -67,25 +62,25 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
     }
   };
 
-  const playNextSong = () => {
+  const playNextSong = async () => {
     if (!isTrackPlayerReady) {
       console.warn('TrackPlayer is not ready yet!');
       return;
     }
     try {
-      TrackPlayer.skipToNext();
+      await TrackPlayer.skipToNext();
     } catch (error) {
       console.warn('Error skipping to next track:', error);
     }
   };
 
-  const playPreviousSong = () => {
+  const playPreviousSong = async () => {
     if (!isTrackPlayerReady) {
       console.warn('TrackPlayer is not ready yet!');
       return;
     }
     try {
-      TrackPlayer.skipToPrevious();
+      await TrackPlayer.skipToPrevious();
     } catch (error) {
       console.warn('Error skipping to previous track:', error);
     }
@@ -112,7 +107,6 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
         TrackPlayer.registerPlaybackService(() => require('@/services/service'));
         await TrackPlayer.setupPlayer();
         setIsTrackPlayerReady(true); // Mark TrackPlayer as ready
-        console.log('SongManager initialized successfully!');
       } catch (error) {
         console.error('Error initializing TrackPlayer:', error);
       }
@@ -129,11 +123,13 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
     const updateSongLines = () => {
       const currentTime = progress.position;
 
+      // get index of current song segment
       const currentSegmentIndex = songText.segments.findIndex(
         (segment: SongSegment) =>
           currentTime >= segment.start - 0.5 && currentTime < segment.end - 0.5,
       );
 
+      // initial text
       if (currentTime < 0.1 && currentSegmentIndex === -1) {
         setSongLines({
           previousSegmentIndex: -1,
@@ -141,6 +137,7 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
           currentLine: '',
           nextLine: songText.segments[0]?.text,
         });
+      // normal case
       } else if (currentSegmentIndex !== -1) {
         setSongLines({
           previousSegmentIndex: currentSegmentIndex,
@@ -148,6 +145,7 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
           currentLine: songText.segments[currentSegmentIndex]?.text || '',
           nextLine: songText.segments[currentSegmentIndex + 1]?.text || '',
         });
+      // between lines (silence) case
       } else {
         setSongLines({
           previousSegmentIndex: songLines.previousSegmentIndex,
