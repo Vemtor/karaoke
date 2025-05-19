@@ -4,4 +4,5 @@ export enum BottomNavTabName {
   SEARCH = 'search',
   QUEUE = 'queue',
   DOWNLOADS = 'downloads',
+  KARAOKE = 'karaoke',
 }
