@@ -220,7 +220,7 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   // update current track state
   useTrackPlayerEvents(
-    [Event.PlaybackActiveTrackChanged, Event.PlaybackPlayWhenReadyChanged, Event.PlaybackState],
+    [Event.PlaybackActiveTrackChanged, Event.PlaybackPlayWhenReadyChanged],
     async () => {
       const track = await TrackPlayer.getActiveTrack();
       if (track) {
