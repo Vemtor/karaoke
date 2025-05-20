@@ -3,19 +3,19 @@ import { Image, Pressable, Text, View } from 'react-native';
 
 import { ImageTileProps } from '@/components/tiles/types/image-tile';
 
-export interface PlaylistTileProps extends ImageTileProps {
+export interface SongTileBigProps extends ImageTileProps {
   onPress?: () => void; // click handler here
   // otherProps: any; // other props if needed
 }
 
-const PlaylistTile: FC<PlaylistTileProps> = ({ title, subtitle, image, onPress }) => {
+const SongTileBig: FC<SongTileBigProps> = ({title, subtitle, image, onPress }) => {
   return (
     <Pressable
       onPress={onPress}
       className="flex-1 flex-row bg-onyx p-1.5 rounded-md"
       style={({ pressed }) => pressed && { opacity: 0.8 }}>
       <Image
-        source={typeof image === 'string' ? { uri: image } : image}
+        source={typeof image === 'string' ? { uri: image } : image} // Fix for cached images
         className="rounded-sm"
         style={{ height: 78, width: 130 }}
       />
@@ -27,4 +27,4 @@ const PlaylistTile: FC<PlaylistTileProps> = ({ title, subtitle, image, onPress }
   );
 };
 
-export default PlaylistTile;
+export default SongTileBig;

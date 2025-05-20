@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import {
   TextInput,
   FlatList,
@@ -15,8 +15,9 @@ import {mapToSearchedVideo} from "@/utils/searchEngine/mapToSearchedVideo";
 import { Ionicons } from '@expo/vector-icons';
 import { parseISO8601Duration} from "@/utils/searchEngine/durationParser";
 import colors from "@/constants/colors";
-import { useTrackPlayer } from '@/context/trackPlayerContext';
-import { SongTrack } from '@/types/songTypes';
+import useSelectedTileStore from '@/stores/selected-tile.store';
+import { ImageTileProps } from '@/components/tiles/types/image-tile';
+import { TileModalVariant } from '@/components/modals/types/tile-modal.enum';
 
 export default function SearchScreen() {
   const apiKey = process.env.EXPO_PUBLIC_SEARCH_APP_API_KEY;
@@ -27,7 +28,23 @@ export default function SearchScreen() {
   const [loading, setLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [nextPageToken, setNextPageToken] = useState<string | null>(null);
-  const { loadSong } = useTrackPlayer();
+
+  const setVisible = useSelectedTileStore((state) => state.setVisible);
+  const setVariant = useSelectedTileStore((state) => state.setVariant);
+  const setTileData = useSelectedTileStore((state) => state.setTileData);
+  const setSongTrack = useSelectedTileStore((state) => state.setSongTrack);
+  const setSearchedVideo = useSelectedTileStore((state) => state.setSearchedVideo);
+
+  const openTileModal = useCallback(
+      (tile: ImageTileProps, variant: TileModalVariant, searchedVideo: SearchedVideo) => {
+        setTileData(tile);
+        setVisible(true);
+        setVariant(variant);
+        setSongTrack(null);
+        setSearchedVideo(searchedVideo);
+      },
+      [setTileData, setVisible, setVariant, setSongTrack, setSearchedVideo],
+    );
 
   const fetchVideoDetails = async (videoIds: string[]): Promise<Map<string, string>> => {
     if (videoIds.length === 0) {
@@ -159,17 +176,9 @@ export default function SearchScreen() {
 
   const renderVideoItem = ({ item }: { item: SearchedVideo }) => (
       <TouchableOpacity style={styles.listItem}
-                        onPress={async () => {
-                          const songTrack = {
-                            title: item.title,
-                            youtubeUrl: item.videoUrl,
-                            url: '',
-                            thumbnailUrl: item.thumbnailUrl,
-                            artist: item.channelTitle,
-                          } as SongTrack
-                          await loadSong(songTrack)
-                        }}
-                        activeOpacity={0.7}
+      onPress={() => openTileModal({title: item.title, subtitle: item.channelTitle, image: item.thumbnailUrl},
+               TileModalVariant.NEW_SONG, 
+               item)}
       >
         {item.thumbnailUrl && (
             <Image
@@ -239,10 +248,24 @@ export default function SearchScreen() {
               />
           )}
         </View>
+        {/* <TouchableOpacity onPress={() => loadSong({title: "On melancholy hill",
+          url: "",youtubeUrl: "https://www.youtube.com/watch?v=BGn2oo-0Dqc",
+          duration: 208,
+          thumbnailUrl: "https://img.youtube.com/vi/BGn2oo-0Dqc/maxresdefault.jpg",
+          artist: ""
+          })}>
+          <Text className="text-white text-[24px] font-bold font-roboto-mono">On Melancholy Hill</Text>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Text className="text-white text-[24px] font-bold font-roboto-mono"
+            
+          >Linkin Park</Text>
+        </TouchableOpacity> */}
+        
       </SafeAreaView>
   );
 }
-
+{/* <TouchableOpacity /> </SafeAreaView> onPress={() => loadSong({title: , artist: , url: "",youtubeUrl: , duration: 278, thumbnailUrl: "https://img.youtube.com/vi/eVTXPUF4Oz4/mqdefault.jpg"})}> */}
 
 const isDarkMode = true;
 const styles = useMemo(() => StyleSheet.create({

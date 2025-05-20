@@ -5,7 +5,7 @@ import TileModal from '@/components/modals/tile-modal';
 import { TileModalVariant } from '@/components/modals/types/tile-modal.enum';
 import TileGrid from '@/components/tile-grid';
 import PlaylistTile, { PlaylistTileProps } from '@/components/tiles/playlist-tile';
-import SongTile, { SongTileProps } from '@/components/tiles/song-tile';
+import SongTile, { SongTileProps } from '@/components/tiles/song-tile-small';
 import { ImageTileProps } from '@/components/tiles/types/image-tile';
 import ViewLayout from '@/components/wrappers/view-laytout';
 import useSelectedTileStore from '@/stores/selected-tile.store';

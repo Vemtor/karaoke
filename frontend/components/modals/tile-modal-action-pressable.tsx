@@ -3,12 +3,14 @@ import { FC } from 'react';
 import { Pressable, Text } from 'react-native';
 
 import { TileModalActionVariant } from './types/tile-modal-action';
+import { SongTrack } from '@/types/songTypes';
+import { SearchedVideo } from '@/utils/searchEngine/searchedVideo';
 
 export interface TileModalActionProps {
   label: string;
   // This signauture may be changed when this part is connected with other features
   // like queueing a song or adding a song to a playlist
-  onPress: () => void;
+  onPress: () => void | ((track: SongTrack) => void);
   type: TileModalActionVariant;
 }
 
