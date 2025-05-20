@@ -248,24 +248,10 @@ export default function SearchScreen() {
               />
           )}
         </View>
-        {/* <TouchableOpacity onPress={() => loadSong({title: "On melancholy hill",
-          url: "",youtubeUrl: "https://www.youtube.com/watch?v=BGn2oo-0Dqc",
-          duration: 208,
-          thumbnailUrl: "https://img.youtube.com/vi/BGn2oo-0Dqc/maxresdefault.jpg",
-          artist: ""
-          })}>
-          <Text className="text-white text-[24px] font-bold font-roboto-mono">On Melancholy Hill</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text className="text-white text-[24px] font-bold font-roboto-mono"
-            
-          >Linkin Park</Text>
-        </TouchableOpacity> */}
-        
       </SafeAreaView>
   );
 }
-{/* <TouchableOpacity /> </SafeAreaView> onPress={() => loadSong({title: , artist: , url: "",youtubeUrl: , duration: 278, thumbnailUrl: "https://img.youtube.com/vi/eVTXPUF4Oz4/mqdefault.jpg"})}> */}
+
 
 const isDarkMode = true;
 const styles = useMemo(() => StyleSheet.create({

@@ -16,5 +16,4 @@ export interface SongTrack extends Track {
   youtubeUrl?: string;
   thumbnailUrl?: string;
   uuid?: symbol;
-  addToQueue?: () => void;
 }
