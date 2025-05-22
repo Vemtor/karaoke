@@ -37,8 +37,7 @@ def transcribe():
                 transcription = json.load(f)
             return transcription
         result = text_generator.whisper_service.transcribe(file)
-
-        with open(transcription_file, "w") as f:
+        with open(transcription_file, "w", encoding="utf-8") as f:
             json.dump(result, f, ensure_ascii=False, indent=4)
         return jsonify(result)
     except Exception as e:

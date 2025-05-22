@@ -1,8 +1,8 @@
 import os
 import subprocess
 
+import yt_dlp
 from audio_extract import extract_audio
-from pytubefix import YouTube
 
 resources_path = "src/main/resources"
 
@@ -28,21 +28,23 @@ def download_audio_from_youtube_url(youtube_url, song_id):
     try:
         directory_name = f"{resources_path}/songs/{song_id}"
         os.makedirs(directory_name, exist_ok=True)
-        yt = YouTube(youtube_url)
-        ys = yt.streams.filter(only_audio=True).first()
 
+        output_mp4 = os.path.join(directory_name, f"{song_id}.mp4")
         output_wav = directory_name + "/" + song_id + ".wav"
         if not os.path.exists(output_wav):
-            file_path = ys.download(
-                output_path=f"./{directory_name}", filename=f"{song_id}.mp4"
-            )
-            file_name = os.path.relpath(file_path)
-            extract_audio(
-                input_path=file_name, output_path=output_wav, output_format="wav"
-            )
-            os.remove(file_name)
+            ydl_opts = {
+                "format": "bestaudio/best",
+                "outtmpl": output_mp4,
+            }
 
-        return directory_name + "/" + song_id + ".wav"
+            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                ydl.download([youtube_url])
+            extract_audio(
+                input_path=output_mp4, output_path=output_wav, output_format="wav"
+            )
+            os.remove(output_mp4)
+
+        return output_wav
     except Exception as e:
         raise Exception(f"Error downloading audio: {str(e)}") from e
 
