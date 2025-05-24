@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { View, TouchableOpacity } from 'react-native';
-import { Text } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import TrackPlayer, { useProgress } from 'react-native-track-player';
 
 export default function SongSpinner() {

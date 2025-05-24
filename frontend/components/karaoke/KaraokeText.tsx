@@ -45,7 +45,7 @@ export default function SongViewText() {
 
       <View className="relative w-full flex justify-center items-center">
         <Text className="text-[22px] font-roboto-mono text-white text-center my-2 z-0">
-          {songLines.previousLine}
+          {songLines?.previousLine}
         </Text>
         <View className="absolute w-full h-full top-0 left-0 z-1 bg-gradient-to-b from-[rgba(25,20,20,1)] from-[75%_rgba(25,20,20,0.5)] to-[rgba(0,0,0,0)]" />
       </View>
@@ -76,10 +76,7 @@ export default function SongViewText() {
               <Text className="text-xs text-white mb-1"> </Text>
               <TextInput
                 value={editedLine}
-                onChangeText={(text) => {
-                  setEditedLine(text);
-                  console.log(text);
-                }}
+                onChangeText={(text) => setEditedLine(text)}
                 className="text-[22px] font-roboto-mono text-lime text-center border border-white rounded px-2 py-1 bg-[#1e1e1e] w-full max-w-[600px]"
               />
             </View>
@@ -107,12 +104,12 @@ export default function SongViewText() {
         ) : null
       ) : (
         <Text className="text-[22px] font-roboto-mono text-lime text-center my-2">
-          {songLines.currentLine}
+          {songLines?.currentLine}
         </Text>
       )}
       <View className="relative w-full flex justify-center items-center">
         <Text className="text-[22px] font-roboto-mono text-white text-center my-2 z-0">
-          {songLines.nextLine}
+          {songLines?.nextLine}
         </Text>
         <View className="absolute w-full h-full top-0 left-0 z-1 bg-gradient-to-t from-[rgba(25,20,20,1)] from-[75%_rgba(25,20,20,0.5)] to-[rgba(0,0,0,0)]" />
       </View>

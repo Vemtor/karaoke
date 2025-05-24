@@ -19,9 +19,9 @@ const PlaylistTile: FC<PlaylistTileProps> = ({ title, subtitle, image, onPress }
         className="rounded-sm"
         style={{ height: 78, width: 130 }}
       />
-      <View className="flex-col flex-1 justify-evenly ml-3">
-        <Text className="text-white font-roboto-mono text-md font-medium text-ellipsis w-full line-clamp-2">{title}</Text>
-        <Text className="text-gray-300 font-roboto-mono text-base line-clamp-1">{subtitle}</Text>
+      <View className="flex-col justify-evenly ml-3">
+        <Text className="text-white font-roboto-mono text-md">{title}</Text>
+        <Text className="text-white font-roboto-mono text-base">{subtitle}</Text>
       </View>
     </Pressable>
   );

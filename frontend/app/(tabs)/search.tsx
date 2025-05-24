@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import {
   TextInput,
   FlatList,
@@ -10,14 +10,13 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import {SearchedVideo} from "@/utils/searchEngine/searchedVideo";
-import {mapToSearchedVideo} from "@/utils/searchEngine/mapToSearchedVideo";
+import {SearchedVideo} from "@/components/utils/searchEngine/searchedVideo";
+import {mapToSearchedVideo} from "@/components/utils/searchEngine/mapToSearchedVideo";
 import { Ionicons } from '@expo/vector-icons';
-import { parseISO8601Duration} from "@/utils/searchEngine/durationParser";
+import { parseISO8601Duration} from "@/components/utils/searchEngine/durationParser";
 import colors from "@/constants/colors";
-import useSelectedTileStore from '@/stores/selected-tile.store';
-import { ImageTileProps } from '@/components/tiles/types/image-tile';
-import { TileModalVariant } from '@/components/modals/types/tile-modal.enum';
+import { SongTrack } from "@/types/songTypes"
+import { useTrackPlayer } from '@/context/trackPlayerContext';
 
 export default function SearchScreen() {
   const apiKey = process.env.EXPO_PUBLIC_SEARCH_APP_API_KEY;
@@ -28,23 +27,7 @@ export default function SearchScreen() {
   const [loading, setLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [nextPageToken, setNextPageToken] = useState<string | null>(null);
-
-  const setVisible = useSelectedTileStore((state) => state.setVisible);
-  const setVariant = useSelectedTileStore((state) => state.setVariant);
-  const setTileData = useSelectedTileStore((state) => state.setTileData);
-  const setSongTrack = useSelectedTileStore((state) => state.setSongTrack);
-  const setSearchedVideo = useSelectedTileStore((state) => state.setSearchedVideo);
-
-  const openTileModal = useCallback(
-      (tile: ImageTileProps, variant: TileModalVariant, searchedVideo: SearchedVideo) => {
-        setTileData(tile);
-        setVisible(true);
-        setVariant(variant);
-        setSongTrack(null);
-        setSearchedVideo(searchedVideo);
-      },
-      [setTileData, setVisible, setVariant, setSongTrack, setSearchedVideo],
-    );
+  const { loadSong } = useTrackPlayer();
 
   const fetchVideoDetails = async (videoIds: string[]): Promise<Map<string, string>> => {
     if (videoIds.length === 0) {
@@ -176,9 +159,20 @@ export default function SearchScreen() {
 
   const renderVideoItem = ({ item }: { item: SearchedVideo }) => (
       <TouchableOpacity style={styles.listItem}
-      onPress={() => openTileModal({title: item.title, subtitle: item.channelTitle, image: item.thumbnailUrl},
-               TileModalVariant.NEW_SONG, 
-               item)}
+                        onPress={async () => {
+                          console.log('Item clicked:', item.title);
+                          console.log('Video URL:', item.videoUrl);
+                          console.log('Raw Duration:', item.rawDuration);
+                          console.log('Formatted Duration:', item.formattedDuration);
+                          const songTrack = {
+                            title: item.title,
+                            youtubeUrl: item.videoUrl,
+                            url: '',
+                            thumbnailUrl: item.thumbnailUrl
+                          }
+                          await loadSong(songTrack)
+                        }}
+                        activeOpacity={0.7}
       >
         {item.thumbnailUrl && (
             <Image
