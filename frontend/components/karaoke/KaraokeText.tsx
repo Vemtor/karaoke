@@ -1,6 +1,6 @@
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useTrackPlayer } from '@/context/trackPlayerContext';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Check, Minus, Pencil, Plus, X } from 'lucide-react-native';
 
 export default function SongViewText() {
   const {
@@ -22,23 +22,37 @@ export default function SongViewText() {
   return (
     <View className="w-full h-full flex justify-center items-center bg-[#191414]">
       {!isEditing ? (
-        <TouchableOpacity onPress={handleEditPress} className="absolute top-5 right-5 z-10">
-          <Ionicons name="create-outline" size={24} color="white" />
+        <TouchableOpacity
+          onPress={handleEditPress}
+          className="absolute top-5 right-5 z-10 p-5 rounded-full"
+          activeOpacity={0.7}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+          <Pencil size={24} color="white" />
         </TouchableOpacity>
       ) : (
         <View className="absolute top-5 right-5 z-10 flex-row space-x-3">
-          <TouchableOpacity onPress={handleSavePress}>
-            <Ionicons name="checkmark-outline" size={24} color="white" />
+          <TouchableOpacity
+            onPress={handleSavePress}
+            className="p-2 rounded-full"
+            activeOpacity={0.7}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+            <Check size={24} color="white" />
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleCancelPress}>
-            <Ionicons name="close-outline" size={24} color="white" />
+          <TouchableOpacity
+            onPress={handleCancelPress}
+            className="p-2 rounded-full"
+            activeOpacity={0.7}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+            <X size={24} color="white" />
           </TouchableOpacity>
         </View>
       )}
       {isEditing && (
         <TouchableOpacity
           onPress={handleReset}
-          className="absolute top-5 left-5 z-10 bg-[#333] px-3 py-1 rounded">
+          className="absolute top-5 left-5 z-10 bg-[#333] px-3 py-2 rounded"
+          activeOpacity={0.7}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
           <Text className="text-white text-sm">Reset to generated</Text>
         </TouchableOpacity>
       )}
@@ -50,8 +64,12 @@ export default function SongViewText() {
         <View className="absolute w-full h-full top-0 left-0 z-1 bg-gradient-to-b from-[rgba(25,20,20,1)] from-[75%_rgba(25,20,20,0.5)] to-[rgba(0,0,0,0)]" />
       </View>
       {isEditing && (
-        <TouchableOpacity className="mb-1 p-1 rounded-full bg-[#333]" onPress={addNewLine}>
-          <Ionicons name="add" size={20} color="white" />
+        <TouchableOpacity
+          className="mb-1 p-1 rounded-full bg-[#333]"
+          activeOpacity={0.7}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          onPress={addNewLine}>
+          <Plus size={20} color="white" />
         </TouchableOpacity>
       )}
       {isEditing ? (
@@ -63,7 +81,7 @@ export default function SongViewText() {
                 keyboardType="decimal-pad"
                 value={
                   lineStart !== null && lineStart !== undefined && !isNaN(lineStart)
-                    ? lineStart.toString()
+                    ? Math.round(lineStart).toString()
                     : ''
                 }
                 className="text-[22px] font-roboto-mono text-lime text-center border border-white rounded px-2 py-1 bg-[#1e1e1e] w-full max-w-[100px]"
@@ -87,7 +105,7 @@ export default function SongViewText() {
                 keyboardType="decimal-pad"
                 value={
                   lineEnd !== null && lineEnd !== undefined && !isNaN(lineEnd)
-                    ? lineEnd.toString()
+                    ? Math.round(lineEnd).toString()
                     : ''
                 }
                 className="text-[22px] font-roboto-mono text-lime text-center border border-white rounded px-2 py-1 bg-[#1e1e1e] w-full max-w-[100px]"
@@ -97,8 +115,10 @@ export default function SongViewText() {
             </View>
             <TouchableOpacity
               className="ml-2 mt-8 mb-1 p-1 rounded-full bg-[#333]"
+              activeOpacity={0.7}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
               onPress={removeLine}>
-              <Ionicons name="remove-outline" size={20} color="white" />
+              <Minus size={20} color="white" />
             </TouchableOpacity>
           </View>
         ) : null
