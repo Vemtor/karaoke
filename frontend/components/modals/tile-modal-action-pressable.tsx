@@ -3,6 +3,7 @@ import { FC } from 'react';
 import { Pressable, Text } from 'react-native';
 
 import { TileModalActionVariant } from './types/tile-modal-action';
+import { SongTrack } from '@/types/songTypes';
 
 export interface TileModalActionProps {
   label: string;
