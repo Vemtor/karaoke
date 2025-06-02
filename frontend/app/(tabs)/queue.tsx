@@ -1,16 +1,13 @@
-import React, { useCallback } from 'react';
-import {StyleSheet, Dimensions, FlatList, View, Text} from 'react-native';
-import { useTrackPlayer } from '@/context/trackPlayerContext';
-import PlaylistTile from '@/components/tiles/playlist-tile';
+import React, {useCallback} from 'react';
+import {Dimensions, FlatList, StyleSheet, Text, View} from 'react-native';
+import {useTrackPlayer} from '@/context/trackPlayerContext';
 import ViewLayout from '@/components/wrappers/view-laytout';
-import TileModal from '@/components/modals/tile-modal';
-import { TileModalVariant } from '@/components/modals/types/tile-modal.enum';
-import TileGrid from '@/components/tile-grid';
-import SongTile, { SongTileProps } from '@/components/tiles/song-tile-small';
-import { ImageTileProps } from '@/components/tiles/types/image-tile';
+import {TileModalVariant} from '@/components/modals/types/tile-modal.enum';
+import {ImageTileProps} from '@/components/tiles/types/image-tile';
 import useSelectedTileStore from '@/stores/selected-tile.store';
 import SongTileBig from '@/components/tiles/song-tile-big';
-import { SongTrack } from '@/types/songTypes';
+import {SongTrack} from '@/types/songTypes';
+
 const { width } = Dimensions.get('window');
 
 const HomeScreen = () => {

@@ -39,4 +39,4 @@ src/**/resources/songs/
 
 ## temp
 /scripts/vocal-remover
-
+/scripts/__pycache__/
