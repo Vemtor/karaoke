@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Image, Modal, Text, TouchableWithoutFeedback, View } from 'react-native';
 
 import useSelectedTileStore from '@/stores/selected-tile.store';
@@ -10,19 +10,27 @@ import { TILE_MODAL_ACTION_CONFIG } from './tile-actions-data';
 import { SongTrack } from '@/types/songTypes';
 import { useTrackPlayer } from '@/context/trackPlayerContext';
 import { SearchedVideo } from '@/utils/searchEngine/searchedVideo';
+import PlaylistSelectorModal from './playlist-selector-modal';
+import {useRouter} from "expo-router";
 
 const TileModal: React.FC = () => {
+  // const router = useRouter();
   const { addSongToQueue, removeSongFromQueue } = useTrackPlayer();
+  // const { getPlaylistById } = usePlaylistStore();
+  const [showPlaylistSelector, setShowPlaylistSelector] = useState(false);
+
   const visible = useSelectedTileStore((state) => state.visible);
   const variant = useSelectedTileStore((state) => state.variant);
   const tileData = useSelectedTileStore((state) => state.tileData);
   const songTrack = useSelectedTileStore((state) => state.songTrack);
   const searchedVideo = useSelectedTileStore((state) => state.searchedVideo);
+  // const playlistId = useSelectedTileStore((state) => state.playlistId);
   const setVisible = useSelectedTileStore((state) => state.setVisible);
   const setTileData = useSelectedTileStore((state) => state.setTileData);
   const setSongTrack = useSelectedTileStore((state) => state.setSongTrack);
   const setSearchedVideo = useSelectedTileStore((state) => state.setSearchedVideo);
-  
+  // const setPlaylistId = useSelectedTileStore((state) => state.setPlaylistId);
+
   if (!visible || !tileData || !variant) {
     return null;
   }
@@ -34,7 +42,17 @@ const TileModal: React.FC = () => {
     setTileData(null);
     setSongTrack(null);
     setSearchedVideo(null);
+    // setPlaylistId(null);
   };
+
+  // const handlePlayPlaylist = () => {
+  //   if (playlistId) {
+  //     const playlist = getPlaylistById(playlistId);
+  //     if (playlist && playlist.songs.length > 0) {
+  //       // addMultipleSongsToQueue(playlist.songs);
+  //     }
+  //   }
+  // };
 
   return (
     <Modal visible={visible} animationType="fade" transparent onRequestClose={onClose}>
