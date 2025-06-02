@@ -1,15 +1,13 @@
 import React from 'react';
-import { Image, Modal, Text, TouchableWithoutFeedback, View } from 'react-native';
+import {Image, Modal, Text, TouchableWithoutFeedback, View} from 'react-native';
 
 import useSelectedTileStore from '@/stores/selected-tile.store';
 
-import { TileModalActionPressable, TileModalActionProps } from './tile-modal-action-pressable';
-import { TILE_MODAL_ACTIONS_DATA } from './tile-modal-actions-data';
-import { TileModalAction } from './types/tile-modal-action';
-import { TILE_MODAL_ACTION_CONFIG } from './tile-actions-data';
-import { SongTrack } from '@/types/songTypes';
-import { useTrackPlayer } from '@/context/trackPlayerContext';
-import { SearchedVideo } from '@/utils/searchEngine/searchedVideo';
+import {TileModalActionPressable, TileModalActionProps} from './tile-modal-action-pressable';
+import {TILE_MODAL_ACTIONS_DATA} from './tile-modal-actions-data';
+import {TileModalAction} from './types/tile-modal-action';
+import {TILE_MODAL_ACTION_CONFIG} from './tile-actions-data';
+import {useTrackPlayer} from '@/context/trackPlayerContext';
 
 const TileModal: React.FC = () => {
   const { addSongToQueue, removeSongFromQueue } = useTrackPlayer();

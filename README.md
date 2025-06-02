@@ -1,6 +1,6 @@
 ## Project setup
 
-### 🧱  Prerequisites
+### 🧱 Prerequisites
 
 - [Node.js](https://nodejs.org/en/)
 - npm or yarn
@@ -32,8 +32,9 @@ npm i
 To setup the project locally skip the next section and go directly to **Local setup**.
 
 ### API Keys:
+
 Add **.env** file to frontend catalog which contains:
-```EXPO_PUBLIC_SEARCH_APP_API_KEY=APIKEYHERE```
+`EXPO_PUBLIC_SEARCH_APP_API_KEY=APIKEYHERE`
 
 ### Docker Containerization Guide
 
@@ -126,16 +127,16 @@ If you encounter issues:
 4. Make sure you're running commands from the project root directory
 5. It is possible that some cached dependecies are blocking/breaking your build, in that case execute the following command:
 
-    ```bash
-    docker compose build --no-cache <service-name>
-    ```
+   ```bash
+   docker compose build --no-cache <service-name>
+   ```
 
-    then reset services' state:
+   then reset services' state:
 
-    ```bash
-    docker compose down
-    docker compose up <service-name>
-    ```
+   ```bash
+   docker compose down
+   docker compose up <service-name>
+   ```
 
 ### Local setup
 
@@ -155,11 +156,13 @@ Install dependencies:
 cd scripts && pip install -r requirements.txt
 ```
 
-Download [vocal remover](<https://github.com/tsurumeso/vocal-remover/releases/download/v5.1.1/vocal-remover-v5.1.1.zip>) and place it in backend/scripts.
+Download [vocal remover](https://github.com/tsurumeso/vocal-remover/releases/download/v5.1.1/vocal-remover-v5.1.1.zip) and place it in backend/scripts.
+
+In scripts folder
 
 ```bash
 wget https://github.com/tsurumeso/vocal-remover/releases/download/v5.1.1/vocal-remover-v5.1.1.zip -O vocal-remover.zip && \
-unzip vocal-remover.zip -d scripts/ && \
+unzip vocal-remover.zip  && \
 rm vocal-remover.zip
 ```
 
@@ -168,6 +171,8 @@ Launch the servers from backend root:
 ```bash
 python3 scripts/flask_server.py
 ```
+
+In application.properties uncomment LOCAL DEVELOPMENT and comment DOCKER DEVELOPMENT
 
 Run Spring app from your IDE
 
