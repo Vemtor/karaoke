@@ -31,6 +31,10 @@ npm i
 
 To setup the project locally skip the next section and go directly to **Local setup**.
 
+### API Keys:
+Add **.env** file to frontend catalog which contains:
+```EXPO_PUBLIC_SEARCH_APP_API_KEY=APIKEYHERE```
+
 ### Docker Containerization Guide
 
 This project can be run from a container. Follow steps below to do so.
