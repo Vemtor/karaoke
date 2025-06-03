@@ -4,8 +4,6 @@ import TrackPlayer, {
   State,
   useProgress,
   useTrackPlayerEvents,
-  useProgress,
-  State,
   Track,
   AddTrack,
 } from 'react-native-track-player';
@@ -63,7 +61,28 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const [isPlaying, setIsPlaying] = useState(false);
 
   const progress = useProgress();
+  const [queueState, setQueueState] = useState<SongTrack[]>([]);
+  const emptySongTrack = {} as SongTrack;
 
+  const getSongIndexBySymbol = async (songUuid: symbol) => {
+    if (!isTrackPlayerReady) return;
+    const queue = await TrackPlayer.getQueue();
+    const index = queue.findIndex((item) => item.uuid === songUuid);
+    return index;
+  };
+
+  async function loadQueue() {
+    const queue = await TrackPlayer.getQueue();
+    setQueueState(queue);
+  }
+
+  useEffect(() => {
+    loadQueue();
+  }, []);
+
+  const explicitlyUpdateQueueState = async () => {
+    await loadQueue();
+  };
   const getTranscriptions = async (): Promise<Map<string, SongTrack>> => {
     const raw = await getItem(TRANSCRIPTIONS);
     const parsed = raw ? JSON.parse(raw) : {};
@@ -117,23 +136,23 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
       duration: video.formattedDuration,
       youtubeUrl: video.videoUrl,
       url: '',
-      thumbnailUrl: video.thumbnailUrl
-    } as SongTrack
-    loadSong(songTrack)
-  }
+      thumbnailUrl: video.thumbnailUrl,
+    } as SongTrack;
+    loadSong(songTrack);
+  };
 
   const removeSongFromQueue = async (track: SongTrack) => {
-    const fetchedCurrentTrack = await TrackPlayer.getActiveTrack()
+    const fetchedCurrentTrack = await TrackPlayer.getActiveTrack();
     const trackUuid = track.uuid;
-    if (fetchedCurrentTrack && fetchedCurrentTrack.uuid === trackUuid || !trackUuid) {
-      console.warn("Can't remove current track")
-      return
-    };
-    try{
+    if ((fetchedCurrentTrack && fetchedCurrentTrack.uuid === trackUuid) || !trackUuid) {
+      console.warn("Can't remove current track");
+      return;
+    }
+    try {
       const trackIndex = await getSongIndexBySymbol(trackUuid);
-      await TrackPlayer.remove(trackIndex as number)
+      await TrackPlayer.remove(trackIndex as number);
       await explicitlyUpdateQueueState();
-    } catch(error) {
+    } catch (error) {
       console.warn(error);
     }
   };
@@ -239,7 +258,7 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
           currentLine: null,
           nextLine: songText.segments[0]?.text || '',
         });
-      // normal case
+        // normal case
       } else if (currentSegmentIndex !== -1) {
         setSongLines({
           previousSegmentIndex: currentSegmentIndex,
@@ -247,7 +266,7 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
           currentLine: songText.segments[currentSegmentIndex]?.text || null,
           nextLine: songText.segments[currentSegmentIndex + 1]?.text || null,
         });
-      // between lines (silence) case
+        // between lines (silence) case
       } else {
         setSongLines({
           previousSegmentIndex: songLines.previousSegmentIndex,
@@ -269,7 +288,7 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
       if (track) {
         setCurrentTrack(track as SongTrack);
       } else {
-        setCurrentTrack(emptySongTrack)
+        setCurrentTrack(emptySongTrack);
       }
     },
   );
@@ -289,16 +308,16 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
         currentTrack,
         songLines,
         isPlaying,
+        queueState,
         isEditing,
         editedLine,
         lineStart,
         lineEnd,
-        handleEditPress,
-        handleSavePress,
-        queueState,
+        toggleSong,
         playNextSong,
         playPreviousSong,
-        toggleSong,
+        handleEditPress,
+        handleSavePress,
         loadSong,
         addSongToQueue,
         removeSongFromQueue,
