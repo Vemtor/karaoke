@@ -1,17 +1,16 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { Button, Modal, TextInput, Text, View, TouchableOpacity, Alert } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { mockPlaylists } from '@/components/home/mock-data';
+import React, {useCallback, useEffect, useState} from 'react';
+import {Alert, Modal, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {Ionicons} from '@expo/vector-icons';
 import TileModal from '@/components/modals/tile-modal';
-import { TileModalVariant } from '@/components/modals/types/tile-modal.enum';
+import {TileModalVariant} from '@/components/modals/types/tile-modal.enum';
 import TileGrid from '@/components/tile-grid';
-import PlaylistTile, { PlaylistTileProps } from '@/components/tiles/playlist-tile';
-import SongTile, { SongTileProps } from '@/components/tiles/song-tile-small';
-import { ImageTileProps } from '@/components/tiles/types/image-tile';
+import PlaylistTile, {PlaylistTileProps} from '@/components/tiles/playlist-tile';
+import SongTile, {SongTileProps} from '@/components/tiles/song-tile-small';
+import {ImageTileProps} from '@/components/tiles/types/image-tile';
 import ViewLayout from '@/components/wrappers/view-laytout';
 import useSelectedTileStore from '@/stores/selected-tile.store';
 import usePlaylistStore from '@/stores/playlist.store';
-import { useRouter } from 'expo-router';
+import {useRouter} from 'expo-router';
 import colors from '@/constants/colors';
 
 const DEFAULT_PLAYLIST_IMAGE = `data:image/svg+xml;base64,${btoa(`
@@ -67,30 +66,30 @@ const HomeScreen = () => {
     ]);
   };
 
-    const openTileModal = useCallback(
-        (tile: ImageTileProps, variant: TileModalVariant, playlistId?: string) => {
-            console.log("openTileModal called with:", {
-                tile: tile.title,
-                variant,
-                playlistId,
-                hasPlaylistId: !!playlistId
-            });
+  const openTileModal = useCallback(
+    (tile: ImageTileProps, variant: TileModalVariant, playlistId?: string) => {
+      console.log('openTileModal called with:', {
+        tile: tile.title,
+        variant,
+        playlistId,
+        hasPlaylistId: !!playlistId,
+      });
 
-            setTileData(tile);
-            setVisible(true);
-            setVariant(variant);
+      setTileData(tile);
+      setVisible(true);
+      setVariant(variant);
 
-            // Always reset playlistId first, then set it if provided
-            setPlaylistId(null);
-            if (playlistId) {
-                console.log("Setting playlistId to:", playlistId);
-                setPlaylistId(playlistId);
-            } else {
-                console.log("No playlistId provided, setting to null");
-            }
-        },
-        [setTileData, setVisible, setVariant, setPlaylistId],
-    );
+      // Always reset playlistId first, then set it if provided
+      setPlaylistId(null);
+      if (playlistId) {
+        console.log('Setting playlistId to:', playlistId);
+        setPlaylistId(playlistId);
+      } else {
+        console.log('No playlistId provided, setting to null');
+      }
+    },
+    [setTileData, setVisible, setVariant, setPlaylistId],
+  );
 
   const navigateToPlaylist = useCallback(
     (playlistId: string) => {
