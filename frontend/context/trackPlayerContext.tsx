@@ -1,31 +1,46 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import TrackPlayer, {
   Event,
-  useTrackPlayerEvents,
-  useProgress,
   State,
+  useProgress,
+  useTrackPlayerEvents,
   Track,
   AddTrack,
 } from 'react-native-track-player';
-import { SongTrack, SongSegment } from '@/types/songTypes';
+import { SongSegment, SongTrack } from '@/types/songTypes';
 import { fetchSongLyrics, splitAudio } from '@/services/backendApi';
 import API_ROUTES from '@/constants/apiRoutes';
+import { getItem } from '@/services/storage';
+import { SongLinesType, useLyricsEditing } from '@/context/lyricsEditProvider';
 import EventEmitter from 'react-native/Libraries/vendor/emitter/EventEmitter';
 import { SearchedVideo } from '@/utils/searchEngine/searchedVideo';
 
 interface TrackPlayerContextType {
   isTrackPlayerReady: boolean; // use for interactions with track player
   currentTrack: SongTrack; // use to get info about current song
-  songLines: { currentLine: string; previousLine: string; nextLine: string }; // current song lines
+  songLines: { currentLine: string; previousLine: string; nextLine: string } | null; // current song lines
   isPlaying: boolean; // use to get info if song is playing
   queueState: SongTrack[];
   // song controls
+  isEditing: boolean | null;
+  editedLine: string | null;
+  lineStart: number | null;
+  lineEnd: number | null;
   toggleSong: () => void;
   playNextSong: () => void;
   playPreviousSong: () => void;
+  handleEditPress: () => void;
+  handleSavePress: () => void;
   loadSong: (track: SongTrack) => void;
   addSongToQueue: (video: SearchedVideo) => void;
   removeSongFromQueue: (track: SongTrack) => void;
+  setEditedLine: (text: string) => void;
+  handleReset: () => void;
+  setLineStart: (start: number) => void;
+  setLineEnd: (end: number) => void;
+  handleCancelPress: () => void;
+  addNewLine: () => void;
+  removeLine: () => void;
   // expand further if you need more interactions with track player
   // addSongToQueue: (songTrack: SongTrack) => void; // Could be used to check if song is cached, if not it will invoke loadSong
 }
@@ -33,25 +48,28 @@ interface TrackPlayerContextType {
 const TrackPlayerContext = createContext<TrackPlayerContextType | undefined>(undefined);
 
 export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const TRANSCRIPTIONS = 'transcriptions';
   const [isTrackPlayerReady, setIsTrackPlayerReady] = useState(false);
   const [currentTrack, setCurrentTrack] = useState({} as SongTrack);
-  const [songLines, setSongLines] = useState({
+  const [songLines, setSongLines] = useState<SongLinesType>({
     previousSegmentIndex: -1,
-    previousLine: '',
-    currentLine: '',
-    nextLine: '',
+    previousLine: null,
+    currentLine: null,
+    nextLine: null,
   });
+
   const [isPlaying, setIsPlaying] = useState(false);
+
   const progress = useProgress();
-  const [ queueState, setQueueState ] = useState<SongTrack[]>([]);
+  const [queueState, setQueueState] = useState<SongTrack[]>([]);
   const emptySongTrack = {} as SongTrack;
 
   const getSongIndexBySymbol = async (songUuid: symbol) => {
     if (!isTrackPlayerReady) return;
-    const queue = await TrackPlayer.getQueue()
+    const queue = await TrackPlayer.getQueue();
     const index = queue.findIndex((item) => item.uuid === songUuid);
     return index;
-  }
+  };
 
   async function loadQueue() {
     const queue = await TrackPlayer.getQueue();
@@ -64,7 +82,12 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   const explicitlyUpdateQueueState = async () => {
     await loadQueue();
-  }
+  };
+  const getTranscriptions = async (): Promise<Map<string, SongTrack>> => {
+    const raw = await getItem(TRANSCRIPTIONS);
+    const parsed = raw ? JSON.parse(raw) : {};
+    return new Map(Object.entries(parsed));
+  };
 
   const loadSong = async (track: SongTrack) => {
     if (!isTrackPlayerReady) {
@@ -77,8 +100,21 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
         console.warn('No YouTube URL provided for the track.');
         return;
       }
-      const fetchedSongText = await fetchSongLyrics(youtubeUrl);
+
+      const raw = await getItem(TRANSCRIPTIONS);
+      let transcriptionsMap;
+      try {
+        const parsed = raw ? JSON.parse(raw) : {};
+        transcriptionsMap = new Map(Object.entries(parsed));
+      } catch (err) {
+        console.warn('Failed to parse transcriptions:', err);
+        transcriptionsMap = new Map();
+      }
+
       const fetchedAudioSplitterResponse = await splitAudio(youtubeUrl);
+      const fetchedSongText =
+        transcriptionsMap.get(youtubeUrl)?.songText || (await fetchSongLyrics(youtubeUrl));
+
       const songUrl = API_ROUTES.API_BASE_URL + fetchedAudioSplitterResponse.instrumentsPath;
       track.url = songUrl; // provide url of the file location to the track
       track.songText = fetchedSongText; // provide song text to the track
@@ -100,23 +136,23 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
       duration: video.formattedDuration,
       youtubeUrl: video.videoUrl,
       url: '',
-      thumbnailUrl: video.thumbnailUrl
-    } as SongTrack
-    loadSong(songTrack)
-  }
+      thumbnailUrl: video.thumbnailUrl,
+    } as SongTrack;
+    loadSong(songTrack);
+  };
 
   const removeSongFromQueue = async (track: SongTrack) => {
-    const fetchedCurrentTrack = await TrackPlayer.getActiveTrack()
+    const fetchedCurrentTrack = await TrackPlayer.getActiveTrack();
     const trackUuid = track.uuid;
-    if (fetchedCurrentTrack && fetchedCurrentTrack.uuid === trackUuid || !trackUuid) {
-      console.warn("Can't remove current track")
-      return
-    };
-    try{
+    if ((fetchedCurrentTrack && fetchedCurrentTrack.uuid === trackUuid) || !trackUuid) {
+      console.warn("Can't remove current track");
+      return;
+    }
+    try {
       const trackIndex = await getSongIndexBySymbol(trackUuid);
-      await TrackPlayer.remove(trackIndex as number)
+      await TrackPlayer.remove(trackIndex as number);
       await explicitlyUpdateQueueState();
-    } catch(error) {
+    } catch (error) {
       console.warn(error);
     }
   };
@@ -151,12 +187,38 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
       return;
     }
     const state = await TrackPlayer.getState();
-    if (state === State.Playing) {
-      TrackPlayer.pause();
-    } else {
-      TrackPlayer.play();
+    if (!isEditing) {
+      if (state === State.Playing) {
+        TrackPlayer.pause();
+      } else {
+        TrackPlayer.play();
+      }
     }
   };
+
+  const {
+    isEditing,
+    editedLine,
+    setEditedLine,
+    lineStart,
+    setLineStart,
+    lineEnd,
+    setLineEnd,
+    handleEditPress,
+    handleSavePress,
+    handleCancelPress,
+    handleReset,
+    addNewLine,
+    removeLine,
+  } = useLyricsEditing({
+    currentTrack,
+    songLines,
+    setSongLines,
+    isPlaying,
+    toggleSong,
+    getTranscriptions,
+    loadSong,
+  });
 
   // Initialize TrackPlayer and update state
   useEffect(() => {
@@ -192,31 +254,31 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
       if (currentTime < 0.1 && currentSegmentIndex === -1) {
         setSongLines({
           previousSegmentIndex: -1,
-          previousLine: '',
-          currentLine: '',
+          previousLine: null,
+          currentLine: null,
           nextLine: songText.segments[0]?.text || '',
         });
-      // normal case
+        // normal case
       } else if (currentSegmentIndex !== -1) {
         setSongLines({
           previousSegmentIndex: currentSegmentIndex,
-          previousLine: songText.segments[currentSegmentIndex - 1]?.text || '',
-          currentLine: songText.segments[currentSegmentIndex]?.text || '',
-          nextLine: songText.segments[currentSegmentIndex + 1]?.text || '',
+          previousLine: songText.segments[currentSegmentIndex - 1]?.text || null,
+          currentLine: songText.segments[currentSegmentIndex]?.text || null,
+          nextLine: songText.segments[currentSegmentIndex + 1]?.text || null,
         });
-      // between lines (silence) case
+        // between lines (silence) case
       } else {
         setSongLines({
           previousSegmentIndex: songLines.previousSegmentIndex,
           previousLine: songText.segments[songLines.previousSegmentIndex]?.text || '',
-          currentLine: ' ',
+          currentLine: null,
           nextLine: songText.segments[songLines.previousSegmentIndex + 1]?.text || '',
         });
       }
     };
 
     updateSongLines();
-  }, [progress.position, currentTrack.songText]);
+  }, [progress.position, currentTrack.songText, isEditing]);
 
   // update current track state
   useTrackPlayerEvents(
@@ -226,7 +288,7 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
       if (track) {
         setCurrentTrack(track as SongTrack);
       } else {
-        setCurrentTrack(emptySongTrack)
+        setCurrentTrack(emptySongTrack);
       }
     },
   );
@@ -247,12 +309,25 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
         songLines,
         isPlaying,
         queueState,
+        isEditing,
+        editedLine,
+        lineStart,
+        lineEnd,
+        toggleSong,
         playNextSong,
         playPreviousSong,
-        toggleSong,
+        handleEditPress,
+        handleSavePress,
         loadSong,
         addSongToQueue,
         removeSongFromQueue,
+        setEditedLine,
+        handleReset,
+        setLineStart,
+        setLineEnd,
+        handleCancelPress,
+        addNewLine,
+        removeLine,
       }}>
       {children}
     </TrackPlayerContext.Provider>
