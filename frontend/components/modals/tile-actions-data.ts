@@ -12,6 +12,7 @@ import {
 
 import { TileModalActionProps } from './tile-modal-action-pressable';
 import { TileModalAction, TileModalActionVariant } from './types/tile-modal-action';
+import { SongTrack } from '@/types/songTypes';
 
 export const TILE_MODAL_ACTION_CONFIG: Record<TileModalAction, TileModalActionProps> = {
   [TileModalAction.ADD_TO_QUEUE]: {

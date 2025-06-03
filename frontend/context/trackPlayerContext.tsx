@@ -4,18 +4,25 @@ import TrackPlayer, {
   State,
   useProgress,
   useTrackPlayerEvents,
+  useProgress,
+  State,
+  Track,
+  AddTrack,
 } from 'react-native-track-player';
 import { SongSegment, SongTrack } from '@/types/songTypes';
 import { fetchSongLyrics, splitAudio } from '@/services/backendApi';
 import API_ROUTES from '@/constants/apiRoutes';
 import { getItem } from '@/services/storage';
 import { SongLinesType, useLyricsEditing } from '@/context/lyricsEditProvider';
+import EventEmitter from 'react-native/Libraries/vendor/emitter/EventEmitter';
+import { SearchedVideo } from '@/utils/searchEngine/searchedVideo';
 
 interface TrackPlayerContextType {
   isTrackPlayerReady: boolean; // use for interactions with track player
   currentTrack: SongTrack; // use to get info about current song
   songLines: { currentLine: string; previousLine: string; nextLine: string } | null; // current song lines
   isPlaying: boolean; // use to get info if song is playing
+  queueState: SongTrack[];
   // song controls
   isEditing: boolean | null;
   editedLine: string | null;
@@ -27,6 +34,8 @@ interface TrackPlayerContextType {
   handleEditPress: () => void;
   handleSavePress: () => void;
   loadSong: (track: SongTrack) => void;
+  addSongToQueue: (video: SearchedVideo) => void;
+  removeSongFromQueue: (track: SongTrack) => void;
   setEditedLine: (text: string) => void;
   handleReset: () => void;
   setLineStart: (start: number) => void;
@@ -88,15 +97,44 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
         transcriptionsMap.get(youtubeUrl)?.songText || (await fetchSongLyrics(youtubeUrl));
 
       const songUrl = API_ROUTES.API_BASE_URL + fetchedAudioSplitterResponse.instrumentsPath;
-
       track.url = songUrl; // provide url of the file location to the track
       track.songText = fetchedSongText; // provide song text to the track
+      track.uuid = Symbol();
 
       await TrackPlayer.add(track, null);
+      // await explicitlyUpdateQueueState();
     } catch (error) {
       if (error instanceof Error) {
         console.error('Error loading song:', error.message);
       }
+    }
+  };
+
+  const addSongToQueue = async (video: SearchedVideo) => {
+    const songTrack = {
+      title: video.title,
+      artist: video.channelTitle,
+      duration: video.formattedDuration,
+      youtubeUrl: video.videoUrl,
+      url: '',
+      thumbnailUrl: video.thumbnailUrl
+    } as SongTrack
+    loadSong(songTrack)
+  }
+
+  const removeSongFromQueue = async (track: SongTrack) => {
+    const fetchedCurrentTrack = await TrackPlayer.getActiveTrack()
+    const trackUuid = track.uuid;
+    if (fetchedCurrentTrack && fetchedCurrentTrack.uuid === trackUuid || !trackUuid) {
+      console.warn("Can't remove current track")
+      return
+    };
+    try{
+      const trackIndex = await getSongIndexBySymbol(trackUuid);
+      await TrackPlayer.remove(trackIndex as number)
+      await explicitlyUpdateQueueState();
+    } catch(error) {
+      console.warn(error);
     }
   };
 
@@ -199,9 +237,9 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
           previousSegmentIndex: -1,
           previousLine: null,
           currentLine: null,
-          nextLine: songText.segments[0]?.text,
+          nextLine: songText.segments[0]?.text || '',
         });
-        // normal case
+      // normal case
       } else if (currentSegmentIndex !== -1) {
         setSongLines({
           previousSegmentIndex: currentSegmentIndex,
@@ -209,7 +247,7 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
           currentLine: songText.segments[currentSegmentIndex]?.text || null,
           nextLine: songText.segments[currentSegmentIndex + 1]?.text || null,
         });
-        // between lines (silence) case
+      // between lines (silence) case
       } else {
         setSongLines({
           previousSegmentIndex: songLines.previousSegmentIndex,
@@ -231,7 +269,7 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
       if (track) {
         setCurrentTrack(track as SongTrack);
       } else {
-        console.warn('No active track found!');
+        setCurrentTrack(emptySongTrack)
       }
     },
   );
@@ -257,10 +295,13 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
         lineEnd,
         handleEditPress,
         handleSavePress,
+        queueState,
         playNextSong,
         playPreviousSong,
         toggleSong,
         loadSong,
+        addSongToQueue,
+        removeSongFromQueue,
         setEditedLine,
         handleReset,
         setLineStart,

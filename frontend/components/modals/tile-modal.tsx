@@ -1,18 +1,26 @@
 import React from 'react';
-import { Image, Modal, Text, TouchableWithoutFeedback, View } from 'react-native';
+import {Image, Modal, Text, TouchableWithoutFeedback, View} from 'react-native';
 
 import useSelectedTileStore from '@/stores/selected-tile.store';
 
-import { TileModalActionPressable, TileModalActionProps } from './tile-modal-action-pressable';
-import { TILE_MODAL_ACTIONS_DATA } from './tile-modal-actions-data';
+import {TileModalActionPressable, TileModalActionProps} from './tile-modal-action-pressable';
+import {TILE_MODAL_ACTIONS_DATA} from './tile-modal-actions-data';
+import {TileModalAction} from './types/tile-modal-action';
+import {TILE_MODAL_ACTION_CONFIG} from './tile-actions-data';
+import {useTrackPlayer} from '@/context/trackPlayerContext';
 
 const TileModal: React.FC = () => {
+  const { addSongToQueue, removeSongFromQueue } = useTrackPlayer();
   const visible = useSelectedTileStore((state) => state.visible);
   const variant = useSelectedTileStore((state) => state.variant);
   const tileData = useSelectedTileStore((state) => state.tileData);
+  const songTrack = useSelectedTileStore((state) => state.songTrack);
+  const searchedVideo = useSelectedTileStore((state) => state.searchedVideo);
   const setVisible = useSelectedTileStore((state) => state.setVisible);
   const setTileData = useSelectedTileStore((state) => state.setTileData);
-
+  const setSongTrack = useSelectedTileStore((state) => state.setSongTrack);
+  const setSearchedVideo = useSelectedTileStore((state) => state.setSearchedVideo);
+  
   if (!visible || !tileData || !variant) {
     return null;
   }
@@ -22,6 +30,8 @@ const TileModal: React.FC = () => {
   const onClose = () => {
     setVisible(false);
     setTileData(null);
+    setSongTrack(null);
+    setSearchedVideo(null);
   };
 
   return (
@@ -44,7 +54,15 @@ const TileModal: React.FC = () => {
                 key={index}
                 label={action.label}
                 onPress={() => {
-                  action.onPress();
+                  if (action.label === TILE_MODAL_ACTION_CONFIG[TileModalAction.REMOVE_FROM_QUEUE].label && songTrack
+                  ){
+                    removeSongFromQueue(songTrack);
+                  } else if (action.label === TILE_MODAL_ACTION_CONFIG[TileModalAction.ADD_TO_QUEUE].label && searchedVideo){
+                    addSongToQueue(searchedVideo);
+                  }
+                  else{
+                    action.onPress();
+                  }
                   onClose();
                 }}
                 type={action.type}
