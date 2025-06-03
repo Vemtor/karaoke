@@ -8,11 +8,11 @@ import {
   handlePlayPlaylist,
   handleRemoveFromPlaylist,
   handleRemoveFromQueue,
+  handleDeletePlaylist,
 } from '@/utils/modal-handlers';
 
 import { TileModalActionProps } from './tile-modal-action-pressable';
 import { TileModalAction, TileModalActionVariant } from './types/tile-modal-action';
-import { SongTrack } from '@/types/songTypes';
 
 export const TILE_MODAL_ACTION_CONFIG: Record<TileModalAction, TileModalActionProps> = {
   [TileModalAction.ADD_TO_QUEUE]: {
@@ -48,6 +48,11 @@ export const TILE_MODAL_ACTION_CONFIG: Record<TileModalAction, TileModalActionPr
   [TileModalAction.EDIT_PLAYLIST]: {
     label: 'Edit Playlist',
     onPress: handleEditPlaylist,
+    type: TileModalActionVariant.NEUTRAL,
+  },
+  [TileModalAction.DELETE_PLAYLIST]: {
+    label: 'Delete Playlist',
+    onPress: handleDeletePlaylist,
     type: TileModalActionVariant.NEUTRAL,
   },
 };

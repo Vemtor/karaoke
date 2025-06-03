@@ -22,4 +22,4 @@ export default function SongViewText() {
       </View>
     </View>
   );
-};
+}

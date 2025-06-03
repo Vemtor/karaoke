@@ -1,7 +1,7 @@
 export interface YouTubeSearchResponse {
   items: YouTubeSearchItem[];
 }
-  
+
 export interface YouTubeSearchItem {
   items: {
     id: { videoId: string };

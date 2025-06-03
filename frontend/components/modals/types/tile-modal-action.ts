@@ -14,4 +14,5 @@ export enum TileModalAction {
   PLAY_PLAYLIST = 'play-playlist',
   DOWNLOAD_PLAYLIST = 'download-playlist',
   EDIT_PLAYLIST = 'edit-playlist',
+  DELETE_PLAYLIST = 'delete-playlist',
 }

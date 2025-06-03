@@ -18,6 +18,8 @@ interface SelectedTileState {
   setSongTrack: (songTrack: SongTrack | null) => void;
   searchedVideo: SearchedVideo | null;
   setSearchedVideo: (searchedVideo: SearchedVideo | null) => void;
+  playlistId: string | null;
+  setPlaylistId: (playlistId: string | null) => void;
 }
 
 const useSelectedTileStore = create<SelectedTileState>((set) => ({
@@ -41,6 +43,8 @@ const useSelectedTileStore = create<SelectedTileState>((set) => ({
   setSearchedVideo: (searchedVideo: SearchedVideo | null) => {
     set({ searchedVideo });
   },
+  playlistId: null,
+  setPlaylistId: (playlistId) => set({ playlistId }),
 }));
 
 export default useSelectedTileStore;

@@ -10,7 +10,7 @@ const TABS: { name: BottomNavTabName; icon: LucideIcon }[] = [
   { name: BottomNavTabName.SEARCH, icon: Search },
   { name: BottomNavTabName.QUEUE, icon: List },
   { name: BottomNavTabName.DOWNLOADS, icon: Bookmark },
-  { name: BottomNavTabName.KARAOKE, icon: MicVocal }
+  { name: BottomNavTabName.KARAOKE, icon: MicVocal },
 ];
 
 export default function TabLayout() {

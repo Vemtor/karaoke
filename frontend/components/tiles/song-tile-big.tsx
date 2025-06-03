@@ -4,11 +4,11 @@ import { Image, Pressable, Text, View } from 'react-native';
 import { ImageTileProps } from '@/components/tiles/types/image-tile';
 
 export interface SongTileBigProps extends ImageTileProps {
+  id: string;
   onPress?: () => void; // click handler here
-  // otherProps: any; // other props if needed
 }
 
-const SongTileBig: FC<SongTileBigProps> = ({title, subtitle, image, onPress }) => {
+const SongTileBig: FC<SongTileBigProps> = ({ id, title, subtitle, image, onPress }) => {
   return (
     <Pressable
       onPress={onPress}
@@ -20,8 +20,14 @@ const SongTileBig: FC<SongTileBigProps> = ({title, subtitle, image, onPress }) =
         style={{ height: 78, width: 130 }}
       />
       <View className="flex-col flex-1 justify-evenly ml-3">
-        <Text className="text-white font-roboto-mono text-md font-medium text-ellipsis w-full line-clamp-2">{title}</Text>
-        <Text className="text-gray-300 font-roboto-mono text-base line-clamp-1">{subtitle}</Text>
+        <Text
+          className="text-white font-roboto-mono text-md font-medium text-ellipsis w-full line-clamp-2"
+          numberOfLines={2}>
+          {title}
+        </Text>
+        <Text className="text-gray-300 font-roboto-mono text-base line-clamp-1" numberOfLines={1}>
+          {subtitle}
+        </Text>
       </View>
     </Pressable>
   );

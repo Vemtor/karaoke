@@ -11,3 +11,5 @@ export const handlePlayPlaylist = () => {};
 export const handleEditPlaylist = () => {};
 
 export const handleDownloadPlaylist = () => {};
+
+export const handleDeletePlaylist = () => {};

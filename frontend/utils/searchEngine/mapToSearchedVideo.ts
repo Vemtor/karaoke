@@ -1,5 +1,5 @@
-import { SearchedVideo } from './searchedVideo'
-import { YouTubeSearchItem } from './youtubeSearchResponse'
+import { SearchedVideo } from './searchedVideo';
+import { YouTubeSearchItem } from './youtubeSearchResponse';
 
 export const mapToSearchedVideo = (data: YouTubeSearchItem): SearchedVideo[] => {
   return data.items.map(
@@ -9,7 +9,7 @@ export const mapToSearchedVideo = (data: YouTubeSearchItem): SearchedVideo[] => 
         item.snippet.title,
         item.snippet.description,
         item.snippet.thumbnails.medium.url,
-        item.snippet.channelTitle
-      )
-  )
-}
+        item.snippet.channelTitle,
+      ),
+  );
+};

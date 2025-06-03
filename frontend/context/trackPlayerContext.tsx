@@ -1,16 +1,13 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import TrackPlayer, {
   Event,
-  useTrackPlayerEvents,
-  useProgress,
   State,
-  Track,
-  AddTrack,
+  useProgress,
+  useTrackPlayerEvents,
 } from 'react-native-track-player';
-import { SongTrack, SongSegment } from '@/types/songTypes';
+import { SongSegment, SongTrack } from '@/types/songTypes';
 import { fetchSongLyrics, splitAudio } from '@/services/backendApi';
 import API_ROUTES from '@/constants/apiRoutes';
-import EventEmitter from 'react-native/Libraries/vendor/emitter/EventEmitter';
 import { SearchedVideo } from '@/utils/searchEngine/searchedVideo';
 
 interface TrackPlayerContextType {
@@ -26,8 +23,7 @@ interface TrackPlayerContextType {
   loadSong: (track: SongTrack) => void;
   addSongToQueue: (video: SearchedVideo) => void;
   removeSongFromQueue: (track: SongTrack) => void;
-  // expand further if you need more interactions with track player
-  // addSongToQueue: (songTrack: SongTrack) => void; // Could be used to check if song is cached, if not it will invoke loadSong
+  addMultipleSongsToQueue: (videos: SearchedVideo[]) => void;
 }
 
 const TrackPlayerContext = createContext<TrackPlayerContextType | undefined>(undefined);
@@ -43,15 +39,15 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
   });
   const [isPlaying, setIsPlaying] = useState(false);
   const progress = useProgress();
-  const [ queueState, setQueueState ] = useState<SongTrack[]>([]);
+  const [queueState, setQueueState] = useState<SongTrack[]>([]);
   const emptySongTrack = {} as SongTrack;
 
   const getSongIndexBySymbol = async (songUuid: symbol) => {
     if (!isTrackPlayerReady) return;
-    const queue = await TrackPlayer.getQueue()
+    const queue = await TrackPlayer.getQueue();
     const index = queue.findIndex((item) => item.uuid === songUuid);
     return index;
-  }
+  };
 
   async function loadQueue() {
     const queue = await TrackPlayer.getQueue();
@@ -64,7 +60,7 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   const explicitlyUpdateQueueState = async () => {
     await loadQueue();
-  }
+  };
 
   const loadSong = async (track: SongTrack) => {
     if (!isTrackPlayerReady) {
@@ -93,30 +89,134 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
     }
   };
 
+  // const addSongToQueue = async (video: SearchedVideo) => {
+  //   const songTrack = {
+  //     id: video.id,
+  //     title: video.title,
+  //     artist: video.channelTitle,
+  //     duration: video.formattedDuration,
+  //     youtubeUrl: video.videoUrl,
+  //     url: '',
+  //     thumbnailUrl: video.thumbnailUrl
+  //   } as SongTrack;
+  //   loadSong(songTrack);
+  // };
+  //
+  // const addMultipleSongsToQueue = async (videos: SearchedVideo[]) => {
+  //   if (!videos || videos.length === 0) {
+  //     console.warn('No videos provided to add to queue');
+  //     return;
+  //   }
+  //
+  //   try {
+  //     // Convert all SearchedVideo objects to SongTrack objects
+  //     const songTracks: SongTrack[] = videos.map(video => ({
+  //       id: video.id,
+  //       title: video.title,
+  //       artist: video.channelTitle,
+  //       duration: video.formattedDuration,
+  //       youtubeUrl: video.videoUrl,
+  //       url: '',
+  //       thumbnailUrl: video.thumbnailUrl
+  //     } as SongTrack));
+  //
+  //     // Add each song to the queue
+  //     for (const songTrack of songTracks) {
+  //       await loadSong(songTrack);
+  //       // Small delay to prevent overwhelming the system
+  //       await new Promise(resolve => setTimeout(resolve, 100));
+  //     }
+  //
+  //     console.log(`Successfully added ${videos.length} songs to queue`);
+  //   } catch (error) {
+  //     console.error('Error adding multiple songs to queue:', error);
+  //   }
+  // };
+
+  // Helper function to generate unique IDs
+  const generateUniqueId = (video: SearchedVideo, index?: number): string => {
+    const baseId = video.id || video.id || video.title || 'unknown';
+    const timestamp = Date.now();
+    const randomSuffix = Math.random().toString(36).substr(2, 9);
+    return `${baseId}-${timestamp}-${randomSuffix}${index !== undefined ? `-${index}` : ''}`;
+  };
+
+  // Helper function to remove duplicates from queue
+  const removeDuplicatesFromQueue = (queue: SongTrack[]): SongTrack[] => {
+    const seen = new Set<string>();
+    return queue.filter((song) => {
+      const identifier = song.youtubeUrl || (song.title ?? '') + (song.artist ?? '');
+      if (seen.has(identifier)) {
+        return false;
+      }
+      seen.add(identifier);
+      return true;
+    });
+  };
+
   const addSongToQueue = async (video: SearchedVideo) => {
     const songTrack = {
+      id: generateUniqueId(video), // Use unique ID generator
       title: video.title,
       artist: video.channelTitle,
       duration: video.formattedDuration,
       youtubeUrl: video.videoUrl,
       url: '',
-      thumbnailUrl: video.thumbnailUrl
-    } as SongTrack
-    loadSong(songTrack)
-  }
+      thumbnailUrl: video.thumbnailUrl,
+    } as SongTrack;
+
+    loadSong(songTrack);
+  };
+
+  const addMultipleSongsToQueue = async (videos: SearchedVideo[]) => {
+    if (!videos || videos.length === 0) {
+      console.warn('No videos provided to add to queue');
+      return;
+    }
+
+    try {
+      // Convert all SearchedVideo objects to SongTrack objects with unique IDs
+      const songTracks: SongTrack[] = videos.map(
+        (video, index) =>
+          ({
+            id: generateUniqueId(video, index), // Use unique ID generator with index
+            title: video.title,
+            artist: video.channelTitle,
+            duration: video.formattedDuration,
+            youtubeUrl: video.videoUrl,
+            url: '',
+            thumbnailUrl: video.thumbnailUrl,
+          }) as SongTrack,
+      );
+
+      // Remove any duplicates before adding to queue
+      const uniqueSongTracks = removeDuplicatesFromQueue(songTracks);
+
+      // Add each song to the queue
+      for (const songTrack of uniqueSongTracks) {
+        await loadSong(songTrack);
+        // Small delay to prevent overwhelming the system
+        await new Promise((resolve) => setTimeout(resolve, 100));
+      }
+
+      console.log(`Successfully added ${uniqueSongTracks.length} unique songs to queue`);
+    } catch (error) {
+      console.error('Error adding multiple songs to queue:', error);
+    }
+  };
 
   const removeSongFromQueue = async (track: SongTrack) => {
-    const fetchedCurrentTrack = await TrackPlayer.getActiveTrack()
+    const fetchedCurrentTrack = await TrackPlayer.getActiveTrack();
     const trackUuid = track.uuid;
-    if (fetchedCurrentTrack && fetchedCurrentTrack.uuid === trackUuid || !trackUuid) {
-      console.warn("Can't remove current track")
-      return
-    };
-    try{
+    if ((fetchedCurrentTrack && fetchedCurrentTrack.uuid === trackUuid) || !trackUuid) {
+      console.warn("Can't remove current track");
+      return;
+    }
+    try {
       const trackIndex = await getSongIndexBySymbol(trackUuid);
-      await TrackPlayer.remove(trackIndex as number)
+      await TrackPlayer.remove(trackIndex as number);
       await explicitlyUpdateQueueState();
-    } catch(error) {
+    } catch (error) {
       console.warn(error);
     }
   };
@@ -196,7 +296,7 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
           currentLine: '',
           nextLine: songText.segments[0]?.text || '',
         });
-      // normal case
+        // normal case
       } else if (currentSegmentIndex !== -1) {
         setSongLines({
           previousSegmentIndex: currentSegmentIndex,
@@ -204,7 +304,7 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
           currentLine: songText.segments[currentSegmentIndex]?.text || '',
           nextLine: songText.segments[currentSegmentIndex + 1]?.text || '',
         });
-      // between lines (silence) case
+        // between lines (silence) case
       } else {
         setSongLines({
           previousSegmentIndex: songLines.previousSegmentIndex,
@@ -226,7 +326,7 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
       if (track) {
         setCurrentTrack(track as SongTrack);
       } else {
-        setCurrentTrack(emptySongTrack)
+        setCurrentTrack(emptySongTrack);
       }
     },
   );
@@ -253,6 +353,7 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
         loadSong,
         addSongToQueue,
         removeSongFromQueue,
+        addMultipleSongsToQueue,
       }}>
       {children}
     </TrackPlayerContext.Provider>
