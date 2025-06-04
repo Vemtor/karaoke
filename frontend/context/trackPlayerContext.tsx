@@ -14,6 +14,7 @@ import { getItem } from '@/services/storage';
 import { SongLinesType, useLyricsEditing } from '@/context/lyricsEditProvider';
 import EventEmitter from 'react-native/Libraries/vendor/emitter/EventEmitter';
 import { SearchedVideo } from '@/utils/searchEngine/searchedVideo';
+import { TrackStorage } from '@/services/trackStorage';
 
 interface TrackPlayerContextType {
   isTrackPlayerReady: boolean; // use for interactions with track player
@@ -120,6 +121,7 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
       track.songText = fetchedSongText; // provide song text to the track
       track.uuid = Symbol();
 
+      await TrackStorage.saveTrack(track);
       await TrackPlayer.add(track, null);
       // await explicitlyUpdateQueueState();
     } catch (error) {
@@ -227,6 +229,12 @@ export const TrackPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
       try {
         TrackPlayer.registerPlaybackService(() => require('@/services/service'));
         await TrackPlayer.setupPlayer();
+
+        const savedTracks = await TrackStorage.getAllSavedTracks();
+        if (savedTracks.length > 0) {
+          await TrackPlayer.add(savedTracks, null);
+        }
+
         setIsTrackPlayerReady(true); // Mark TrackPlayer as ready
       } catch (error) {
         console.error('Error initializing TrackPlayer:', error);
